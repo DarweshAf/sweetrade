@@ -168,6 +168,7 @@ export type Database = {
       site_settings: {
         Row: {
           delivery_fee: number
+          delivery_configured: boolean
           email: string
           free_delivery_threshold: number
           payment_methods: string[]
@@ -180,6 +181,7 @@ export type Database = {
         }
         Insert: {
           delivery_fee?: number
+          delivery_configured?: boolean
           email?: string
           free_delivery_threshold?: number
           payment_methods?: string[]
@@ -192,6 +194,7 @@ export type Database = {
         }
         Update: {
           delivery_fee?: number
+          delivery_configured?: boolean
           email?: string
           free_delivery_threshold?: number
           payment_methods?: string[]

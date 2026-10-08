@@ -70,7 +70,7 @@ const fallback = (): Catalog => ({
     paymentMethods: ["Cash on Delivery"],
     heroTitle: "Experience Nature's Finest",
     heroSubtitle:
-      "Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — delivered with care across Karachi.",
+      "Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — available to customers across Pakistan.",
   },
 });
 

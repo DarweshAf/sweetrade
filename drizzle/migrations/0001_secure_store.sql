@@ -11,6 +11,13 @@ ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS payment_methods text[]
 ALTER TABLE public.site_settings ALTER COLUMN whatsapp SET DEFAULT '';
 ALTER TABLE public.site_settings ALTER COLUMN free_delivery_threshold SET DEFAULT 0;
 ALTER TABLE public.site_settings ALTER COLUMN delivery_fee SET DEFAULT 0;
+
+-- New installations need the singleton settings row for server-calculated order totals.
+INSERT INTO public.site_settings
+  (id, phone, whatsapp, email, delivery_fee, free_delivery_threshold, payment_methods, hero_title, hero_subtitle)
+VALUES
+  (1, '+92 334 3645850', '', 'info@sweetrade.com', 0, 0, ARRAY['Cash on Delivery']::text[], 'Experience Nature''s Finest', 'Explore Sweet Trade natural products in Karachi.')
+ON CONFLICT (id) DO NOTHING;
 -- Existing admins and settings remain unchanged. Initial admins require a trusted provisioner.
 
 -- Reject payment methods not explicitly activated by the store administrator.

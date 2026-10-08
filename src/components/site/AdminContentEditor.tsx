@@ -87,6 +87,7 @@ export function AdminContentEditor() {
       toast.error("Every FAQ needs both a question and answer."); return;
     }
     if (selected === "footer") {
+      if (!draft.footer.brandName.trim()) { toast.error("Enter a brand name"); return; }
       for (const url of [draft.footer.facebook, draft.footer.instagram].filter(Boolean)) {
         try {
           const parsed = new URL(url);
@@ -156,6 +157,8 @@ export function AdminContentEditor() {
         <ImageField label="About page image" value={draft.about.image} onChange={(v) => update("about", { image: v })} />
       </>}
       {selected === "footer" && <>
+        <Text label="Store / brand name" value={draft.footer.brandName} onChange={(v) => update("footer", { brandName: v })} />
+        <ImageField label="Store logo" value={draft.footer.logoImage} onChange={(v) => update("footer", { logoImage: v })} />
         <Text label="Brand tagline" value={draft.footer.tagline} onChange={(v) => update("footer", { tagline: v })} />
         <Text label="Footer description" value={draft.footer.description} rows={3} onChange={(v) => update("footer", { description: v })} />
         <Text label="Facebook page URL (optional)" value={draft.footer.facebook} onChange={(v) => update("footer", { facebook: v })} />

@@ -106,6 +106,7 @@ export type Database = {
           id: string
           image_url: string | null
           in_stock: boolean
+          price_verified: boolean
           is_archived: boolean
           ingredients: string
           name: string
@@ -125,6 +126,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           in_stock?: boolean
+          price_verified?: boolean
           is_archived?: boolean
           ingredients?: string
           name: string
@@ -144,6 +146,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           in_stock?: boolean
+          price_verified?: boolean
           ingredients?: string
           name?: string
           short?: string

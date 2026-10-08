@@ -42,6 +42,7 @@ function Products() {
     refresh();
   };
   const toggleStock = async (p: Row) => {
+    if (!p.price_verified && !p.in_stock) { toast.error("Confirm product prices first using Edit"); return; }
     const { error } = await supabase.from("products").update({ in_stock: !p.in_stock }).eq("id", p.id);
     if (error) { toast.error(error.message); return; }
     refresh();
@@ -66,7 +67,7 @@ function Products() {
                 <img src={resolveImage(p.image_url)} alt="" className="size-14 rounded object-cover" />
                 <span className="min-w-0 flex-1">
                   <b className="block truncate font-medium">{p.name}</b>
-                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {vs.length ? `from ${formatPrice(Math.min(...vs.map((v) => v.price)))}` : "no sizes"}{p.featured ? " · Featured" : ""}{p.is_archived ? " · Archived" : ""}</span>
+                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {vs.length ? `${p.price_verified ? "from" : "draft from"} ${formatPrice(Math.min(...vs.map((v) => v.price)))}` : "no sizes"}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.is_archived ? " · Archived" : ""}</span>
                 </span>
                 <button onClick={() => toggleStock(p)} className={`rounded-full px-3 py-1 text-xs font-medium ${p.in_stock ? "bg-primary-soft text-primary" : "bg-secondary text-muted-foreground"}`}>
                   {p.in_stock ? "In stock" : "Out of stock"}
@@ -115,6 +116,8 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
     const vs = variants.filter((v) => v.label.trim() && v.price > 0).map((v) => ({ label: v.label.trim(), price: Math.round(v.price) }));
     if (!name || !slug) { toast.error("Name is required"); return; }
     if (!vs.length) { toast.error("Add at least one size with a price"); return; }
+    const priceVerified = f.get("price_verified") === "on";
+    if (f.get("in_stock") === "on" && !priceVerified) { toast.error("Confirm prices before marking this item available"); return; }
     const data = {
       name, slug,
       category_slug: s("category") || null,
@@ -122,6 +125,7 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
       gallery: image ? [image, ...gallery.filter((g) => g !== image)] : gallery,
       variants: vs,
       in_stock: f.get("in_stock") === "on",
+      price_verified: priceVerified,
       featured: f.get("featured") === "on",
       badge: s("badge") || null,
       short: s("short"), description: s("description"), ingredients: s("ingredients"), storage: s("storage"),
@@ -203,7 +207,8 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
         <div><L htmlFor="p-sto">Storage</L><textarea id="p-sto" name="storage" rows={2} defaultValue={row?.storage} className={ta} /></div>
       </div>
       <div className="flex flex-wrap items-center gap-5 text-sm">
-        <label className="flex items-center gap-2"><input type="checkbox" name="in_stock" defaultChecked={row?.in_stock ?? true} className="size-4 accent-primary" /> In stock</label>
+        <label className="flex items-center gap-2"><input type="checkbox" name="price_verified" defaultChecked={row?.price_verified ?? false} className="size-4 accent-primary" /> I have verified these prices and variants</label>
+        <label className="flex items-center gap-2"><input type="checkbox" name="in_stock" defaultChecked={row?.in_stock ?? false} className="size-4 accent-primary" /> Available to order</label>
         <label className="flex items-center gap-2"><input type="checkbox" name="featured" defaultChecked={row?.featured ?? false} className="size-4 accent-primary" /> Featured on homepage</label>
         <label className="flex items-center gap-2">Sort order <input name="sort_order" type="number" defaultValue={row?.sort_order ?? nextOrder} className={`${adminField} w-20`} /></label>
       </div>

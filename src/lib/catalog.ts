@@ -1,5 +1,6 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { DEFAULT_SITE_CONTENT, mergeSiteContent, type SiteContent } from "@/lib/site-content";
 import {
   CATEGORIES as FALLBACK_CATEGORIES,
   CONTACT as FALLBACK_CONTACT,
@@ -15,8 +16,9 @@ import dates from "@/assets/p-dates.jpg";
 import sweets from "@/assets/p-sweets.jpg";
 import pickle from "@/assets/p-pickle.jpg";
 import ghee from "@/assets/p-ghee.jpg";
+import hero from "@/assets/hero.jpg";
 
-export const LOCAL_IMAGES: Record<string, string> = { honey, shilajit, saffron, olive, dates, sweets, pickle, ghee };
+export const LOCAL_IMAGES: Record<string, string> = { honey, shilajit, saffron, olive, dates, sweets, pickle, ghee, hero };
 
 /** DB stores either "local:<key>" (bundled image) or a full URL (uploaded). */
 export const resolveImage = (v?: string | null) => {
@@ -52,11 +54,13 @@ export interface Catalog {
   products: Product[];
   categories: Category[];
   settings: Settings;
+  content: SiteContent;
 }
 
 const fallback = (): Catalog => ({
   isPreview: true,
   requiresPricing: true,
+  content: DEFAULT_SITE_CONTENT,
   // Bundled products are a non-purchasable preview; never use demo prices for orders.
   products: FALLBACK_PRODUCTS.map((product) => ({ ...product, inStock: false, badge: undefined, variants: [{ label: "Contact for price", price: 0 }] })),
   categories: FALLBACK_CATEGORIES.map((c, i) => ({ ...c, imageRaw: null, sortOrder: i })),
@@ -70,10 +74,11 @@ const fallback = (): Catalog => ({
 });
 
 export async function fetchCatalog(): Promise<Catalog> {
-  const [p, c, s] = await Promise.all([
+  const [p, c, s, site] = await Promise.all([
     supabase.from("products").select("*").order("sort_order").order("created_at"),
     supabase.from("categories").select("*").order("sort_order"),
     supabase.from("site_settings").select("*").eq("id", 1).maybeSingle(),
+    supabase.from("site_content").select("section, content"),
   ]);
   if (p.error || c.error) {
     console.error("catalog load failed", p.error ?? c.error);
@@ -83,6 +88,7 @@ export async function fetchCatalog(): Promise<Catalog> {
   const fb = fallback();
   return {
     isPreview: false,
+    content: site.error ? DEFAULT_SITE_CONTENT : mergeSiteContent(site.data ?? []),
     requiresPricing: (p.data ?? []).filter((x) => !x.is_archived).every((x) => !x.price_verified),
     categories: (c.data ?? []).map((x) => ({
       slug: x.slug,

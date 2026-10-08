@@ -30,6 +30,7 @@ function SettingsPage() {
       whatsapp: str("whatsapp").replace(/\D/g, ""),
       email: str("email"),
       delivery_fee: Math.max(0, Number(str("delivery_fee")) || 0),
+      delivery_configured: f.get("delivery_configured") === "on",
       free_delivery_threshold: Math.max(0, Number(str("free_delivery_threshold")) || 0),
       payment_methods: enabledMethods,
       hero_title: str("hero_title"),
@@ -45,7 +46,7 @@ function SettingsPage() {
   const F = ({ name, label, def, type = "text" }: { name: string; label: string; def: string | number; type?: string }) => (
     <div>
       <label htmlFor={name} className="mb-1.5 block text-sm font-medium">{label}</label>
-      <input id={name} name={name} type={type} defaultValue={def} required className={adminField} />
+      <input id={name} name={name} type={type} defaultValue={def} required={name !== "email"} className={adminField} />
     </div>
   );
 
@@ -63,6 +64,7 @@ function SettingsPage() {
           <h2 className="text-lg sm:col-span-2">Delivery</h2>
           <F name="delivery_fee" label="Delivery fee (Rs.)" def={s.deliveryFee} type="number" />
           <F name="free_delivery_threshold" label="Free delivery above (Rs.)" def={s.freeDeliveryThreshold} type="number" />
+          <label className="flex min-h-11 items-start gap-3 sm:col-span-2"><input type="checkbox" name="delivery_configured" defaultChecked={s.deliveryConfigured} className="mt-1 size-5 accent-primary" /><span className="text-sm">I confirm these delivery charges are accurate. Enable checkout delivery calculations.</span></label>
         </section>
         <fieldset className="rounded-lg border border-border p-4">
           <legend className="px-2 text-lg">Accepted Payment Methods</legend>

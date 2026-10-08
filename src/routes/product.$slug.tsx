@@ -67,7 +67,7 @@ function ProductPage() {
     Description: p.description,
     Ingredients: p.ingredients || "Contact Sweet Trade to confirm the ingredients for this product.",
     Storage: p.storage || "Contact Sweet Trade for confirmed storage instructions.",
-    Delivery: CONTACT.freeDeliveryThreshold > 0 ? `Karachi delivery: free above ${formatPrice(CONTACT.freeDeliveryThreshold)}, otherwise ${formatPrice(CONTACT.deliveryFee)}. Contact us to confirm delivery timing.` : "Contact us to confirm delivery charges and timing.",
+    Delivery: CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Karachi delivery: free above ${formatPrice(CONTACT.freeDeliveryThreshold)}, otherwise ${formatPrice(CONTACT.deliveryFee)}. Contact us to confirm delivery timing.` : "Contact us to confirm delivery charges and timing.",
   };
 
   return (

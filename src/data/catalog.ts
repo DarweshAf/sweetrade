@@ -14,6 +14,7 @@ export const CONTACT = {
   email: "info@sweetrade.com",
   freeDeliveryThreshold: 0,
   deliveryFee: 0,
+  deliveryConfigured: false,
 };
 
 export const CATEGORIES = [

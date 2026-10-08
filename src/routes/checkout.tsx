@@ -45,6 +45,7 @@ function Checkout() {
     setErrors(err);
     if (Object.keys(err).length > 0) return;
     if (!selectedPay) { toast.error("No payment option is currently available. Please contact us."); return; }
+    if (!settings.deliveryConfigured) { toast.error("Delivery charges are awaiting confirmation. Please contact Sweet Trade."); return; }
     setBusy(true);
     try {
       const notes = [f.get("landmark") && `Landmark: ${f.get("landmark")}`, f.get("notes")].filter(Boolean).join("\n");
@@ -141,7 +142,8 @@ function Checkout() {
             ))}
           </div>
           {!paymentOptions.length && <p className="text-sm text-destructive">No payment methods are configured. Please contact us.</p>}
-          <Button type="submit" size="lg" block className="mt-5" disabled={busy || !paymentOptions.length}>{busy ? "Placing order…" : "Place Order"}</Button>
+          {!settings.deliveryConfigured && <p role="status" className="mt-3 text-sm text-destructive">Delivery charges are not yet confirmed. Please contact Sweet Trade before ordering.</p>}
+          <Button type="submit" size="lg" block className="mt-5" disabled={busy || !paymentOptions.length || !settings.deliveryConfigured}>{busy ? "Placing order…" : "Place Order"}</Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">No account needed. We confirm every order by phone.</p>
         </fieldset>
       </aside>

@@ -39,6 +39,7 @@ export interface Settings {
   whatsapp: string;
   email: string;
   deliveryFee: number;
+  deliveryConfigured: boolean;
   freeDeliveryThreshold: number;
   paymentMethods: string[];
   heroTitle: string;
@@ -120,6 +121,7 @@ export async function fetchCatalog(): Promise<Catalog> {
           whatsapp: s.data.whatsapp,
           email: s.data.email,
           deliveryFee: s.data.delivery_fee,
+          deliveryConfigured: s.data.delivery_configured,
           freeDeliveryThreshold: s.data.free_delivery_threshold,
           paymentMethods: s.data.payment_methods?.length ? s.data.payment_methods : ["Cash on Delivery"],
           heroTitle: s.data.hero_title,

@@ -24,7 +24,7 @@ function Cart() {
   const { lines, count, setQty, remove, clear, total } = useStore();
 
   const waText = encodeURIComponent(
-    `Assalam o Alaikum, I'd like to order:\n${lines.map((l) => `• ${l.product.name} (${l.variant}) × ${l.qty} = ${formatPrice(l.total)}`).join("\n")}\nTotal: ${formatPrice(total)}`,
+    `Assalam o Alaikum, I'd like to order:\n${lines.map((l) => `• ${l.product.name} (${l.variant}) × ${l.qty} = ${formatPrice(l.total)}`).join("\n")}\n${CONTACT.deliveryConfigured ? "Total" : "Products subtotal"}: ${formatPrice(total)}${CONTACT.deliveryConfigured ? "" : "\nDelivery: To be confirmed"}`,
   );
 
   if (!lines.length) {

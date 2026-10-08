@@ -165,6 +165,24 @@ export type Database = {
           },
         ]
       }
+      site_content: {
+        Row: {
+          section: string
+          content: Json
+          updated_at: string
+        }
+        Insert: {
+          section: string
+          content?: Json
+          updated_at?: string
+        }
+        Update: {
+          section?: string
+          content?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           delivery_fee: number

@@ -7,6 +7,7 @@ import { useCatalog } from "@/lib/catalog";
 import { adminField } from "@/lib/admin";
 import { PAYMENT_METHODS } from "@/data/catalog";
 import { Button } from "@/components/ui/button";
+import { AdminContentEditor } from "@/components/site/AdminContentEditor";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
   component: SettingsPage,
@@ -51,7 +52,7 @@ function SettingsPage() {
   );
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-3xl">
       <h1 className="mb-6 text-3xl">Site Settings</h1>
       <form onSubmit={save} className="space-y-6 rounded-lg border border-border bg-card p-5 sm:p-6">
         <section className="grid gap-4 sm:grid-cols-2">
@@ -83,6 +84,7 @@ function SettingsPage() {
         </section>
         <Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save settings"}</Button>
       </form>
+      <AdminContentEditor />
     </div>
   );
 }

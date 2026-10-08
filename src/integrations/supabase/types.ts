@@ -43,6 +43,8 @@ export type Database = {
       }
       orders: {
         Row: {
+          shipping_pending: boolean
+          is_provisional: boolean
           address: string
           area: string
           province: string | null
@@ -62,6 +64,8 @@ export type Database = {
           total: number
         }
         Insert: {
+          shipping_pending?: boolean
+          is_provisional?: boolean
           address: string
           area: string
           province?: string | null
@@ -81,6 +85,8 @@ export type Database = {
           total?: number
         }
         Update: {
+          shipping_pending?: boolean
+          is_provisional?: boolean
           address?: string
           area?: string
           province?: string | null
@@ -103,6 +109,7 @@ export type Database = {
       }
       products: {
         Row: {
+          allow_pending_orders: boolean
           badge: string | null
           category_slug: string | null
           created_at: string
@@ -123,6 +130,7 @@ export type Database = {
           variants: Json
         }
         Insert: {
+          allow_pending_orders?: boolean
           badge?: string | null
           category_slug?: string | null
           created_at?: string
@@ -143,6 +151,7 @@ export type Database = {
           variants?: Json
         }
         Update: {
+          allow_pending_orders?: boolean
           badge?: string | null
           category_slug?: string | null
           created_at?: string
@@ -191,6 +200,7 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          accept_pending_orders: boolean
           delivery_fee: number
           delivery_configured: boolean
           email: string
@@ -204,6 +214,7 @@ export type Database = {
           whatsapp: string
         }
         Insert: {
+          accept_pending_orders?: boolean
           delivery_fee?: number
           delivery_configured?: boolean
           email?: string
@@ -217,6 +228,7 @@ export type Database = {
           whatsapp?: string
         }
         Update: {
+          accept_pending_orders?: boolean
           delivery_fee?: number
           delivery_configured?: boolean
           email?: string

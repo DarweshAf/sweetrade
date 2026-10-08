@@ -62,9 +62,9 @@ function Orders() {
                 <div className="flex flex-wrap items-center gap-3 p-4">
                   <button onClick={() => setOpen(open === o.id ? null : o.id)} className="min-w-0 flex-1 text-left">
                     <b className="block font-medium">#{o.id.slice(0, 8).toUpperCase()} · {o.customer_name}</b>
-                    <span className="text-sm text-muted-foreground">{new Date(o.created_at).toLocaleString()} · {[o.city, o.province].filter(Boolean).join(", ") || o.area} · {o.payment_method}</span>
+                    <span className="text-sm text-muted-foreground">{new Date(o.created_at).toLocaleString()} · {[o.city, o.province].filter(Boolean).join(", ") || o.area} · {o.payment_method}{o.is_provisional ? " · Provisional request" : ""}</span>
                   </button>
-                  <b>{formatPrice(o.total)}</b>
+                  <span className="text-right"><b className="block">{formatPrice(o.total)}</b>{o.is_provisional && <span className="text-xs text-destructive">Estimated only</span>}</span>
                   <select value={o.status} onChange={(e) => setStatus(o.id, e.target.value)} className={`${adminField} w-auto capitalize`} aria-label="Order status">
                     {ORDER_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
                   </select>
@@ -73,6 +73,7 @@ function Orders() {
                 {open === o.id && (
                   <div className="grid gap-4 border-t border-border p-4 text-sm sm:grid-cols-2">
                     <div className="space-y-1">
+                      {o.is_provisional && <p className="rounded-md border border-border bg-secondary p-2 font-medium">Order request: confirm product prices, stock and {o.shipping_pending ? "shipping charge" : "delivery"} with the customer before fulfillment. No upfront payment has been collected.</p>}
                       <p><b>Phone:</b> <a className="text-primary" href={`tel:${o.phone}`}>{o.phone}</a></p>
                       <p><b>Address:</b> {[o.address, o.area, o.city, o.province, "Pakistan"].filter(Boolean).join(", ")}</p>
                       {o.notes && <p className="whitespace-pre-line"><b>Notes:</b> {o.notes}</p>}
@@ -85,8 +86,8 @@ function Orders() {
                       </ul>
                       <div className="mt-2 space-y-1 border-t border-border pt-2">
                         <p className="flex justify-between"><span>Subtotal</span><span>{formatPrice(o.subtotal)}</span></p>
-                        <p className="flex justify-between"><span>Delivery</span><span>{formatPrice(o.delivery)}</span></p>
-                        <p className="flex justify-between font-semibold"><span>Total</span><span>{formatPrice(o.total)}</span></p>
+                        <p className="flex justify-between"><span>Delivery</span><span>{o.shipping_pending ? "To be confirmed" : formatPrice(o.delivery)}</span></p>
+                        <p className="flex justify-between font-semibold"><span>{o.is_provisional ? "Estimated products / total" : "Total"}</span><span>{formatPrice(o.total)}</span></p>
                       </div>
                     </div>
                   </div>

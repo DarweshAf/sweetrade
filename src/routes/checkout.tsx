@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { formatPrice, KARACHI_AREAS, PAYMENT_METHODS } from "@/data/catalog";
 import { useStore } from "@/lib/store";
+import { useCatalog } from "@/lib/catalog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -24,8 +25,11 @@ const field = "h-11 w-full rounded-md border border-input bg-card px-3 text-sm f
 
 function Checkout() {
   const { lines, clear } = useStore();
+  const { settings } = useCatalog();
+  const paymentOptions = PAYMENT_METHODS.filter((method) => settings.paymentMethods.includes(method));
   const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "area" | "address", string>>>({});
-  const [pay, setPay] = useState<string>(PAYMENT_METHODS[0]);
+  const [pay, setPay] = useState<string>(paymentOptions[0] ?? "");
+  const selectedPay = paymentOptions.some((method) => method === pay) ? pay : paymentOptions[0] ?? "";
   const [done, setDone] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -39,6 +43,7 @@ function Checkout() {
     if (!String(f.get("address")).trim()) err.address = "Please enter your address";
     setErrors(err);
     if (Object.keys(err).length > 0) return;
+    if (!selectedPay) { toast.error("No payment option is currently available. Please contact us."); return; }
     setBusy(true);
     const notes = [f.get("landmark") && `Landmark: ${f.get("landmark")}`, f.get("notes")].filter(Boolean).join("\n");
     const id = crypto.randomUUID();
@@ -51,7 +56,7 @@ function Checkout() {
         area: String(f.get("area")),
         address: String(f.get("address")).trim().slice(0, 500),
         notes: notes ? String(notes).slice(0, 1000) : null,
-        payment_method: pay,
+        payment_method: selectedPay,
         items: lines.map((l) => ({ product_id: l.productId, variant: l.variant, qty: l.qty })),
       });
     setBusy(false);
@@ -127,14 +132,15 @@ function Checkout() {
           <legend className="sr-only">Payment method</legend>
           <h2 className="mb-4 text-xl">3. Payment Method</h2>
           <div className="space-y-2">
-            {PAYMENT_METHODS.map((m) => (
-              <label key={m} className={`flex cursor-pointer items-center gap-3 rounded-md border px-3 py-3 text-sm ${pay === m ? "border-primary bg-primary-soft" : "border-input"}`}>
-                <input type="radio" name="payment" value={m} checked={pay === m} onChange={() => setPay(m)} className="size-4 accent-primary" />
+            {paymentOptions.map((m) => (
+              <label key={m} className={`flex cursor-pointer items-center gap-3 rounded-md border px-3 py-3 text-sm ${selectedPay === m ? "border-primary bg-primary-soft" : "border-input"}`}>
+                <input type="radio" name="payment" value={m} checked={selectedPay === m} onChange={() => setPay(m)} className="size-4 accent-primary" />
                 {m}
               </label>
             ))}
           </div>
-          <Button type="submit" size="lg" block className="mt-5" disabled={busy}>{busy ? "Placing order…" : "Place Order"}</Button>
+          {!paymentOptions.length && <p className="text-sm text-destructive">No payment methods are configured. Please contact us.</p>}
+          <Button type="submit" size="lg" block className="mt-5" disabled={busy || !paymentOptions.length}>{busy ? "Placing order…" : "Place Order"}</Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">No account needed. We confirm every order by phone.</p>
         </fieldset>
       </aside>

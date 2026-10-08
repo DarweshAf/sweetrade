@@ -57,7 +57,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const lines = raw.flatMap<ResolvedLine>((l) => {
       const product = products.find((p) => p.id === l.productId);
       const v = product?.variants.find((x) => x.label === l.variant);
-      return product && v ? [{ ...l, product, v, total: v.price * l.qty }] : [];
+      return product?.inStock && v && v.price > 0 ? [{ ...l, product, v, total: v.price * l.qty }] : [];
     });
     const subtotal = lines.reduce((n, l) => n + l.total, 0);
     const delivery = subtotal === 0 || subtotal >= CONTACT.freeDeliveryThreshold ? 0 : CONTACT.deliveryFee;

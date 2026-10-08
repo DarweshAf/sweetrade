@@ -44,20 +44,19 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
         </Link>
         <p className="mt-1 text-sm font-bold text-primary">
           {showFrom && <span className="font-medium">From </span>}
-          {purchasable ? formatPrice(showFrom ? priceFrom(product) : first!.price) : "Price on request"}
+          {first?.price ? formatPrice(showFrom ? priceFrom(product) : first.price) : "Price on request"}
         </p>
-        <Button
-          size="sm"
-          className="mt-3 w-full"
-          disabled={!purchasable}
-          onClick={() => {
-            if (!purchasable || !first) return;
+        {purchasable ? (
+          <Button size="sm" className="mt-3 w-full" onClick={() => {
+            if (!first) return;
             add(product.id, first.label);
             toast.success(`${product.name} (${first.label}) added to cart`);
-          }}
-        >
-          {purchasable ? "Add to Cart" : "Enquire to Order"}
-        </Button>
+          }}>Add to Cart</Button>
+        ) : first?.price ? (
+          <Button size="sm" className="mt-3 w-full" disabled>Out of Stock</Button>
+        ) : (
+          <Button asChild size="sm" variant="outline" className="mt-3 w-full"><Link to="/contact">Enquire for Price</Link></Button>
+        )}
       </div>
     </article>
   );

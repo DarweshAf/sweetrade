@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useCatalog } from "@/lib/catalog";
 import { adminField } from "@/lib/admin";
+import { PAYMENT_METHODS } from "@/data/catalog";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
@@ -20,6 +21,8 @@ function SettingsPage() {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     const str = (k: string) => String(f.get(k) ?? "").trim();
+    const enabledMethods = f.getAll("payment_methods").map(String).filter((m) => PAYMENT_METHODS.some((allowed) => allowed === m));
+    if (!enabledMethods.length) { toast.error("Enable at least one payment method"); return; }
     setBusy(true);
     const { error } = await supabase.from("site_settings").upsert({
       id: 1,
@@ -28,6 +31,7 @@ function SettingsPage() {
       email: str("email"),
       delivery_fee: Math.max(0, Number(str("delivery_fee")) || 0),
       free_delivery_threshold: Math.max(0, Number(str("free_delivery_threshold")) || 0),
+      payment_methods: enabledMethods,
       hero_title: str("hero_title"),
       hero_subtitle: str("hero_subtitle"),
       updated_at: new Date().toISOString(),
@@ -60,6 +64,13 @@ function SettingsPage() {
           <F name="delivery_fee" label="Delivery fee (Rs.)" def={s.deliveryFee} type="number" />
           <F name="free_delivery_threshold" label="Free delivery above (Rs.)" def={s.freeDeliveryThreshold} type="number" />
         </section>
+        <fieldset className="rounded-lg border border-border p-4">
+          <legend className="px-2 text-lg">Accepted Payment Methods</legend>
+          <p className="mb-3 text-sm text-muted-foreground">Only enable methods the business can actually process.</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {PAYMENT_METHODS.map((method) => <label key={method} className="flex min-h-11 items-center gap-3 text-sm"><input type="checkbox" name="payment_methods" value={method} defaultChecked={s.paymentMethods.includes(method)} className="size-5 accent-primary" />{method}</label>)}
+          </div>
+        </fieldset>
         <section className="grid gap-4">
           <h2 className="text-lg">Homepage</h2>
           <F name="hero_title" label="Hero title" def={s.heroTitle} />

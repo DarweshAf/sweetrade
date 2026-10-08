@@ -40,6 +40,7 @@ export interface Settings {
   email: string;
   deliveryFee: number;
   freeDeliveryThreshold: number;
+  paymentMethods: string[];
   heroTitle: string;
   heroSubtitle: string;
 }
@@ -56,6 +57,7 @@ const fallback = (): Catalog => ({
   categories: FALLBACK_CATEGORIES.map((c, i) => ({ ...c, imageRaw: null, sortOrder: i })),
   settings: {
     ...FALLBACK_CONTACT,
+    paymentMethods: ["Cash on Delivery"],
     heroTitle: "Experience Nature's Finest",
     heroSubtitle:
       "Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — delivered with care across Karachi.",
@@ -110,6 +112,7 @@ export async function fetchCatalog(): Promise<Catalog> {
           email: s.data.email,
           deliveryFee: s.data.delivery_fee,
           freeDeliveryThreshold: s.data.free_delivery_threshold,
+          paymentMethods: s.data.payment_methods?.length ? s.data.payment_methods : ["Cash on Delivery"],
           heroTitle: s.data.hero_title,
           heroSubtitle: s.data.hero_subtitle || fb.settings.heroSubtitle,
         }

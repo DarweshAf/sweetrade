@@ -12,7 +12,7 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
   const wished = wishlist.includes(product.id);
   const [selectedLabel, setSelectedLabel] = useState(product.variants[0]?.label ?? "");
   const selected = product.variants.find((variant) => variant.label === selectedLabel) ?? product.variants[0];
-  const purchasable = Boolean(product.inStock && product.priceVerified && selected && selected.price > 0);
+  const purchasable = Boolean(product.inStock && (product.priceVerified || product.requestOnly) && selected && selected.price > 0);
   const showStartingPrice = showFrom && selected?.label === product.variants[0]?.label
     && selected.price === priceFrom(product);
 
@@ -29,7 +29,7 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
         )}
         {!product.priceVerified ? (
           <span className="absolute bottom-2 left-2 rounded-sm bg-card/95 px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
-            {product.variants.some((v) => v.price > 0) ? "DEMO · Not for ordering" : "Price pending"}
+            {product.requestOnly ? "Order request · price to confirm" : product.variants.some((v) => v.price > 0) ? "DEMO · Not for ordering" : "Price pending"}
           </span>
         ) : !product.inStock && (
           <span className="absolute bottom-2 left-2 rounded-sm bg-card/95 px-2 py-0.5 text-[11px] font-semibold text-destructive">
@@ -53,7 +53,7 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
         <p className="mt-1 text-sm font-bold text-primary" aria-live="polite" aria-atomic="true">
           {selected && selected.price > 0 ? (
             <>
-              {!product.priceVerified && <span className="mr-1 text-xs font-semibold text-muted-foreground">Demo price:</span>}
+              {!product.priceVerified && <span className="mr-1 text-xs font-semibold text-muted-foreground">Estimated:</span>}
               {showStartingPrice && <span className="font-medium">From </span>}
               {formatPrice(selected.price)}
               <span className="ml-1 text-xs font-normal text-muted-foreground">/ {selected.label}</span>
@@ -80,8 +80,8 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
           <Button size="sm" className="mt-3 w-full" onClick={() => {
             if (!selected) return;
             add(product.id, selected.label);
-            toast.success(`${product.name} (${selected.label}) added to cart`);
-          }}>Add to Cart · {selected?.label}</Button>
+            toast.success(`${product.name} (${selected.label}) ${product.requestOnly ? "added to your order request" : "added to cart"}`);
+          }}>{product.requestOnly ? "Request Order" : "Add to Cart"} · {selected?.label}</Button>
         ) : product.priceVerified && selected?.price ? (
           <Button size="sm" className="mt-3 w-full" disabled>Out of Stock</Button>
         ) : (

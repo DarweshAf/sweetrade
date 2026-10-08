@@ -38,9 +38,7 @@ export function Footer() {
       <div className="bg-ink text-ink-foreground">
         <div className="container-page grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-2xl">
-              Swee<span className="text-primary">Trade</span>
-            </p>
+            <p className="font-display text-2xl">{content.footer.brandName}</p>
             <p className="mt-1 text-sm text-ink-foreground/70">{content.footer.tagline}</p>
             <p className="mt-4 max-w-xs text-sm text-ink-foreground/70">
               {content.footer.description}
@@ -82,7 +80,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-ink-foreground/10">
-          <p className="container-page py-4 text-xs text-ink-foreground/60">© {new Date().getFullYear()} Sweet Trade. All rights reserved.</p>
+          <p className="container-page py-4 text-xs text-ink-foreground/60">© {new Date().getFullYear()} {content.footer.brandName}. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -7,7 +7,7 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — Sweet Trade" },
-      { name: "description", content: "Call, WhatsApp or email Sweet Trade for orders and product questions in Karachi." },
+      { name: "description", content: "Call, WhatsApp or email Sweet Trade for orders and product questions across Pakistan." },
       { property: "og:title", content: "Contact — Sweet Trade" },
       { property: "og:description", content: "We are here to help." },
     ],

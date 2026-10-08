@@ -54,7 +54,7 @@ export function ProductImage({
           onError={() => setStatus("error")}
           className={cn(
             "absolute inset-0 size-full object-cover transition-opacity duration-500",
-            status === "ready" ? "opacity-100" : "opacity-0",
+            
             zoom && "hover-zoom",
             imgClassName,
           )}
@@ -65,7 +65,7 @@ export function ProductImage({
           <span className="text-xs text-muted-foreground">Image unavailable</span>
         </div>
       )}
-      {status === "loading" && (
+      {false && (
         <div className="absolute inset-0 animate-pulse bg-muted" aria-hidden="true" />
       )}
     </div>

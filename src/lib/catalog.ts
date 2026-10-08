@@ -43,6 +43,7 @@ export interface Settings {
   email: string;
   deliveryFee: number;
   deliveryConfigured: boolean;
+  pendingOrdersEnabled: boolean;
   freeDeliveryThreshold: number;
   paymentMethods: string[];
   heroTitle: string;
@@ -68,6 +69,7 @@ const fallback = (): Catalog => ({
   settings: {
     ...FALLBACK_CONTACT,
     paymentMethods: ["Cash on Delivery"],
+    pendingOrdersEnabled: false,
     heroTitle: "Experience Nature's Finest",
     heroSubtitle:
       "Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — available to customers across Pakistan.",
@@ -90,7 +92,7 @@ export async function fetchCatalog(): Promise<Catalog> {
   return {
     isPreview: false,
     content: site.error ? DEFAULT_SITE_CONTENT : mergeSiteContent(site.data ?? []),
-    requiresPricing: (p.data ?? []).filter((x) => !x.is_archived).every((x) => !x.price_verified),
+    requiresPricing: (p.data ?? []).filter((x) => !x.is_archived).every((x) => !x.price_verified && !(s.data?.accept_pending_orders && x.allow_pending_orders)),
     categories: (c.data ?? []).map((x) => ({
       slug: x.slug,
       name: x.name,
@@ -118,7 +120,8 @@ export async function fetchCatalog(): Promise<Catalog> {
               typeof v.price === "number" && Number.isFinite(v.price) && v.price >= 0)
           : [{ label: "Contact for price", price: 0 }],
         priceVerified: x.price_verified,
-        inStock: x.in_stock && x.price_verified,
+        requestOnly: Boolean(s.data?.accept_pending_orders && x.allow_pending_orders && !x.price_verified),
+        inStock: (x.in_stock && x.price_verified) || Boolean(s.data?.accept_pending_orders && x.allow_pending_orders),
         ...(x.badge ? { badge: x.badge as NonNullable<Product["badge"]> } : {}),
         featured: x.featured,
         short: x.short,
@@ -134,6 +137,7 @@ export async function fetchCatalog(): Promise<Catalog> {
           email: s.data.email,
           deliveryFee: s.data.delivery_fee,
           deliveryConfigured: s.data.delivery_configured,
+          pendingOrdersEnabled: s.data.accept_pending_orders,
           freeDeliveryThreshold: s.data.free_delivery_threshold,
           paymentMethods: s.data.payment_methods?.length ? s.data.payment_methods : ["Cash on Delivery"],
           heroTitle: s.data.hero_title,

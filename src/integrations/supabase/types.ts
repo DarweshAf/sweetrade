@@ -106,6 +106,7 @@ export type Database = {
           id: string
           image_url: string | null
           in_stock: boolean
+          is_archived: boolean
           ingredients: string
           name: string
           short: string
@@ -124,6 +125,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           in_stock?: boolean
+          is_archived?: boolean
           ingredients?: string
           name: string
           short?: string
@@ -165,6 +167,7 @@ export type Database = {
           delivery_fee: number
           email: string
           free_delivery_threshold: number
+          payment_methods: string[]
           hero_subtitle: string
           hero_title: string
           id: number
@@ -176,6 +179,7 @@ export type Database = {
           delivery_fee?: number
           email?: string
           free_delivery_threshold?: number
+          payment_methods?: string[]
           hero_subtitle?: string
           hero_title?: string
           id?: number
@@ -187,6 +191,7 @@ export type Database = {
           delivery_fee?: number
           email?: string
           free_delivery_threshold?: number
+          payment_methods?: string[]
           hero_subtitle?: string
           hero_title?: string
           id?: number

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { Pencil, Plus, Trash2, X } from "lucide-react";
+import { Archive, Pencil, Plus, RotateCcw, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/data/catalog";
 import { resolveImage, useCatalog } from "@/lib/catalog";
@@ -34,11 +34,11 @@ function Products() {
     qc.invalidateQueries({ queryKey: ["admin"] });
     qc.invalidateQueries({ queryKey: ["catalog"] });
   };
-  const del = async (p: Row) => {
-    if (!confirm(`Delete "${p.name}"?`)) return;
-    const { error } = await supabase.from("products").delete().eq("id", p.id);
+  const toggleArchive = async (p: Row) => {
+    if (!confirm(`${p.is_archived ? "Restore" : "Archive"} "${p.name}"?`)) return;
+    const { error } = await supabase.from("products").update({ is_archived: !p.is_archived }).eq("id", p.id);
     if (error) { toast.error(error.message); return; }
-    toast.success("Product deleted");
+    toast.success(p.is_archived ? "Product restored" : "Product archived");
     refresh();
   };
   const toggleStock = async (p: Row) => {
@@ -66,13 +66,13 @@ function Products() {
                 <img src={resolveImage(p.image_url)} alt="" className="size-14 rounded object-cover" />
                 <span className="min-w-0 flex-1">
                   <b className="block truncate font-medium">{p.name}</b>
-                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {vs.length ? `from ${formatPrice(Math.min(...vs.map((v) => v.price)))}` : "no sizes"}{p.featured ? " · Featured" : ""}</span>
+                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {vs.length ? `from ${formatPrice(Math.min(...vs.map((v) => v.price)))}` : "no sizes"}{p.featured ? " · Featured" : ""}{p.is_archived ? " · Archived" : ""}</span>
                 </span>
                 <button onClick={() => toggleStock(p)} className={`rounded-full px-3 py-1 text-xs font-medium ${p.in_stock ? "bg-primary-soft text-primary" : "bg-secondary text-muted-foreground"}`}>
                   {p.in_stock ? "In stock" : "Out of stock"}
                 </button>
                 <button onClick={() => setEdit(p)} className="p-2 text-muted-foreground hover:text-primary" aria-label="Edit"><Pencil className="size-4" /></button>
-                <button onClick={() => del(p)} className="p-2 text-muted-foreground hover:text-destructive" aria-label="Delete"><Trash2 className="size-4" /></button>
+                <button onClick={() => toggleArchive(p)} className="tap-target text-muted-foreground hover:text-primary" aria-label={p.is_archived ? "Restore product" : "Archive product"}>{p.is_archived ? <RotateCcw className="size-4" /> : <Archive className="size-4" />}</button>
               </li>
             );
           })}

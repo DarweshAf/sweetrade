@@ -18,16 +18,11 @@ $$;
 CREATE POLICY "Users see own roles" ON public.user_roles FOR SELECT TO authenticated
   USING (user_id = auth.uid() OR public.has_role(auth.uid(), 'admin'));
 
--- First signup becomes admin
+-- New users receive only the user role. Admins must be provisioned privately.
 CREATE OR REPLACE FUNCTION public.handle_new_user_role()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 BEGIN
-  PERFORM pg_advisory_xact_lock(424242);
-  IF NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role = 'admin') THEN
-    INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin');
-  ELSE
-    INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'user');
-  END IF;
+  INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'user');
   RETURN NEW;
 END $$;
 CREATE TRIGGER on_auth_user_created_role AFTER INSERT ON auth.users

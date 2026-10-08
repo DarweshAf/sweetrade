@@ -48,10 +48,10 @@ function ProductPage() {
   const navigate = useNavigate();
   const [img, setImg] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
-  const [variant, setVariant] = useState(p.variants[0]!.label);
+  const [variant, setVariant] = useState(p.variants[0]?.label ?? "Contact for price");
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState<(typeof TABS)[number]>("Description");
-  const v = p.variants.find((x) => x.label === variant)!;
+  const v = p.variants.find((x) => x.label === variant) ?? p.variants[0] ?? { label: "Contact for price", price: 0 };
   const cat = categoryOf(p.category);
   const wished = wishlist.includes(p.id);
   const purchasable = p.inStock && v.price > 0;

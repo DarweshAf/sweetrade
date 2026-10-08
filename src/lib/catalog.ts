@@ -83,7 +83,7 @@ export async function fetchCatalog(): Promise<Catalog> {
       imageRaw: x.image_url,
       sortOrder: x.sort_order,
     })),
-    products: (p.data ?? []).map((x) => {
+    products: (p.data ?? []).filter((x) => !x.is_archived).map((x) => {
       const image = resolveImage(x.image_url);
       const gallery = (x.gallery ?? []).map(resolveImage);
       return {

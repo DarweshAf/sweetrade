@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — SweeTrade" },
-      { name: "description", content: "Call, WhatsApp or email SweeTrade for orders and product questions in Karachi." },
-      { property: "og:title", content: "Contact — SweeTrade" },
+      { title: "Contact — Sweet Trade" },
+      { name: "description", content: "Call, WhatsApp or email Sweet Trade for orders and product questions in Karachi." },
+      { property: "og:title", content: "Contact — Sweet Trade" },
       { property: "og:description", content: "We are here to help." },
     ],
   }),
@@ -19,8 +19,8 @@ function Contact() {
   const { contact: CONTACT } = useCatalog();
   const items = [
     { icon: Phone, label: "Call us", value: CONTACT.phone, href: `tel:${CONTACT.phone.replace(/\s/g, "")}` },
-    { icon: MessageCircle, label: "WhatsApp", value: "Chat with us", href: `https://wa.me/${CONTACT.whatsapp}` },
-    { icon: Mail, label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` },
+    ...(CONTACT.whatsapp ? [{ icon: MessageCircle, label: "WhatsApp", value: "Chat with us", href: `https://wa.me/${CONTACT.whatsapp}` }] : []),
+    ...(CONTACT.email ? [{ icon: Mail, label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` }] : []),
   ];
   return (
     <div className="container-page section-y max-w-3xl">

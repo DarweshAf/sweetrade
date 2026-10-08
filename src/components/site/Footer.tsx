@@ -3,10 +3,10 @@ import { FileText, Headphones, Leaf, MessageCircle, Phone, ShieldCheck, Truck, M
 import { useCatalog } from "@/lib/catalog";
 
 const TRUST = [
-  { icon: Leaf, title: "Natural Selection", body: "Quality you can trust" },
+  { icon: Leaf, title: "Natural Selection", body: "Browse our collection" },
   { icon: FileText, title: "Clear Product Information", body: "Know what you buy" },
   { icon: MessageCircle, title: "Convenient Ordering", body: "Call or WhatsApp" },
-  { icon: Truck, title: "Karachi Delivery", body: "Fast and reliable" },
+  { icon: Truck, title: "Karachi Delivery", body: "Contact us for details" },
   { icon: Headphones, title: "Customer Support", body: "We are here to help" },
 ];
 
@@ -65,20 +65,25 @@ export function Footer() {
               <li><Link to="/about" className="hover:text-primary">About Us</Link></li>
               <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
               <li><Link to="/cart" className="hover:text-primary">Your Cart</Link></li>
-              <li><span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-4" /> Cash on Delivery available</span></li>
+              <li><Link to="/faq" className="hover:text-primary">FAQs</Link></li>
+              <li><Link to="/delivery" className="hover:text-primary">Delivery Information</Link></li>
+              <li><Link to="/returns" className="hover:text-primary">Returns & Exchanges</Link></li>
+              <li><Link to="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-primary">Terms & Conditions</Link></li>
+              <li><span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-4" /> Payment options at checkout</span></li>
             </ul>
           </div>
           <div>
             <h2 className="mb-3 font-sans text-sm font-semibold uppercase tracking-wider text-primary">Contact</h2>
             <ul className="space-y-2 text-sm text-ink-foreground/80">
               <li className="flex items-center gap-2"><Phone className="size-4" /> {CONTACT.phone}</li>
-              <li className="flex items-center gap-2"><Mail className="size-4" /> {CONTACT.email}</li>
-              <li className="flex items-center gap-2"><MessageCircle className="size-4" /> WhatsApp ordering</li>
+              {CONTACT.email && <li className="flex items-center gap-2"><Mail className="size-4" /> {CONTACT.email}</li>}
+              {CONTACT.whatsapp && <li className="flex items-center gap-2"><MessageCircle className="size-4" /> WhatsApp ordering</li>}
             </ul>
           </div>
         </div>
         <div className="border-t border-ink-foreground/10">
-          <p className="container-page py-4 text-xs text-ink-foreground/60">© {new Date().getFullYear()} SweeTrade. All rights reserved.</p>
+          <p className="container-page py-4 text-xs text-ink-foreground/60">© {new Date().getFullYear()} Sweet Trade. All rights reserved.</p>
         </div>
       </div>
     </footer>

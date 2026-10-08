@@ -11,9 +11,9 @@ import { Totals } from "@/components/shop/OrderSummary";
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
-      { title: "Checkout — SweeTrade" },
+      { title: "Checkout — Sweet Trade" },
       { name: "description", content: "Guest checkout with Karachi delivery and Cash on Delivery, Bank Transfer, JazzCash or Easypaisa." },
-      { property: "og:title", content: "Checkout — SweeTrade" },
+      { property: "og:title", content: "Checkout — Sweet Trade" },
       { property: "og:description", content: "Complete your order." },
     ],
   }),

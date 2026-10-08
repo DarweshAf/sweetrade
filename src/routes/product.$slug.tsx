@@ -126,8 +126,17 @@ function ProductPage() {
           </div>
 
           <div className="mt-6 hidden gap-3 sm:grid sm:grid-cols-2">
-            <Button size="lg" disabled={!purchasable} onClick={addIt}>Add to Cart</Button>
-            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary-soft" disabled={!purchasable} onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
+            {purchasable ? (
+              <>
+                <Button size="lg" onClick={addIt}>Add to Cart</Button>
+                <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary-soft" onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
+              </>
+            ) : (
+              <>
+                <Button asChild size="lg"><Link to="/contact">Enquire About Product</Link></Button>
+                <Button asChild size="lg" variant="outline"><a href={`tel:${CONTACT.phone.replace(/\\s/g, "")}`}>Call Sweet Trade</a></Button>
+              </>
+            )}
           </div>
 
           <ul className="mt-7 grid grid-cols-1 gap-4 border-y border-border py-5 text-sm sm:grid-cols-3">
@@ -157,8 +166,17 @@ function ProductPage() {
       )}
 
       <div className="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-30 grid grid-cols-2 gap-3 border-t border-border bg-background p-3 shadow-raised sm:hidden">
-        <Button disabled={!purchasable} onClick={addIt}>Add to Cart</Button>
-        <Button variant="outline" className="border-primary text-primary" disabled={!purchasable} onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
+        {purchasable ? (
+          <>
+            <Button onClick={addIt}>Add to Cart</Button>
+            <Button variant="outline" className="border-primary text-primary" onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
+          </>
+        ) : (
+          <>
+            <Button asChild><Link to="/contact">Enquire</Link></Button>
+            <Button asChild variant="outline"><a href={`tel:${CONTACT.phone.replace(/\\s/g, "")}`}>Call Us</a></Button>
+          </>
+        )}
       </div>
     </div>
   );

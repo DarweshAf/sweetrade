@@ -30,7 +30,7 @@ These database changes are specific to this Lovable project, **not a proof that 
 - Shop: query search, category filters, max price, stock filter, sort, empty state.
 - Product: images, zoom dialog, size, availability, wishlist, sticky mobile Add to Cart above bottom navigation.
 - Cart: add, increment, decrement, remove, persistence, totals, WhatsApp only when active.
-- Checkout: Pakistani phone validation, Karachi area, unavailable payment methods, order failure, order success in a staging database only.
+- Checkout: Pakistani phone validation, all provinces, custom city/locality and address, unavailable payment methods, order failure, order success in a staging database only.
 - Admin: authorization, product edit, archive/restore, categories, settings, order status; no public sign-up.
 - Accessibility: keyboard navigation, focus states, dialogs, visible labels, touch targets.
 - Verify no fake prices, reviews, badges, medical claims or unverified shipping promises remain.

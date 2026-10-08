@@ -95,7 +95,7 @@ export function Header() {
             <Link to="/shop" className="tap-target hidden sm:inline-flex" aria-label="Wishlist">
               <Heart className="size-5" />
             </Link>
-            <Link to="/cart" className="tap-target relative -mr-2" aria-label={`Cart, ${count} items`}>
+            <Link to="/cart" className="tap-target relative -mr-2 hidden sm:inline-flex" aria-label={`Cart, ${count} items`}>
               <ShoppingCart className="size-5" />
               {count > 0 && (
                 <span className="absolute right-1 top-1 grid min-w-4.5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold leading-4.5 text-primary-foreground">

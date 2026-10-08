@@ -61,3 +61,13 @@ All of these use the RLS-protected site_content table. Default strings in src/li
 - Applied on the linked Lovable Cloud project, with a rollback-only trigger smoke test. The test left **zero** orders in the table.
 - Schema/function replication for any separately deployed database: `drizzle/migrations/0004_provisional_order_requests.sql`. Do not apply to another project's database without verifying the target.
 - Browser E2E, build/lint and custom-domain redeploy are still unverified. Lovable AI credits, GitHub Actions and CLI were not used.
+
+## Instant Add to Cart / Buy Now and admin finalisation (8 October 2026)
+- Shop, home featured cards, related products and product details expose direct **Add to Cart** and **Buy Now** actions. Weight/size selection drives displayed PKR price and order SKU variant.
+- Buy Now enters checkout for **only** the selected product and quantity; existing saved cart is preserved separately. The one-item selection survives page reload within the browser tab. Cart → Checkout explicitly clears one-item Buy Now mode and uses the entire saved cart instead.
+- Checkout reads its own selected items and totals, accepts Pakistan-wide addresses, and sends an order insert; server triggers recompute prices and enforce allowed draft or confirmed availability.
+- Currently the linked DB has 14 provisional request-eligible products, COD only, and unconfirmed shipping, so these are **real saved pending order requests**, not automatic fulfillment, paid orders or binding shipping quotes.
+- Admin → Orders allows manual entry of **confirmed unit prices per item**, **confirmed delivery fee** (including an explicitly entered zero for genuinely free delivery), and requires acknowledgement that the customer agreed before changing the order to Confirmed. Provisional requests cannot be marked shipped/delivered from the status selector.
+- Previously stored order items keep their snapshot until explicitly confirmed; updating product prices in Admin → Products affects later orders, not existing stored requests.
+- Buy Now from a product does not clear or silently purchase unrelated items in the cart; checkout offers a switch back to full-cart ordering.
+- Two database transaction smoke tests (pending order insert, order finalisation) passed with intentional rollback; no test orders were left in the project database. Static code checks still need build/lint and real browser E2E; the public sweetrade.pk domain has **not** been confirmed deployed.

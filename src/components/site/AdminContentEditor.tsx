@@ -117,7 +117,7 @@ export function AdminContentEditor() {
     }
   };
 
-  return <section className="mt-8 rounded-lg border border-border bg-card p-4 sm:p-6" aria-label="Website content management">
+  return <section id="website-content" className="mt-8 scroll-mt-6 rounded-lg border border-border bg-card p-4 sm:p-6" aria-label="Website content management">
     <h2 className="text-2xl">Website Content</h2>
     <p className="mt-1 text-sm text-muted-foreground">Edit the text, images, promotions, FAQ and delivery areas visible to shoppers. Choose a section, make changes, then save.</p>
     {isPreview && <p role="status" className="mt-3 text-sm text-destructive">The public catalog is in preview mode. Verify database connection before publishing edits.</p>}

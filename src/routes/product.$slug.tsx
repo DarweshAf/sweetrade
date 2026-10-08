@@ -54,13 +54,13 @@ function ProductPage() {
   const v = p.variants.find((x) => x.label === variant) ?? p.variants[0] ?? { label: "Contact for price", price: 0 };
   const cat = categoryOf(p.category);
   const wished = wishlist.includes(p.id);
-  const purchasable = Boolean(p.priceVerified && p.inStock && v.price > 0);
+  const purchasable = Boolean(p.inStock && (p.priceVerified || p.requestOnly) && v.price > 0);
   const related = products.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 4);
 
   const addIt = () => {
     if (!purchasable) return;
     add(p.id, v.label, qty);
-    toast.success(`${p.name} (${v.label}) × ${qty} added to cart`);
+    toast.success(`${p.name} (${v.label}) × ${qty} added to ${p.requestOnly ? "your order request" : "cart"}`);
   };
 
   const tabBody: Record<(typeof TABS)[number], string> = {
@@ -104,7 +104,7 @@ function ProductPage() {
             </p>
             {!p.priceVerified && v.price > 0 && (
               <p className="mt-1 text-sm font-semibold text-destructive">
-                Demo price only — not a confirmed selling price. Online ordering is disabled until the seller verifies it.
+                Estimated price only — not final. You can submit an order request; Sweet Trade will confirm pricing and shipping by phone before fulfillment.
               </p>
             )}
             <p className="mt-1 text-sm text-muted-foreground">Selected size: {v.label}</p>
@@ -131,7 +131,7 @@ function ProductPage() {
             </div>
           </fieldset>
 
-          <p className={`mt-4 text-sm font-medium ${p.inStock ? "text-success" : "text-destructive"}`}>{p.inStock && v.price > 0 ? "In stock" : "Contact us for availability"}</p>
+          <p className={`mt-4 text-sm font-medium ${p.inStock ? "text-success" : "text-destructive"}`}>{p.requestOnly ? "Order request available — stock and final price to be confirmed" : p.inStock && v.price > 0 ? "In stock" : "Contact us for availability"}</p>
 
           <div className="mt-5">
             <p className="mb-2 text-sm font-semibold">Quantity</p>
@@ -141,8 +141,8 @@ function ProductPage() {
           <div className="mt-6 hidden gap-3 sm:grid sm:grid-cols-2">
             {purchasable ? (
               <>
-                <Button size="lg" onClick={addIt}>Add to Cart</Button>
-                <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary-soft" onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
+                <Button size="lg" onClick={addIt}>{p.requestOnly ? "Add to Request" : "Add to Cart"}</Button>
+                <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary-soft" onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>{p.requestOnly ? "Request Now" : "Buy Now"}</Button>
               </>
             ) : (
               <>
@@ -181,8 +181,8 @@ function ProductPage() {
       <div className="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-30 grid grid-cols-2 gap-3 border-t border-border bg-background p-3 shadow-raised sm:hidden">
         {purchasable ? (
           <>
-            <Button onClick={addIt}>Add to Cart</Button>
-            <Button variant="outline" className="border-primary text-primary" onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
+            <Button onClick={addIt}>{p.requestOnly ? "Add to Request" : "Add to Cart"}</Button>
+            <Button variant="outline" className="border-primary text-primary" onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>{p.requestOnly ? "Request Now" : "Buy Now"}</Button>
           </>
         ) : (
           <>

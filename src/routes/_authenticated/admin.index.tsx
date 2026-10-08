@@ -12,7 +12,7 @@ function Dashboard() {
     queryKey: ["admin", "dashboard"],
     queryFn: async () => {
       const [orders, products, cats] = await Promise.all([
-        supabase.from("orders").select("id, customer_name, total, status, created_at").order("created_at", { ascending: false }),
+        supabase.from("orders").select("id, customer_name, total, status, is_provisional, created_at").order("created_at", { ascending: false }),
         supabase.from("products").select("id, in_stock"),
         supabase.from("categories").select("slug"),
       ]);
@@ -21,11 +21,11 @@ function Dashboard() {
     },
   });
   const d = q.data;
-  const revenue = d?.orders.filter((o) => o.status !== "cancelled").reduce((n, o) => n + o.total, 0) ?? 0;
+  const confirmedOrderValue = d?.orders.filter((o) => !o.is_provisional && o.status !== "cancelled").reduce((n, o) => n + o.total, 0) ?? 0;
   const stats = [
     ["Total orders", d?.orders.length ?? "—"],
-    ["Pending orders", d?.orders.filter((o) => o.status === "pending").length ?? "—"],
-    ["Non-cancelled order value", d ? formatPrice(revenue) : "—"],
+    ["Pending requests / orders", d?.orders.filter((o) => o.status === "pending").length ?? "—"],
+    ["Verified-price orders value", d ? formatPrice(confirmedOrderValue) : "—"],
     ["Products", d ? `${d.products.length} (${d.products.filter((p) => !p.in_stock).length} out of stock)` : "—"],
   ];
   return (
@@ -49,7 +49,7 @@ function Dashboard() {
             {d.orders.slice(0, 6).map((o) => (
               <li key={o.id} className="flex items-center justify-between gap-3 p-4 text-sm">
                 <span className="min-w-0"><b className="block truncate font-medium">{o.customer_name}</b><span className="text-muted-foreground">{new Date(o.created_at).toLocaleString()}</span></span>
-                <span className="text-right"><b className="block">{formatPrice(o.total)}</b><span className="capitalize text-muted-foreground">{o.status}</span></span>
+                <span className="text-right"><b className="block">{formatPrice(o.total)}</b><span className="capitalize text-muted-foreground">{o.status}{o.is_provisional ? " · Estimate to confirm" : ""}</span></span>
               </li>
             ))}
           </ul>

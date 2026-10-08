@@ -99,7 +99,14 @@ function ProductPage() {
         <div>
           <h1 className="text-3xl sm:text-4xl">{p.name}</h1>
           <div className="mt-3" aria-live="polite" aria-atomic="true">
-            <p className="text-2xl font-bold text-primary">{p.priceVerified && v.price > 0 ? formatPrice(v.price) : "Price on request"}</p>
+            <p className="text-2xl font-bold text-primary">
+              {v.price > 0 ? formatPrice(v.price) : "Price on request"}
+            </p>
+            {!p.priceVerified && v.price > 0 && (
+              <p className="mt-1 text-sm font-semibold text-destructive">
+                Demo price only — not a confirmed selling price. Online ordering is disabled until the seller verifies it.
+              </p>
+            )}
             <p className="mt-1 text-sm text-muted-foreground">Selected size: {v.label}</p>
           </div>
           <p className="mt-3 text-muted-foreground">{p.short}</p>
@@ -116,7 +123,9 @@ function ProductPage() {
                   className={`min-w-24 rounded-md border px-4 py-2 text-center transition-colors ${v.label === x.label ? "border-primary bg-primary-soft" : "border-input hover:border-border-strong"}`}
                 >
                   <span className="block text-sm font-semibold">{x.label}</span>
-                  <span className="block text-xs text-muted-foreground">{p.priceVerified && x.price > 0 ? formatPrice(x.price) : "Ask for price"}</span>
+                  <span className="block text-xs text-muted-foreground">
+                    {x.price > 0 ? `${!p.priceVerified ? "Demo " : ""}${formatPrice(x.price)}` : "Ask for price"}
+                  </span>
                 </button>
               ))}
             </div>

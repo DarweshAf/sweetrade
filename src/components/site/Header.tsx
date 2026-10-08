@@ -66,12 +66,7 @@ export function Header() {
 
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
         <div className="container-page grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 lg:h-20 lg:gap-8">
-          <div className="flex items-center gap-1">
-            <button className="tap-target -ml-2 lg:hidden" aria-label="Open menu" onClick={() => setOpen(true)}>
-              <Menu className="size-5" />
-            </button>
-            <Logo className="h-10 lg:h-14" />
-          </div>
+          <Logo className="h-10 lg:h-14" />
 
           <nav aria-label="Main" className="hidden items-center gap-6 lg:flex">
             {NAV.map((n) => (

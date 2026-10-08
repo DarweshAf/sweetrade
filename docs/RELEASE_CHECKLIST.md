@@ -36,3 +36,11 @@ These database changes are specific to this Lovable project, **not a proof that 
 - Verify no fake prices, reviews, badges, medical claims or unverified shipping promises remain.
 
 **Never place real test orders on production.**
+
+## Pakistan-wide checkout change (October 8, 2026)
+- Sweet Trade serves customers throughout Pakistan, not only Karachi. City can be typed freely; province/region and locality are also required.
+- The Lovable Cloud project's `orders` table now has nullable `province` and `city` columns; old records remain valid. For any other database, review and apply `docs/PAKISTAN_WIDE_CHECKOUT.sql` before deploying new checkout code.
+- The editable suggested city list is under Admin → Settings → Website Content → Suggested cities; it does not restrict the actual delivery address.
+- Delivery fees remain unverified (`delivery_configured=false` in the current Lovable project). Confirm *nationwide* rate applicability before enabling online checkout. Variable shipping charges by city/region will require further work; do not silently charge a Karachi fee for other cities.
+- The site-wide hero subtitle was updated in the Lovable project from Karachi to Pakistan without modifying products, prices or order data.
+- Browser E2E and build/lint are still required before treating the custom domain as released.

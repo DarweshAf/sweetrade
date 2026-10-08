@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Heart, ShieldCheck, Truck, MessageCircle } from "lucide-react";
 import hero from "@/assets/hero.jpg";
-import { CATEGORIES, countIn, products } from "@/data/catalog";
+import { useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
 import honey from "@/assets/p-honey.jpg";
@@ -44,6 +44,10 @@ function Promo({ img, title, sub, cat, big = false }: { img: string; title: stri
 }
 
 function Home() {
+  const { categories: CATEGORIES, countIn, products, settings } = useCatalog();
+  const hw = settings.heroTitle.trim().split(/\s+/);
+  const heroTail = hw.length > 2 ? hw.slice(-2).join(" ") : hw.join(" ");
+  const heroLead = hw.length > 2 ? hw.slice(0, -2).join(" ") : "";
   const featured = products.filter((p) => p.featured);
   return (
     <>
@@ -53,10 +57,10 @@ function Home() {
         <div className="container-page relative py-16 sm:py-24 lg:py-28">
           <div className="max-w-lg">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl">
-              Experience <span className="block text-primary">Nature's Finest.</span>
+              {heroLead} <span className="block text-primary">{heroTail}</span>
             </h1>
             <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-              Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — delivered with care across Karachi.
+              {settings.heroSubtitle}
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Button asChild size="lg"><Link to="/shop">Shop Now</Link></Button>

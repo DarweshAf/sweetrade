@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { FileText, Headphones, Leaf, MessageCircle, Phone, ShieldCheck, Truck, Mail } from "lucide-react";
-import { CATEGORIES, CONTACT } from "@/data/catalog";
+import { useCatalog } from "@/lib/catalog";
 
 const TRUST = [
   { icon: Leaf, title: "Natural Selection", body: "Quality you can trust" },
@@ -30,6 +30,7 @@ export function TrustStrip({ compact = false }: { compact?: boolean }) {
 }
 
 export function Footer() {
+  const { contact: CONTACT, categories: CATEGORIES } = useCatalog();
   return (
     <footer className="mt-auto">
       <div className="border-t border-border bg-surface">

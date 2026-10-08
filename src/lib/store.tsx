@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { CONTACT, products, type Product, type Variant } from "@/data/catalog";
+import type { Product, Variant } from "@/data/catalog";
+import { useCatalog } from "@/lib/catalog";
 
 export interface CartLine {
   productId: string;
@@ -31,6 +32,7 @@ const KEY = "st.cart.v1";
 const WKEY = "st.wish.v1";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
+  const { products, contact: CONTACT } = useCatalog();
   const [raw, setRaw] = useState<CartLine[]>([]);
   const [wishlist, setWish] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
@@ -81,7 +83,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       wishlist,
       toggleWish: (id) => setWish((w) => (w.includes(id) ? w.filter((x) => x !== id) : [...w, id])),
     };
-  }, [raw, wishlist]);
+  }, [raw, wishlist, products, CONTACT]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

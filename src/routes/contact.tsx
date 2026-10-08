@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail, MessageCircle, Phone } from "lucide-react";
-import { CONTACT } from "@/data/catalog";
+import { useCatalog } from "@/lib/catalog";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/contact")({
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
+  const { contact: CONTACT } = useCatalog();
   const items = [
     { icon: Phone, label: "Call us", value: CONTACT.phone, href: `tel:${CONTACT.phone.replace(/\s/g, "")}` },
     { icon: MessageCircle, label: "WhatsApp", value: "Chat with us", href: `https://wa.me/${CONTACT.whatsapp}` },

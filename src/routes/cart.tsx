@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, MessageCircle, ShoppingCart, Trash2 } from "lucide-react";
-import { CONTACT, formatPrice } from "@/data/catalog";
+import { formatPrice } from "@/data/catalog";
+import { useCatalog } from "@/lib/catalog";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { QuantitySelector } from "@/components/shop/QuantitySelector";
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/cart")({
 });
 
 function Cart() {
+  const { contact: CONTACT } = useCatalog();
   const { lines, count, setQty, remove, clear, total } = useStore();
 
   const waText = encodeURIComponent(

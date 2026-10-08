@@ -36,7 +36,9 @@ const field = "h-11 w-full rounded-md border border-input bg-card px-3 text-sm f
 function Checkout() {
   const { lines, clear } = useStore();
   const { settings, content } = useCatalog();
-  const paymentOptions = PAYMENT_METHODS.filter((method) => settings.paymentMethods.includes(method));
+  const requestMode = !settings.deliveryConfigured || lines.some((line) => line.product.requestOnly);
+  const paymentOptions = PAYMENT_METHODS.filter((method) =>
+    settings.paymentMethods.includes(method) && (!requestMode || method === "Cash on Delivery"));
   const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "province" | "city" | "area" | "address", string>>>({});
   const [pay, setPay] = useState<string>(paymentOptions[0] ?? "");
   const selectedPay = paymentOptions.some((method) => method === pay) ? pay : paymentOptions[0] ?? "";
@@ -59,7 +61,11 @@ function Checkout() {
     setErrors(err);
     if (Object.keys(err).length > 0) return;
     if (!selectedPay) { toast.error("No payment option is currently available. Please contact us."); return; }
-    if (!settings.deliveryConfigured) { toast.error("Delivery charges are awaiting confirmation. Please contact Sweet Trade."); return; }
+    if (requestMode && !settings.pendingOrdersEnabled) { toast.error("Order requests are currently unavailable."); return; }
+    if (requestMode && f.get("accept_estimate") !== "on") {
+      toast.error("Please confirm that you understand these prices and shipping are subject to confirmation.");
+      return;
+    }
     setBusy(true);
     try {
       const notes = [
@@ -95,8 +101,8 @@ function Checkout() {
     return (
       <div className="container-page py-24 text-center">
         <CheckCircle2 className="mx-auto size-12 text-success" />
-        <h1 className="mt-4 text-3xl">Thank you for your order</h1>
-        <p className="mt-2 text-muted-foreground">Your order #{done} has been received. Our team will confirm it by phone shortly.</p>
+        <h1 className="mt-4 text-3xl">{requestMode ? "Your order request has been received" : "Thank you for your order"}</h1>
+        <p className="mt-2 text-muted-foreground">Reference #{done}. Sweet Trade will contact you by phone to confirm availability, final prices and delivery charges before processing the order. No payment has been collected.</p>
         <Button asChild size="lg" className="mt-6"><Link to="/shop">Continue Shopping</Link></Button>
       </div>
     );
@@ -171,6 +177,11 @@ function Checkout() {
             ))}
           </ul>
           <Totals />
+          {requestMode && (
+            <p role="note" className="mt-4 rounded-md border border-border bg-secondary p-3 text-sm">
+              These are estimated product prices. Shipping and the final amount will be confirmed by our team for your Pakistan delivery address. No online payment is taken.
+            </p>
+          )}
         </section>
         <fieldset className="rounded-lg border border-border bg-card p-5">
           <legend className="sr-only">Payment method</legend>
@@ -184,9 +195,17 @@ function Checkout() {
             ))}
           </div>
           {!paymentOptions.length && <p className="text-sm text-destructive">No payment methods are configured. Please contact us.</p>}
-          {!settings.deliveryConfigured && <p role="status" className="mt-3 text-sm text-destructive">Shipping charges are not yet confirmed for Pakistan-wide delivery. Please contact Sweet Trade before ordering.</p>}
-          <Button type="submit" size="lg" block className="mt-5" disabled={busy || !paymentOptions.length || !settings.deliveryConfigured}>{busy ? "Placing order…" : "Place Order"}</Button>
-          <p className="mt-3 text-center text-xs text-muted-foreground">No account needed. We confirm every order by phone.</p>
+          {requestMode && (
+            <label className="mt-4 flex items-start gap-2 text-sm">
+              <input name="accept_estimate" type="checkbox" className="mt-0.5 size-4 shrink-0 accent-primary" required />
+              <span>I understand this is an order request only. Product prices, availability, shipping and the final total must be confirmed by phone before fulfillment. No advance payment is required.</span>
+            </label>
+          )}
+          {requestMode && !settings.pendingOrdersEnabled && <p role="alert" className="mt-3 text-sm text-destructive">Order requests are currently unavailable. Please contact Sweet Trade.</p>}
+          <Button type="submit" size="lg" block className="mt-5" disabled={busy || !paymentOptions.length || (requestMode && !settings.pendingOrdersEnabled)}>
+            {busy ? "Submitting…" : requestMode ? "Submit Order Request" : "Place Order"}
+          </Button>
+          <p className="mt-3 text-center text-xs text-muted-foreground">No account required. Sweet Trade confirms orders by phone.</p>
         </fieldset>
       </aside>
     </form>

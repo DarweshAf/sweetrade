@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
@@ -8,7 +8,8 @@ import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 
 export function ProductCard({ product, showFrom = false }: { product: Product; showFrom?: boolean }) {
-  const { add, wishlist, toggleWish } = useStore();
+  const { add, startBuyNow, wishlist, toggleWish } = useStore();
+  const navigate = useNavigate();
   const wished = wishlist.includes(product.id);
   const [selectedLabel, setSelectedLabel] = useState(product.variants[0]?.label ?? "");
   const selected = product.variants.find((variant) => variant.label === selectedLabel) ?? product.variants[0];
@@ -29,7 +30,7 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
         )}
         {!product.priceVerified ? (
           <span className="absolute bottom-2 left-2 rounded-sm bg-card/95 px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
-            {product.requestOnly ? "Order request · price to confirm" : product.variants.some((v) => v.price > 0) ? "DEMO · Not for ordering" : "Price pending"}
+            {product.requestOnly ? "Estimated price · confirm on order" : product.variants.some((v) => v.price > 0) ? "Demo only" : "Price pending"}
           </span>
         ) : !product.inStock && (
           <span className="absolute bottom-2 left-2 rounded-sm bg-card/95 px-2 py-0.5 text-[11px] font-semibold text-destructive">
@@ -77,11 +78,22 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
           </div>
         )}
         {purchasable ? (
-          <Button size="sm" className="mt-3 w-full" onClick={() => {
-            if (!selected) return;
-            add(product.id, selected.label);
-            toast.success(`${product.name} (${selected.label}) ${product.requestOnly ? "added to your order request" : "added to cart"}`);
-          }}>{product.requestOnly ? "Request Order" : "Add to Cart"} · {selected?.label}</Button>
+          <div className="mt-auto grid grid-cols-2 gap-2 pt-3">
+            <Button size="sm" variant="outline" className="min-w-0 px-1.5 text-xs sm:px-2.5 sm:text-sm"
+              onClick={() => {
+                if (!selected) return;
+                add(product.id, selected.label);
+                toast.success(`${product.name} (${selected.label}) added to cart`, {
+                  action: { label: "View Cart", onClick: () => navigate({ to: "/cart" }) },
+                });
+              }}>Add to Cart</Button>
+            <Button size="sm" className="min-w-0 px-1.5 text-xs sm:px-2.5 sm:text-sm"
+              onClick={() => {
+                if (!selected) return;
+                startBuyNow(product.id, selected.label);
+                navigate({ to: "/checkout" });
+              }}>Buy Now</Button>
+          </div>
         ) : product.priceVerified && selected?.price ? (
           <Button size="sm" className="mt-3 w-full" disabled>Out of Stock</Button>
         ) : (

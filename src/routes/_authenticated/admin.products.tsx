@@ -93,7 +93,7 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
   const { categories } = useCatalog();
   const [image, setImage] = useState<string | null>(row?.image_url ?? null);
   const [gallery, setGallery] = useState<string[]>(row?.gallery ?? []);
-  const [variants, setVariants] = useState<V[]>(((row?.variants as unknown as V[]) ?? []).length ? (row!.variants as unknown as V[]) : [{ label: "250g", price: 0 }]);
+  const [variants, setVariants] = useState<V[]>(((row?.variants as unknown as V[]) ?? []).length ? (row!.variants as unknown as V[]) : [{ label: "", price: 0 }]);
   const [busy, setBusy] = useState(false);
 
   const upload = async (files: FileList | null, main: boolean) => {
@@ -115,8 +115,8 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
     const slug = slugify(s("slug") || name);
     const vs = variants.filter((v) => v.label.trim() && v.price > 0).map((v) => ({ label: v.label.trim(), price: Math.round(v.price) }));
     if (!name || !slug) { toast.error("Name is required"); return; }
-    if (!vs.length) { toast.error("Add at least one size with a price"); return; }
     const priceVerified = f.get("price_verified") === "on";
+    if (priceVerified && !vs.length) { toast.error("Add a valid size and price before confirming product prices"); return; }
     if (f.get("in_stock") === "on" && !priceVerified) { toast.error("Confirm prices before marking this item available"); return; }
     const data = {
       name, slug,
@@ -165,7 +165,7 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
       </div>
 
       <div>
-        <L>Sizes & prices *</L>
+        <L>Sizes & prices (required when confirming prices)</L>
         <div className="space-y-2">
           {variants.map((v, i) => (
             <div key={i} className="flex gap-2">

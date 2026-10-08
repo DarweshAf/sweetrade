@@ -51,7 +51,7 @@ export function Header() {
         <div className="container-page flex h-9 items-center justify-center gap-6 text-xs sm:justify-between">
           <span className="hidden sm:block" />
           <p className="text-center">
-            {CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Free delivery in Karachi on orders above ${formatPrice(CONTACT.freeDeliveryThreshold)}` : content.home.announcement}
+            {CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Free delivery across Pakistan on orders above ${formatPrice(CONTACT.freeDeliveryThreshold)}` : content.home.announcement}
           </p>
           <div className="hidden items-center gap-4 sm:flex">
             <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-1.5 hover:text-primary">

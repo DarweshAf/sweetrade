@@ -34,9 +34,9 @@ const PROVINCES = [
 const field = "h-11 w-full rounded-md border border-input bg-card px-3 text-sm focus:border-primary focus:outline-none aria-[invalid=true]:border-destructive";
 
 function Checkout() {
-  const { lines, clear } = useStore();
+  const { lines, checkoutLines, isBuyNow, ready, clearBuyNow, completeCheckout } = useStore();
   const { settings, content } = useCatalog();
-  const requestMode = !settings.deliveryConfigured || lines.some((line) => line.product.requestOnly);
+  const requestMode = !settings.deliveryConfigured || checkoutLines.some((line) => line.product.requestOnly);
   const paymentOptions = PAYMENT_METHODS.filter((method) =>
     settings.paymentMethods.includes(method) && (!requestMode || method === "Cash on Delivery"));
   const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "province" | "city" | "area" | "address", string>>>({});
@@ -47,7 +47,7 @@ function Checkout() {
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (busy || !lines.length) return;
+    if (busy || !ready || !checkoutLines.length) return;
     const f = new FormData(e.currentTarget);
     const err: Partial<Record<"name" | "phone" | "province" | "city" | "area" | "address", string>> = {};
     if (!String(f.get("name")).trim()) err.name = "Please enter your full name";
@@ -84,11 +84,11 @@ function Checkout() {
         address: String(f.get("address")).trim().slice(0, 500),
         notes: notes ? String(notes).slice(0, 1000) : null,
         payment_method: selectedPay,
-        items: lines.map((l) => ({ product_id: l.productId, variant: l.variant, qty: l.qty })),
+        items: checkoutLines.map((l) => ({ product_id: l.productId, variant: l.variant, qty: l.qty })),
       });
       if (error) throw error;
       setDone({ reference: id.slice(0, 8).toUpperCase(), isRequest: requestMode });
-      clear();
+      completeCheckout();
     } catch (error) {
       console.error("Order submission failed", error);
       toast.error("Could not place your order. Please try again or contact Sweet Trade.");
@@ -108,7 +108,11 @@ function Checkout() {
     );
   }
 
-  if (!lines.length) {
+  if (!ready) {
+    return <div role="status" className="container-page py-20 text-center text-muted-foreground">Loading your checkout…</div>;
+  }
+
+  if (!checkoutLines.length) {
     return (
       <div className="container-page py-24 text-center">
         <h1 className="text-3xl">Nothing to check out yet</h1>
@@ -124,7 +128,10 @@ function Checkout() {
     <form noValidate onSubmit={submit} className="container-page grid gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:py-12">
       <h1 className="sr-only">Checkout</h1>
       <section className="rounded-lg border border-border bg-card p-5 sm:p-6">
-        <h2 className="mb-5 text-xl">1. Delivery Information</h2>
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-xl">1. Delivery Information</h2>
+          {isBuyNow && <span className="rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">Buy Now · One product</span>}
+        </div>
         <p className="mb-4 text-sm text-muted-foreground">Country: Pakistan. Enter your actual province, city and complete delivery address. Delivery availability and charges are confirmed by Sweet Trade.</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div><L htmlFor="name">Full Name *</L><input id="name" name="name" autoComplete="name" className={field} aria-invalid={!!errors.name} aria-describedby="name-err" /><Err k="name" /></div>
@@ -166,9 +173,16 @@ function Checkout() {
 
       <aside className="space-y-6">
         <section className="rounded-lg border border-border bg-card p-5">
-          <h2 className="mb-4 text-xl">2. Order Summary</h2>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-xl">2. Order Summary</h2>
+            {isBuyNow && lines.length > 0 && (
+              <button type="button" className="text-xs font-semibold text-primary underline" onClick={clearBuyNow}>
+                Use my full cart instead
+              </button>
+            )}
+          </div>
           <ul className="mb-4 space-y-3">
-            {lines.map((l) => (
+            {checkoutLines.map((l) => (
               <li key={l.productId + l.variant} className="grid grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 text-sm">
                 <img src={l.product.image} alt="" className="size-12 rounded object-cover" />
                 <span className="min-w-0"><span className="block truncate font-medium">{l.product.name}</span><span className="text-muted-foreground">{l.variant} × {l.qty}</span></span>
@@ -176,7 +190,7 @@ function Checkout() {
               </li>
             ))}
           </ul>
-          <Totals />
+          <Totals checkout />
           {requestMode && (
             <p role="note" className="mt-4 rounded-md border border-border bg-secondary p-3 text-sm">
               These are estimated product prices. Shipping and the final amount will be confirmed by our team for your Pakistan delivery address. No online payment is taken.

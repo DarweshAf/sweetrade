@@ -61,7 +61,7 @@ function Home() {
         </div>
       </section>
 
-      {(isPreview || requiresPricing) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">Sample prices are shown for demonstration only, not as final selling prices. Online purchasing remains disabled until Sweet Trade verifies each product’s prices and delivery details. <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for confirmed prices and availability.</p></div>}
+      {(isPreview || requiresPricing || settings.pendingOrdersEnabled) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">{settings.pendingOrdersEnabled && !isPreview ? "Order requests are open! Prices are estimates; we confirm stock, shipping and the final total by phone before processing. No upfront payment." : "Sample prices are for demonstration only. Online orders are unavailable until Sweet Trade confirms the product prices."} <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for details.</p></div>}
       <section className="border-b border-border bg-card">
         <ul className="container-page grid grid-cols-2 gap-4 py-5 lg:grid-cols-4">
           {content.home.highlights.map((feature, i) => {

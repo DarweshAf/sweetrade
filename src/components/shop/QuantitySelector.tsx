@@ -18,13 +18,13 @@ export function QuantitySelector({
 
   return (
     <div
-      className={`inline-flex items-center rounded-sm border border-input ${compact ? "h-9" : "h-11"}`}
+      className={`inline-flex items-center rounded-sm border border-input h-11`}
       role="group"
       aria-label={label}
     >
       <button
         type="button"
-        className={`${btn} ${compact ? "h-9 w-9 min-h-0 min-w-0" : ""}`}
+        className={`${btn} h-11 w-11`}
         onClick={() => onChange(value - 1)}
         disabled={value <= 1}
         aria-label={`Decrease ${label.toLowerCase()}`}

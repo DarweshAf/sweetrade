@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Heart, Home, MessageCircle, Phone, Search, ShoppingCart, Store, User } from "lucide-react";
+import { Heart, Home, MessageCircle, Phone, Search, ShoppingCart } from "lucide-react";
 import { Logo } from "./Logo";
 import { useStore } from "@/lib/store";
 import { formatPrice } from "@/data/catalog";
@@ -9,7 +9,6 @@ import { useCatalog } from "@/lib/catalog";
 const NAV = [
   { to: "/", label: "Home" },
   { to: "/shop", label: "Shop" },
-  { to: "/shop", label: "Categories" },
   { to: "/about", label: "About Us" },
   { to: "/contact", label: "Contact" },
 ] as const;
@@ -32,6 +31,7 @@ function SearchBox({ onDone }: { onDone?: () => void }) {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         type="search"
+        autoFocus={Boolean(onDone)}
         aria-label="Search natural products"
         placeholder="Search natural products..."
         className="h-10 w-full rounded-md border border-input bg-card pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none"
@@ -41,7 +41,7 @@ function SearchBox({ onDone }: { onDone?: () => void }) {
 }
 
 export function Header() {
-  const { contact: CONTACT } = useCatalog();
+  const { contact: CONTACT, categories } = useCatalog();
   const { count } = useStore();
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -79,6 +79,14 @@ export function Header() {
                 {n.label}
               </Link>
             ))}
+            <details className="group relative">
+              <summary className="cursor-pointer list-none text-sm font-medium hover:text-primary">Categories <span aria-hidden>⌄</span></summary>
+              <div className="absolute left-0 top-full z-50 mt-3 min-w-56 rounded-lg border border-border bg-card p-2 shadow-raised">
+                {categories.map((c) => (
+                  <Link key={c.slug} to="/shop" search={{ category: c.slug }} className="block rounded px-3 py-2 text-sm hover:bg-secondary">{c.name}</Link>
+                ))}
+              </div>
+            </details>
             <div className="ml-2 w-64 xl:w-72">
               <SearchBox />
             </div>
@@ -89,10 +97,7 @@ export function Header() {
             <button className="tap-target lg:hidden" aria-label="Search" onClick={() => setSearchOpen((s) => !s)}>
               <Search className="size-5" />
             </button>
-            <Link to="/contact" className="tap-target hidden sm:inline-flex" aria-label="Account">
-              <User className="size-5" />
-            </Link>
-            <Link to="/shop" className="tap-target hidden sm:inline-flex" aria-label="Wishlist">
+                        <Link to="/wishlist" className="tap-target hidden sm:inline-flex" aria-label="Wishlist">
               <Heart className="size-5" />
             </Link>
             <Link to="/cart" className="tap-target relative -mr-2 hidden sm:inline-flex" aria-label={`Cart, ${count} items`}>
@@ -112,32 +117,20 @@ export function Header() {
         )}
       </header>
 
-      <nav
-        aria-label="Mobile"
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
-      >
-        {[
-          { to: "/", label: "Home", icon: Home, exact: true },
-          { to: "/shop", label: "Shop", icon: Store, exact: false },
-          { to: "/contact", label: "Contact", icon: Phone, exact: false },
-          { to: "/cart", label: "Cart", icon: ShoppingCart, exact: false },
-          { to: "/auth", label: "Account", icon: User, exact: false },
-        ].map((n) => (
-          <Link
-            key={n.label}
-            to={n.to}
-            activeOptions={{ exact: n.exact }}
-            className="relative flex flex-col items-center gap-0.5 py-2 text-[10px] font-medium text-muted-foreground data-[status=active]:text-primary"
-          >
-            <n.icon className="size-5" aria-hidden />
-            {n.label}
-            {n.label === "Cart" && count > 0 && (
-              <span className="absolute right-[calc(50%-1.4rem)] top-1 grid min-w-4 place-items-center rounded-full bg-primary px-1 text-[9px] font-bold leading-4 text-primary-foreground">
-                {count}
-              </span>
-            )}
-          </Link>
-        ))}
+      <nav aria-label="Mobile" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+        <Link to="/" activeOptions={{ exact: true }} className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
+          <Home className="size-5" aria-hidden />Home
+        </Link>
+        <Link to="/shop" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
+          <ShoppingCart className="size-5" aria-hidden />Categories
+        </Link>
+        <button type="button" onClick={() => setSearchOpen(true)} aria-label="Search products" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground">
+          <Search className="size-5" aria-hidden />Search
+        </button>
+        <Link to="/cart" className="relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
+          <ShoppingCart className="size-5" aria-hidden />Cart
+          {count > 0 && <span className="absolute right-1/3 top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{count}</span>}
+        </Link>
       </nav>
     </>
   );

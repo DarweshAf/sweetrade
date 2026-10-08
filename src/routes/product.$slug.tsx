@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { QuantitySelector } from "@/components/shop/QuantitySelector";
 import { ProductImage } from "@/components/shop/ProductImage";
 import { ProductCard } from "@/components/shop/ProductCard";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/product/$slug")({
   loader: async ({ params, context }) => {
@@ -46,15 +47,18 @@ function ProductPage() {
   const { add, wishlist, toggleWish } = useStore();
   const navigate = useNavigate();
   const [img, setImg] = useState(0);
+  const [zoomOpen, setZoomOpen] = useState(false);
   const [variant, setVariant] = useState(p.variants[0]!.label);
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState<(typeof TABS)[number]>("Description");
   const v = p.variants.find((x) => x.label === variant)!;
   const cat = categoryOf(p.category);
   const wished = wishlist.includes(p.id);
+  const purchasable = p.inStock && v.price > 0;
   const related = products.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 4);
 
   const addIt = () => {
+    if (!purchasable) return;
     add(p.id, v.label, qty);
     toast.success(`${p.name} (${v.label}) × ${qty} added to cart`);
   };
@@ -67,7 +71,7 @@ function ProductPage() {
   };
 
   return (
-    <div className="container-page py-6 pb-28 lg:py-10 lg:pb-10">
+    <div className="container-page py-6 pb-48 lg:py-10 lg:pb-10">
       <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
         <Link to="/" className="hover:text-primary">Home</Link><ChevronRight className="size-3" />
         <Link to="/shop" search={{ category: p.category }} className="hover:text-primary">{cat?.name}</Link><ChevronRight className="size-3" />
@@ -77,11 +81,12 @@ function ProductPage() {
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
         <div>
           <div className="relative overflow-hidden rounded-lg border border-border">
-            <ProductImage src={p.gallery[img] ?? p.image} alt={p.name} ratio="1/1" priority />
+            <button type="button" className="block w-full" onClick={() => setZoomOpen(true)} aria-label={`Enlarge ${p.name} image`}><ProductImage src={p.gallery[img] ?? p.image} alt={p.name} ratio="1/1" priority /></button>
             <button onClick={() => toggleWish(p.id)} aria-pressed={wished} aria-label="Toggle wishlist" className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-card shadow-card">
               <Heart className={`size-5 ${wished ? "fill-primary text-primary" : ""}`} />
             </button>
           </div>
+          <Dialog open={zoomOpen} onOpenChange={setZoomOpen}><DialogContent className="max-w-3xl"><DialogTitle className="sr-only">{p.name} image</DialogTitle><img src={p.gallery[img] ?? p.image} alt={p.name} className="max-h-[78vh] w-full object-contain" /></DialogContent></Dialog>
           <div className="mt-3 grid grid-cols-4 gap-3">
             {p.gallery.map((g, i) => (
               <button key={i} onClick={() => setImg(i)} aria-label={`View image ${i + 1}`} className={`overflow-hidden rounded-md border-2 ${i === img ? "border-primary" : "border-transparent"}`}>
@@ -93,7 +98,7 @@ function ProductPage() {
 
         <div>
           <h1 className="text-3xl sm:text-4xl">{p.name}</h1>
-          <p className="mt-3 text-2xl font-bold text-primary">{formatPrice(v.price)}</p>
+          <p className="mt-3 text-2xl font-bold text-primary">{v.price > 0 ? formatPrice(v.price) : "Price on request"}</p>
           <p className="mt-3 text-muted-foreground">{p.short}</p>
 
           <fieldset className="mt-6">
@@ -107,13 +112,13 @@ function ProductPage() {
                   className={`min-w-24 rounded-md border px-4 py-2 text-center transition-colors ${variant === x.label ? "border-primary bg-primary-soft" : "border-input hover:border-border-strong"}`}
                 >
                   <span className="block text-sm font-semibold">{x.label}</span>
-                  <span className="block text-xs text-muted-foreground">{formatPrice(x.price)}</span>
+                  <span className="block text-xs text-muted-foreground">{x.price > 0 ? formatPrice(x.price) : "Ask for price"}</span>
                 </button>
               ))}
             </div>
           </fieldset>
 
-          <p className={`mt-4 text-sm font-medium ${p.inStock ? "text-success" : "text-destructive"}`}>{p.inStock ? "In stock" : "Currently out of stock"}</p>
+          <p className={`mt-4 text-sm font-medium ${p.inStock ? "text-success" : "text-destructive"}`}>{p.inStock && v.price > 0 ? "In stock" : "Contact us for availability"}</p>
 
           <div className="mt-5">
             <p className="mb-2 text-sm font-semibold">Quantity</p>
@@ -121,8 +126,8 @@ function ProductPage() {
           </div>
 
           <div className="mt-6 hidden gap-3 sm:grid sm:grid-cols-2">
-            <Button size="lg" disabled={!p.inStock} onClick={addIt}>Add to Cart</Button>
-            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary-soft" disabled={!p.inStock} onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
+            <Button size="lg" disabled={!purchasable} onClick={addIt}>Add to Cart</Button>
+            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary-soft" disabled={!purchasable} onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
           </div>
 
           <ul className="mt-7 grid grid-cols-1 gap-4 border-y border-border py-5 text-sm sm:grid-cols-3">
@@ -151,9 +156,9 @@ function ProductPage() {
         </section>
       )}
 
-      <div className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-2 gap-3 border-t border-border bg-background p-3 sm:hidden">
-        <Button disabled={!p.inStock} onClick={addIt}>Add to Cart</Button>
-        <Button variant="outline" className="border-primary text-primary" disabled={!p.inStock} onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
+      <div className="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-30 grid grid-cols-2 gap-3 border-t border-border bg-background p-3 shadow-raised sm:hidden">
+        <Button disabled={!purchasable} onClick={addIt}>Add to Cart</Button>
+        <Button variant="outline" className="border-primary text-primary" disabled={!purchasable} onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>Buy Now</Button>
       </div>
     </div>
   );

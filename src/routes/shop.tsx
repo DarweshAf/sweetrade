@@ -27,8 +27,6 @@ export const Route = createFileRoute("/shop")({
   component: Shop,
 });
 
-const MIN = 500;
-const MAX = 10000;
 
 function Shop() {
   const { categories: CATEGORIES, countIn, products } = useCatalog();
@@ -36,14 +34,16 @@ function Shop() {
   const navigate = useNavigate({ from: "/shop" });
   const [open, setOpen] = useState(false);
   const set = (patch: Partial<Search>) => navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
-  const max = s.max ?? MAX;
+  const MIN = 0;
+  const MAX = Math.max(1000, ...products.flatMap((p) => p.variants.map((v) => v.price)));
+  const max = s.max === undefined || !Number.isFinite(s.max) ? MAX : Math.max(MIN, Math.min(MAX, s.max));
 
   const list = useMemo(() => {
     let r = products.filter((p) => {
       if (s.category && p.category !== s.category) return false;
       if (s.stock === "in" && !p.inStock) return false;
       if (s.stock === "out" && p.inStock) return false;
-      if (priceFrom(p) > max) return false;
+      if (p.variants.length > 0 && priceFrom(p) > max) return false;
       if (s.q && !`${p.name} ${p.category}`.toLowerCase().includes(s.q.toLowerCase())) return false;
       return true;
     });
@@ -51,7 +51,7 @@ function Shop() {
     if (s.sort === "high") r = [...r].sort((a, b) => priceFrom(b) - priceFrom(a));
     if (s.sort === "name") r = [...r].sort((a, b) => a.name.localeCompare(b.name));
     return r;
-  }, [s.category, s.stock, s.q, s.sort, max]);
+  }, [products, s.category, s.stock, s.q, s.sort, max]);
 
   const active = Boolean(s.category || s.stock || s.q || s.max);
   const cat = CATEGORIES.find((c) => c.slug === s.category);

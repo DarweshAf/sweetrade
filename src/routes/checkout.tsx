@@ -26,7 +26,7 @@ function Checkout() {
   const { lines, clear } = useStore();
   const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "area" | "address", string>>>({});
   const [pay, setPay] = useState<string>(PAYMENT_METHODS[0]);
-  const [done, setDone] = useState<number | null>(null);
+  const [done, setDone] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
@@ -41,9 +41,11 @@ function Checkout() {
     if (Object.keys(err).length > 0) return;
     setBusy(true);
     const notes = [f.get("landmark") && `Landmark: ${f.get("landmark")}`, f.get("notes")].filter(Boolean).join("\n");
-    const { data, error } = await supabase
+    const id = crypto.randomUUID();
+    const { error } = await supabase
       .from("orders")
       .insert({
+        id,
         customer_name: String(f.get("name")).trim().slice(0, 120),
         phone: String(f.get("phone")).trim().slice(0, 30),
         area: String(f.get("area")),
@@ -51,16 +53,14 @@ function Checkout() {
         notes: notes ? String(notes).slice(0, 1000) : null,
         payment_method: pay,
         items: lines.map((l) => ({ product_id: l.productId, variant: l.variant, qty: l.qty })),
-      })
-      .select("order_number")
-      .single();
+      });
     setBusy(false);
-    if (error || !data) {
+    if (error) {
       console.error(error);
       toast.error("Could not place your order. Please try again or order on WhatsApp.");
       return;
     }
-    setDone(data.order_number);
+    setDone(id.slice(0, 8).toUpperCase());
     clear();
   };
 

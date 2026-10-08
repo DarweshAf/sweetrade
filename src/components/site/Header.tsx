@@ -119,9 +119,9 @@ export function Header() {
         {[
           { to: "/", label: "Home", icon: Home, exact: true },
           { to: "/shop", label: "Shop", icon: Store, exact: false },
-          { to: "/shop", label: "Wishlist", icon: Heart, exact: false },
+          { to: "/contact", label: "Contact", icon: Phone, exact: false },
           { to: "/cart", label: "Cart", icon: ShoppingCart, exact: false },
-          { to: "/contact", label: "Account", icon: User, exact: false },
+          { to: "/auth", label: "Account", icon: User, exact: false },
         ].map((n) => (
           <Link
             key={n.label}

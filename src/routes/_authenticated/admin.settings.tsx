@@ -24,6 +24,11 @@ function SettingsPage() {
     const str = (k: string) => String(f.get(k) ?? "").trim();
     const enabledMethods = f.getAll("payment_methods").map(String).filter((m) => PAYMENT_METHODS.some((allowed) => allowed === m));
     if (!enabledMethods.length) { toast.error("Enable at least one payment method"); return; }
+    const pendingRequested = f.get("accept_pending_orders") === "on";
+    if (pendingRequested && !enabledMethods.includes("Cash on Delivery")) {
+      toast.error("Cash on Delivery must be enabled to accept provisional order requests.");
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.from("site_settings").upsert({
       id: 1,
@@ -32,6 +37,7 @@ function SettingsPage() {
       email: str("email"),
       delivery_fee: Math.max(0, Number(str("delivery_fee")) || 0),
       delivery_configured: f.get("delivery_configured") === "on",
+      accept_pending_orders: pendingRequested,
       free_delivery_threshold: Math.max(0, Number(str("free_delivery_threshold")) || 0),
       payment_methods: enabledMethods,
       hero_title: str("hero_title"),
@@ -66,9 +72,17 @@ function SettingsPage() {
           <F name="whatsapp" label="WhatsApp number (digits, e.g. 923001234567)" def={s.whatsapp} />
           <div className="sm:col-span-2"><F name="email" label="Email" def={s.email} type="email" /></div>
         </section>
+        <section className="space-y-2 rounded-md border border-primary/30 bg-primary-soft p-4">
+          <h2 className="text-lg">Accept pending order requests</h2>
+          <p className="text-sm">Allow customers to submit order requests using temporary sample prices. Real prices, stock and shipping must be confirmed by phone before processing. No upfront payment is collected. Requests use Cash on Delivery only.</p>
+          <label className="flex items-center gap-3 text-sm font-medium">
+            <input type="checkbox" name="accept_pending_orders" defaultChecked={s.pendingOrdersEnabled} className="size-5 accent-primary" />
+            Enable provisional order requests
+          </label>
+        </section>
         <section className="grid gap-4 sm:grid-cols-2">
           <h2 className="text-lg sm:col-span-2">Pakistan-wide Delivery</h2>
-          <p className="text-sm text-muted-foreground sm:col-span-2">These are single store-wide rates. Enable checkout only after confirming the fee and coverage for all destinations you intend to accept. If fees differ by city, leave checkout disabled and confirm individual charges with customers.</p>
+          <p className="text-sm text-muted-foreground sm:col-span-2">These are single store-wide rates. Enable checkout only after confirming the fee and coverage for all destinations you intend to accept. If fees differ by city, leave flat delivery unconfirmed; customers can still submit pending requests when the option above is enabled.</p>
           <F name="delivery_fee" label="Flat Pakistan delivery fee (Rs.)" def={s.deliveryFee} type="number" />
           <F name="free_delivery_threshold" label="Free delivery threshold (Rs.)" def={s.freeDeliveryThreshold} type="number" />
           <label className="flex min-h-11 items-start gap-3 sm:col-span-2"><input type="checkbox" name="delivery_configured" defaultChecked={s.deliveryConfigured} className="mt-1 size-5 accent-primary" /><span className="text-sm">I confirm these rates and coverage are valid for the Pakistan destinations I accept; enable online checkout.</span></label>

@@ -111,7 +111,7 @@ function RootComponent() {
       <StoreProvider>
         <div className="flex min-h-screen flex-col">
           {!isAdmin && <Header />}
-          <main className="flex-1">
+          <main className={`flex-1 ${isAdmin ? "" : "pb-16 lg:pb-0"}`}>
             <Outlet />
           </main>
           {!isAdmin && <Footer />}

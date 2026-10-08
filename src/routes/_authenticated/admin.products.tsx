@@ -197,7 +197,7 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
         <legend className="px-1 text-sm font-semibold">Sizes / weights & prices</legend>
         <p className="text-xs leading-relaxed text-muted-foreground">
           Add the sizes this product is actually sold in. Set a separate PKR price for each size.
-          Half kg means 500g. Prices are not calculated automatically or shown to shoppers until verified.
+          Half kg means 500g. Unverified draft prices appear on the storefront as clearly labelled DEMO prices only; they cannot be ordered. Confirm actual prices and availability before enabling sales.
         </p>
         <div className="flex flex-wrap gap-2" role="group" aria-label="Quick add weight options">
           {QUICK_WEIGHTS.map((option) => (

@@ -29,7 +29,7 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
         )}
         {!product.priceVerified ? (
           <span className="absolute bottom-2 left-2 rounded-sm bg-card/95 px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
-            Price pending
+            {product.variants.some((v) => v.price > 0) ? "DEMO · Not for ordering" : "Price pending"}
           </span>
         ) : !product.inStock && (
           <span className="absolute bottom-2 left-2 rounded-sm bg-card/95 px-2 py-0.5 text-[11px] font-semibold text-destructive">
@@ -51,8 +51,9 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
           {product.name}
         </Link>
         <p className="mt-1 text-sm font-bold text-primary" aria-live="polite" aria-atomic="true">
-          {product.priceVerified && selected && selected.price > 0 ? (
+          {selected && selected.price > 0 ? (
             <>
+              {!product.priceVerified && <span className="mr-1 text-xs font-semibold text-muted-foreground">Demo price:</span>}
               {showStartingPrice && <span className="font-medium">From </span>}
               {formatPrice(selected.price)}
               <span className="ml-1 text-xs font-normal text-muted-foreground">/ {selected.label}</span>
@@ -84,7 +85,9 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
         ) : product.priceVerified && selected?.price ? (
           <Button size="sm" className="mt-3 w-full" disabled>Out of Stock</Button>
         ) : (
-          <Button asChild size="sm" variant="outline" className="mt-3 w-full"><Link to="/contact">Enquire for Price</Link></Button>
+          <Button asChild size="sm" variant="outline" className="mt-3 w-full">
+            <Link to="/contact">{selected && selected.price > 0 ? "Confirm actual price" : "Enquire for Price"}</Link>
+          </Button>
         )}
       </div>
     </article>

@@ -109,8 +109,13 @@ export async function fetchCatalog(): Promise<Catalog> {
         category: (x.category_slug ?? "") as Product["category"],
         image,
         gallery: gallery.length ? gallery : [image],
-        variants: x.price_verified && Array.isArray(x.variants) && x.variants.length
-          ? (x.variants as unknown as Variant[])
+        // Display admin-entered draft prices as clearly labelled demos in the UI.
+        // Keep priceVerified=false and inStock=false until the merchant confirms the real rates.
+        // Never substitute these demo numbers as checkout prices.
+        variants: Array.isArray(x.variants) && x.variants.length
+          ? (x.variants as unknown as Variant[]).filter((v) =>
+              typeof v.label === "string" && v.label.trim().length > 0 &&
+              typeof v.price === "number" && Number.isFinite(v.price) && v.price >= 0)
           : [{ label: "Contact for price", price: 0 }],
         priceVerified: x.price_verified,
         inStock: x.in_stock && x.price_verified,

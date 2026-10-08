@@ -97,7 +97,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
-  const isAdmin = useRouterState({ select: (s) => s.location.pathname.startsWith("/admin") });
+  const isAdmin = useRouterState({ select: (s) => /^\/(admin|auth)/.test(s.location.pathname) });
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;

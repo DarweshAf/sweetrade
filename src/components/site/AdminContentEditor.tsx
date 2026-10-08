@@ -59,8 +59,12 @@ export function AdminContentEditor() {
   const qc = useQueryClient();
   const [selected, setSelected] = useState<SiteSection>("home");
   const [draft, setDraft] = useState<SiteContent>(content);
+  const [areasText, setAreasText] = useState(content.checkout.areas.join("\n"));
   const [busy, setBusy] = useState(false);
-  useEffect(() => setDraft(content), [content]);
+  useEffect(() => {
+    setDraft(content);
+    setAreasText(content.checkout.areas.join("\n"));
+  }, [content]);
 
   const update = <K extends SiteSection>(key: K, patch: Partial<SiteContent[K]>) => {
     setDraft((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }));
@@ -77,7 +81,8 @@ export function AdminContentEditor() {
     update("faq", { items: draft.faq.items.map((v, i) => i === index ? { ...v, ...patch } : v) });
   const save = async () => {
     if (busy) return;
-    if (selected === "checkout" && !draft.checkout.areas.length) {
+    const areas = [...new Set(areasText.split(/\r?\n/).map((x) => x.trim()).filter(Boolean))];
+    if (selected === "checkout" && !areas.length) {
       toast.error("Add at least one delivery area."); return;
     }
     if (selected === "home" && draft.home.promos.some((p) => !p.title.trim() || !categories.some((c) => c.slug === p.category))) {
@@ -99,7 +104,7 @@ export function AdminContentEditor() {
     try {
       const { error } = await supabase.from("site_content").upsert({
         section: selected,
-        content: draft[selected] as unknown as Json,
+        content: (selected === "checkout" ? { areas } : draft[selected]) as unknown as Json,
         updated_at: new Date().toISOString(),
       }, { onConflict: "section" });
       if (error) throw error;
@@ -187,8 +192,7 @@ export function AdminContentEditor() {
           onChange={(v) => update("policies", { [key]: v })} />)}
       </>}
       {selected === "checkout" && <Text label="Karachi delivery areas — one per line"
-        value={draft.checkout.areas.join("\n")} rows={12}
-        onChange={(v) => update("checkout", { areas: [...new Set(v.split(/\r?\n/).map((x) => x.trim()).filter(Boolean))] })} />}
+        value={areasText} rows={12} onChange={setAreasText} />}
     </div>
     <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
       <p className="text-xs text-muted-foreground">Only the selected section will be saved.</p>

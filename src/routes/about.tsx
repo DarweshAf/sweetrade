@@ -7,7 +7,7 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About Us — Sweet Trade" },
-      { name: "description", content: "Sweet Trade brings carefully selected natural products to families across Karachi. Sweet Taste… Healthy Life." },
+      { name: "description", content: "Sweet Trade brings carefully selected natural products to families across Pakistan. Sweet Taste… Healthy Life." },
       { property: "og:title", content: "About Us — Sweet Trade" },
       { property: "og:description", content: "Sweet Taste… Healthy Life." },
     ],

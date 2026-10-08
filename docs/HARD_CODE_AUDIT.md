@@ -50,3 +50,14 @@ All of these use the RLS-protected site_content table. Default strings in src/li
 - Changed checkout from a Karachi-only city/area dropdown to a Pakistan-wide province picker, free-text city input with editable suggestions, neighbourhood/locality, full street address and optional postal code.
 - No guessed nationwide delivery rates were activated. A flat store-wide delivery fee is only valid when explicitly confirmed for the destinations the merchant actually serves; variable-by-city rates are not implemented.
 - See docs/PAKISTAN_WIDE_CHECKOUT.sql before deploying to another database.
+
+## Provisional order requests — 8 October 2026
+- Merchant authorised order requests at existing sample PKR prices. All 14 seeded products accept pending requests via `allow_pending_orders=true`; `price_verified=false` and `in_stock=false` remain truthful, unchanged.
+- `site_settings.accept_pending_orders=true` opens the request path. Admin > Settings can disable it at any time; Admin > Products can disable each item separately.
+- Shoppers choose weights, add to cart, enter a Pakistan address, acknowledge that estimated prices, availability and shipping are not final, and submit a **Cash on Delivery request**. There is **no upfront collection or automatic dispatch**.
+- Orders are priced server-side from the active database variants; the trigger overrides client totals, forces `status=pending`, and records `is_provisional=true` and `shipping_pending=true` for unconfirmed shipping. A stored delivery value of 0 is **not a free shipping quote** when `shipping_pending=true`.
+- Existing `delivery_configured=false` remains intact; no nationwide courier charge is invented. Final amounts require merchant/customer agreement before fulfillment.
+- Admin > Orders displays provisional status and distinguishes estimated subtotals; dashboard excludes provisional requests from verified-price order value.
+- Applied on the linked Lovable Cloud project, with a rollback-only trigger smoke test. The test left **zero** orders in the table.
+- Schema/function replication for any separately deployed database: `drizzle/migrations/0004_provisional_order_requests.sql`. Do not apply to another project's database without verifying the target.
+- Browser E2E, build/lint and custom-domain redeploy are still unverified. Lovable AI credits, GitHub Actions and CLI were not used.

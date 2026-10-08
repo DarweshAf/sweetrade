@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Heart, Menu, MessageCircle, Phone, Search, ShoppingCart, User, X } from "lucide-react";
+import { Heart, Home, MessageCircle, Phone, Search, ShoppingCart, Store, User } from "lucide-react";
 import { Logo } from "./Logo";
 import { useStore } from "@/lib/store";
 import { formatPrice } from "@/data/catalog";

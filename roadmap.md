@@ -6,4 +6,4 @@
 - [ ] Shop listing: sidebar filters, sort, 14 products
 - [ ] Product detail: gallery, size selector, qty, Add to Cart/Buy Now, tabs
 - [ ] Cart: qty, breakdown, checkout + WhatsApp buttons
-- [ ] Checkout: Karachi delivery form, summary, payment methods
+- [ ] Checkout: Pakistan-wide province/city/locality delivery form, summary, payment methods

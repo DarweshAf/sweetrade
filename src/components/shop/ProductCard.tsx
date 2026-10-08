@@ -10,7 +10,7 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
   const { add, wishlist, toggleWish } = useStore();
   const wished = wishlist.includes(product.id);
   const first = product.variants[0];
-  const purchasable = Boolean(product.inStock && first && first.price > 0);
+  const purchasable = Boolean(product.inStock && product.priceVerified && first && first.price > 0);
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-card">
@@ -23,7 +23,11 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
             {product.badge}
           </span>
         )}
-        {!product.inStock && (
+        {!product.priceVerified ? (
+          <span className="absolute bottom-2 left-2 rounded-sm bg-card/95 px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
+            Price pending
+          </span>
+        ) : !product.inStock && (
           <span className="absolute bottom-2 left-2 rounded-sm bg-card/95 px-2 py-0.5 text-[11px] font-semibold text-destructive">
             Out of stock
           </span>
@@ -44,7 +48,7 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
         </Link>
         <p className="mt-1 text-sm font-bold text-primary">
           {showFrom && <span className="font-medium">From </span>}
-          {first?.price ? formatPrice(showFrom ? priceFrom(product) : first.price) : "Price on request"}
+          {product.priceVerified && first?.price ? formatPrice(showFrom ? priceFrom(product) : first.price) : "Price on request"}
         </p>
         {purchasable ? (
           <Button size="sm" className="mt-3 w-full" onClick={() => {
@@ -52,7 +56,7 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
             add(product.id, first.label);
             toast.success(`${product.name} (${first.label}) added to cart`);
           }}>Add to Cart</Button>
-        ) : first?.price ? (
+        ) : product.priceVerified && first?.price ? (
           <Button size="sm" className="mt-3 w-full" disabled>Out of Stock</Button>
         ) : (
           <Button asChild size="sm" variant="outline" className="mt-3 w-full"><Link to="/contact">Enquire for Price</Link></Button>

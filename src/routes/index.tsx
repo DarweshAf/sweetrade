@@ -44,7 +44,7 @@ function Promo({ img, title, sub, cat, big = false }: { img: string; title: stri
 }
 
 function Home() {
-  const { categories: CATEGORIES, countIn, products, settings, isPreview } = useCatalog();
+  const { categories: CATEGORIES, countIn, products, settings, isPreview, requiresPricing } = useCatalog();
   const hw = settings.heroTitle.trim().split(/\s+/);
   const heroTail = hw.length > 2 ? hw.slice(-2).join(" ") : hw.join(" ");
   const heroLead = hw.length > 2 ? hw.slice(0, -2).join(" ") : "";
@@ -70,7 +70,7 @@ function Home() {
         </div>
       </section>
 
-      {isPreview && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">Catalog preview: online purchasing is temporarily unavailable. <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for availability and prices.</p></div>}
+      {(isPreview || requiresPricing) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">Online purchasing is not yet active until product prices are confirmed. <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for availability and prices.</p></div>}
       <section className="border-b border-border bg-card">
         <ul className="container-page grid grid-cols-2 gap-4 py-5 lg:grid-cols-4">
           {HIGHLIGHTS.map(({ icon: I, a, b }) => (

@@ -54,7 +54,7 @@ function ProductPage() {
   const v = p.variants.find((x) => x.label === variant) ?? p.variants[0] ?? { label: "Contact for price", price: 0 };
   const cat = categoryOf(p.category);
   const wished = wishlist.includes(p.id);
-  const purchasable = p.inStock && v.price > 0;
+  const purchasable = Boolean(p.priceVerified && p.inStock && v.price > 0);
   const related = products.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 4);
 
   const addIt = () => {
@@ -98,7 +98,7 @@ function ProductPage() {
 
         <div>
           <h1 className="text-3xl sm:text-4xl">{p.name}</h1>
-          <p className="mt-3 text-2xl font-bold text-primary">{v.price > 0 ? formatPrice(v.price) : "Price on request"}</p>
+          <p className="mt-3 text-2xl font-bold text-primary">{p.priceVerified && v.price > 0 ? formatPrice(v.price) : "Price on request"}</p>
           <p className="mt-3 text-muted-foreground">{p.short}</p>
 
           <fieldset className="mt-6">
@@ -112,7 +112,7 @@ function ProductPage() {
                   className={`min-w-24 rounded-md border px-4 py-2 text-center transition-colors ${variant === x.label ? "border-primary bg-primary-soft" : "border-input hover:border-border-strong"}`}
                 >
                   <span className="block text-sm font-semibold">{x.label}</span>
-                  <span className="block text-xs text-muted-foreground">{x.price > 0 ? formatPrice(x.price) : "Ask for price"}</span>
+                  <span className="block text-xs text-muted-foreground">{p.priceVerified && x.price > 0 ? formatPrice(x.price) : "Ask for price"}</span>
                 </button>
               ))}
             </div>
@@ -131,9 +131,9 @@ function ProductPage() {
           </div>
 
           <ul className="mt-7 grid grid-cols-1 gap-4 border-y border-border py-5 text-sm sm:grid-cols-3">
-            <li className="flex items-center gap-2.5"><Truck className="size-6 text-primary" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Karachi Delivery</b><span className="text-muted-foreground">Fast and reliable</span></span></li>
-            <li className="flex items-center gap-2.5"><ShieldCheck className="size-6 text-primary" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Cash on Delivery</b><span className="text-muted-foreground">Available</span></span></li>
-            <li className="flex items-center gap-2.5"><MessageCircle className="size-6 text-success" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">WhatsApp Support</b><span className="text-muted-foreground">{CONTACT.phone}</span></span></li>
+            <li className="flex items-center gap-2.5"><Truck className="size-6 text-primary" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Karachi Delivery</b><span className="text-muted-foreground">Confirm delivery time</span></span></li>
+            <li className="flex items-center gap-2.5"><ShieldCheck className="size-6 text-primary" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Payment Options</b><span className="text-muted-foreground">Shown at checkout</span></span></li>
+            <li className="flex items-center gap-2.5"><MessageCircle className="size-6 text-success" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Customer Support</b><span className="text-muted-foreground">{CONTACT.phone}</span></span></li>
           </ul>
 
           <div className="mt-6">

@@ -47,6 +47,7 @@ export interface Settings {
 
 export interface Catalog {
   isPreview: boolean;
+  requiresPricing: boolean;
   products: Product[];
   categories: Category[];
   settings: Settings;
@@ -54,6 +55,7 @@ export interface Catalog {
 
 const fallback = (): Catalog => ({
   isPreview: true,
+  requiresPricing: true,
   // Bundled products are a non-purchasable preview; never use demo prices for orders.
   products: FALLBACK_PRODUCTS.map((product) => ({ ...product, inStock: false, badge: undefined, variants: [{ label: "Contact for price", price: 0 }] })),
   categories: FALLBACK_CATEGORIES.map((c, i) => ({ ...c, imageRaw: null, sortOrder: i })),
@@ -80,6 +82,7 @@ export async function fetchCatalog(): Promise<Catalog> {
   const fb = fallback();
   return {
     isPreview: false,
+    requiresPricing: (p.data ?? []).filter((x) => !x.is_archived).every((x) => !x.price_verified),
     categories: (c.data ?? []).map((x) => ({
       slug: x.slug,
       name: x.name,
@@ -98,8 +101,11 @@ export async function fetchCatalog(): Promise<Catalog> {
         category: (x.category_slug ?? "") as Product["category"],
         image,
         gallery: gallery.length ? gallery : [image],
-        variants: (Array.isArray(x.variants) ? x.variants : []) as unknown as Variant[],
-        inStock: x.in_stock,
+        variants: x.price_verified && Array.isArray(x.variants) && x.variants.length
+          ? (x.variants as unknown as Variant[])
+          : [{ label: "Contact for price", price: 0 }],
+        priceVerified: x.price_verified,
+        inStock: x.in_stock && x.price_verified,
         ...(x.badge ? { badge: x.badge as NonNullable<Product["badge"]> } : {}),
         featured: x.featured,
         short: x.short,

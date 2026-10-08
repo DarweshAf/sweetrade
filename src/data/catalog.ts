@@ -41,6 +41,7 @@ export interface Product {
   gallery: string[];
   variants: Variant[];
   inStock: boolean;
+  priceVerified?: boolean;
   badge?: "Bestseller" | "New" | "Premium";
   featured?: boolean;
   short: string;
@@ -71,7 +72,8 @@ const p = (
   image,
   gallery: [image],
   variants,
-  inStock: true,
+  inStock: false,
+  priceVerified: false,
   short: `Discover ${name}. Contact us for product details and availability.`,
   description: `${name}. Please contact Sweet Trade for confirmed ingredients, origin, packaging and storage information.`,
   ingredients: "",

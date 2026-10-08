@@ -3,7 +3,8 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Heart, Menu, MessageCircle, Phone, Search, ShoppingCart, User, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { useStore } from "@/lib/store";
-import { CONTACT, formatPrice } from "@/data/catalog";
+import { formatPrice } from "@/data/catalog";
+import { useCatalog } from "@/lib/catalog";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -40,6 +41,7 @@ function SearchBox({ onDone }: { onDone?: () => void }) {
 }
 
 export function Header() {
+  const { contact: CONTACT } = useCatalog();
   const { count } = useStore();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);

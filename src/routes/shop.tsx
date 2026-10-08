@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { SlidersHorizontal, X, SearchX } from "lucide-react";
-import { CATEGORIES, countIn, formatPrice, priceFrom, products } from "@/data/catalog";
+import { formatPrice, priceFrom } from "@/data/catalog";
+import { useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
 
@@ -30,6 +31,7 @@ const MIN = 500;
 const MAX = 10000;
 
 function Shop() {
+  const { categories: CATEGORIES, countIn, products } = useCatalog();
   const s = Route.useSearch();
   const navigate = useNavigate({ from: "/shop" });
   const [open, setOpen] = useState(false);

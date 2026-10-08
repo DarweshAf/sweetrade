@@ -2,7 +2,8 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import { useState } from "react";
 import { ChevronRight, Heart, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { toast } from "sonner";
-import { categoryOf, CONTACT, findProduct, formatPrice, products } from "@/data/catalog";
+import { formatPrice } from "@/data/catalog";
+import { catalogQuery, useCatalog } from "@/lib/catalog";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { QuantitySelector } from "@/components/shop/QuantitySelector";
@@ -10,8 +11,9 @@ import { ProductImage } from "@/components/shop/ProductImage";
 import { ProductCard } from "@/components/shop/ProductCard";
 
 export const Route = createFileRoute("/product/$slug")({
-  loader: ({ params }) => {
-    const product = findProduct(params.slug);
+  loader: async ({ params, context }) => {
+    const cat = await context.queryClient.ensureQueryData(catalogQuery);
+    const product = cat.products.find((x) => x.slug === params.slug);
     if (!product) throw notFound();
     return { product };
   },
@@ -39,6 +41,7 @@ export const Route = createFileRoute("/product/$slug")({
 const TABS = ["Description", "Ingredients", "Storage", "Delivery"] as const;
 
 function ProductPage() {
+  const { categoryOf, contact: CONTACT, products } = useCatalog();
   const { product: p } = Route.useLoaderData();
   const { add, wishlist, toggleWish } = useStore();
   const navigate = useNavigate();

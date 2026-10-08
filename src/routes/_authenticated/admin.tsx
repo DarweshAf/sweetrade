@@ -63,7 +63,7 @@ function AdminLayout() {
     <div className="min-h-screen bg-secondary lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
       <aside className="border-b border-border bg-card lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0">
         <div className="flex items-center justify-between p-4 lg:block">
-          <Link to="/admin"><Logo /></Link>
+          <Logo />
           <span className="hidden text-xs text-muted-foreground lg:mt-2 lg:block">Admin Panel</span>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:pb-0">

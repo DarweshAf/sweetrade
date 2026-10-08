@@ -8,9 +8,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Sweet Trade — Experience Nature's Finest" },
-      { name: "description", content: "Carefully selected honey, saffron, shilajit, olive oil, dates and traditional delicacies, delivered across Karachi." },
+      { name: "description", content: "Carefully selected honey, saffron, shilajit, olive oil, dates and traditional delicacies, available to customers across Pakistan." },
       { property: "og:title", content: "Sweet Trade — Experience Nature's Finest" },
-      { property: "og:description", content: "Natural products delivered with care across Karachi." },
+      { property: "og:description", content: "Explore natural products for customers across Pakistan." },
     ],
   }),
   component: Home,

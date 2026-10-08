@@ -3,6 +3,8 @@ import { useState, type FormEvent } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { formatPrice, KARACHI_AREAS, PAYMENT_METHODS } from "@/data/catalog";
 import { useStore } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Totals } from "@/components/shop/OrderSummary";
 
@@ -24,9 +26,10 @@ function Checkout() {
   const { lines, clear } = useStore();
   const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "area" | "address", string>>>({});
   const [pay, setPay] = useState<string>(PAYMENT_METHODS[0]);
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState<number | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     const err: Partial<Record<"name" | "phone" | "area" | "address", string>> = {};
@@ -35,18 +38,38 @@ function Checkout() {
     if (!f.get("area")) err.area = "Select your area";
     if (!String(f.get("address")).trim()) err.address = "Please enter your address";
     setErrors(err);
-    if (Object.keys(err).length === 0) {
-      setDone(true);
-      clear();
+    if (Object.keys(err).length > 0) return;
+    setBusy(true);
+    const notes = [f.get("landmark") && `Landmark: ${f.get("landmark")}`, f.get("notes")].filter(Boolean).join("\n");
+    const { data, error } = await supabase
+      .from("orders")
+      .insert({
+        customer_name: String(f.get("name")).trim().slice(0, 120),
+        phone: String(f.get("phone")).trim().slice(0, 30),
+        area: String(f.get("area")),
+        address: String(f.get("address")).trim().slice(0, 500),
+        notes: notes ? String(notes).slice(0, 1000) : null,
+        payment_method: pay,
+        items: lines.map((l) => ({ product_id: l.productId, variant: l.variant, qty: l.qty })),
+      })
+      .select("order_number")
+      .single();
+    setBusy(false);
+    if (error || !data) {
+      console.error(error);
+      toast.error("Could not place your order. Please try again or order on WhatsApp.");
+      return;
     }
+    setDone(data.order_number);
+    clear();
   };
 
-  if (done) {
+  if (done !== null) {
     return (
       <div className="container-page py-24 text-center">
         <CheckCircle2 className="mx-auto size-12 text-success" />
         <h1 className="mt-4 text-3xl">Thank you for your order</h1>
-        <p className="mt-2 text-muted-foreground">This is a design preview — no real order was placed. Our team would confirm by phone.</p>
+        <p className="mt-2 text-muted-foreground">Your order #{done} has been received. Our team will confirm it by phone shortly.</p>
         <Button asChild size="lg" className="mt-6"><Link to="/shop">Continue Shopping</Link></Button>
       </div>
     );
@@ -111,7 +134,7 @@ function Checkout() {
               </label>
             ))}
           </div>
-          <Button type="submit" size="lg" block className="mt-5">Place Order</Button>
+          <Button type="submit" size="lg" block className="mt-5" disabled={busy}>{busy ? "Placing order…" : "Place Order"}</Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">No account needed. We confirm every order by phone.</p>
         </fieldset>
       </aside>

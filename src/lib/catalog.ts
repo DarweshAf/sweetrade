@@ -120,7 +120,7 @@ export async function fetchCatalog(): Promise<Catalog> {
               typeof v.price === "number" && Number.isFinite(v.price) && v.price >= 0)
           : [{ label: "Contact for price", price: 0 }],
         priceVerified: x.price_verified,
-        requestOnly: Boolean(s.data?.accept_pending_orders && x.allow_pending_orders && !x.price_verified),
+        requestOnly: Boolean(s.data?.accept_pending_orders && x.allow_pending_orders && !(x.in_stock && x.price_verified)),
         inStock: (x.in_stock && x.price_verified) || Boolean(s.data?.accept_pending_orders && x.allow_pending_orders),
         ...(x.badge ? { badge: x.badge as NonNullable<Product["badge"]> } : {}),
         featured: x.featured,

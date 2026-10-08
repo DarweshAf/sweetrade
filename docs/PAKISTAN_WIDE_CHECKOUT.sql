@@ -29,3 +29,18 @@ END $$;
 -- Legacy orders may have NULL city/province; admin will not infer or fabricate them.
 -- New web checkout requires both fields. Leave delivery_configured=false until
 -- the merchant verifies shipping rates and coverage for the areas it serves.
+
+-- Correct only the known old Karachi-only seeded hero copy; never overwrite
+-- any custom merchant marketing text.
+UPDATE public.site_settings
+SET hero_subtitle = CASE
+  WHEN hero_subtitle = 'Explore Sweet Trade natural products in Karachi.'
+    THEN 'Explore Sweet Trade natural products for customers across Pakistan.'
+  WHEN hero_subtitle = 'Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — delivered with care across Karachi.'
+    THEN 'Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — available to customers across Pakistan.'
+  ELSE hero_subtitle
+END
+WHERE id = 1 AND hero_subtitle IN (
+  'Explore Sweet Trade natural products in Karachi.',
+  'Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — delivered with care across Karachi.'
+);

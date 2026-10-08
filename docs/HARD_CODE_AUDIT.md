@@ -16,13 +16,13 @@ This document distinguishes implemented functionality from things that need live
 - Footer: brand name, uploaded logo, tagline, description, trust messages, optional social media links.
 - FAQs: add, reorder manually through remove/add, edit and delete questions and answers.
 - Legal/help pages: delivery, returns, privacy and terms paragraphs.
-- Checkout: editable list of Karachi delivery areas, one per line.
+- Checkout: Pakistan-wide province/region selector, free-entry city and locality, optional postal code, and admin-editable city suggestions (not a restriction).
 
 All of these use the RLS-protected site_content table. Default strings in src/lib/site-content.ts are non-destructive emergency fallbacks, not the only production source once merchant overrides exist. No invented prices are published.
 
 ## Still fixed on purpose / requiring a bigger feature
 - Technical navigation and route URLs (Home, Shop, About, Contact, etc.) are fixed because every menu item needs a working route.
-- Karachi-only city, Pakistan phone validation and PKR are business market rules. Areas within Karachi can be managed.
+- Pakistan phone validation and PKR are business market rules. Province/region values are fixed geography; city suggestions are admin-managed and never prevent the buyer entering another Pakistan city.
 - Payment provider choices (COD, Bank Transfer, JazzCash, Easypaisa) are code-validated; Admin can enable/disable supported ones but cannot safely invent a new payment integration.
 - Order workflow status codes are a fixed set to preserve order processing and reporting.
 - UI design tokens, fonts, accessibility behavior, and stock/price verification logic should remain controlled by code.
@@ -43,3 +43,10 @@ All of these use the RLS-protected site_content table. Default strings in src/li
 - Existing product pricing confirmation, shipping confirmation and order security triggers have not been changed.
 - Data and RLS were inspected after DDL. Code was synced to GitHub via direct connector; no Lovable AI prompts, GitHub Actions, or CLI publishing was used.
 - Full browser E2E, build and lint are still needed on the published/target environment; code checks alone are not a substitute.
+
+## Pakistan-wide storefront correction (2026-10-08)
+- Replaced Karachi-only store claims in header, product, metadata, default policies, FAQ, About and footer copy with Pakistan-wide positioning. Made the existing database hero subtitle nationwide without replacing any prices or orders.
+- Added nullable city/province order columns and typed them; old orders are preserved and displayed without fabricated cities.
+- Changed checkout from a Karachi-only city/area dropdown to a Pakistan-wide province picker, free-text city input with editable suggestions, neighbourhood/locality, full street address and optional postal code.
+- No guessed nationwide delivery rates were activated. A flat store-wide delivery fee is only valid when explicitly confirmed for the destinations the merchant actually serves; variable-by-city rates are not implemented.
+- See docs/PAKISTAN_WIDE_CHECKOUT.sql before deploying to another database.

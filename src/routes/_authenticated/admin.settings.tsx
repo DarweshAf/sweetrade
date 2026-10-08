@@ -33,7 +33,7 @@ function SettingsPage() {
       updated_at: new Date().toISOString(),
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Settings saved");
     qc.invalidateQueries({ queryKey: ["catalog"] });
   };

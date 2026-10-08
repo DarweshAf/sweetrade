@@ -29,14 +29,14 @@ function Orders() {
 
   const setStatus = async (id: string, status: string) => {
     const { error } = await supabase.from("orders").update({ status }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Status updated");
     refresh();
   };
   const del = async (id: string) => {
     if (!confirm("Delete this order permanently?")) return;
     const { error } = await supabase.from("orders").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   };
 

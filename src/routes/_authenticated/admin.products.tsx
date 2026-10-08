@@ -37,13 +37,13 @@ function Products() {
   const del = async (p: Row) => {
     if (!confirm(`Delete "${p.name}"?`)) return;
     const { error } = await supabase.from("products").delete().eq("id", p.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Product deleted");
     refresh();
   };
   const toggleStock = async (p: Row) => {
     const { error } = await supabase.from("products").update({ in_stock: !p.in_stock }).eq("id", p.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   };
   const rows = (q.data ?? []).filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
@@ -113,8 +113,8 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
     const name = s("name");
     const slug = slugify(s("slug") || name);
     const vs = variants.filter((v) => v.label.trim() && v.price > 0).map((v) => ({ label: v.label.trim(), price: Math.round(v.price) }));
-    if (!name || !slug) return toast.error("Name is required");
-    if (!vs.length) return toast.error("Add at least one size with a price");
+    if (!name || !slug) { toast.error("Name is required"); return; }
+    if (!vs.length) { toast.error("Add at least one size with a price"); return; }
     const data = {
       name, slug,
       category_slug: s("category") || null,
@@ -132,7 +132,7 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
       ? await supabase.from("products").update(data).eq("id", row.id)
       : await supabase.from("products").insert(data);
     setBusy(false);
-    if (error) return toast.error(error.message.includes("duplicate") ? "That URL slug is already used" : error.message);
+    if (error) { toast.error(error.message.includes("duplicate") ? "That URL slug is already used" : error.message); return; }
     toast.success("Product saved");
     onDone();
   };

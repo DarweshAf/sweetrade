@@ -22,7 +22,7 @@ function Categories() {
   const del = async (c: Category) => {
     if (!confirm(`Delete "${c.name}"? Its products will become uncategorised.`)) return;
     const { error } = await supabase.from("categories").delete().eq("slug", c.slug);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Category deleted");
     refresh();
   };
@@ -69,14 +69,14 @@ function CategoryForm({ cat, nextOrder, onDone }: { cat: Category | null; nextOr
     const f = new FormData(e.currentTarget);
     const name = String(f.get("name")).trim();
     const slug = slugify(String(f.get("slug")) || name);
-    if (!name || !slug) return toast.error("Name is required");
+    if (!name || !slug) { toast.error("Name is required"); return; }
     const row = { slug, name, short: String(f.get("short")).trim() || name, image_url: image, sort_order: Number(f.get("sort_order")) || 0 };
     setBusy(true);
     const { error } = cat
       ? await supabase.from("categories").update(row).eq("slug", cat.slug)
       : await supabase.from("categories").insert(row);
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Category saved");
     onDone();
   };

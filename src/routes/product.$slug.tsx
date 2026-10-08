@@ -134,7 +134,7 @@ function ProductPage() {
             ) : (
               <>
                 <Button asChild size="lg"><Link to="/contact">Enquire About Product</Link></Button>
-                <Button asChild size="lg" variant="outline"><a href={`tel:${CONTACT.phone.replace(/\\s/g, "")}`}>Call Sweet Trade</a></Button>
+                <Button asChild size="lg" variant="outline"><a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>Call Sweet Trade</a></Button>
               </>
             )}
           </div>
@@ -174,7 +174,7 @@ function ProductPage() {
         ) : (
           <>
             <Button asChild><Link to="/contact">Enquire</Link></Button>
-            <Button asChild variant="outline"><a href={`tel:${CONTACT.phone.replace(/\\s/g, "")}`}>Call Us</a></Button>
+            <Button asChild variant="outline"><a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>Call Us</a></Button>
           </>
         )}
       </div>

@@ -22,9 +22,10 @@ export const Route = createFileRoute("/cart")({
 function Cart() {
   const { contact: CONTACT } = useCatalog();
   const { lines, count, setQty, remove, clear, total } = useStore();
+  const requestMode = !CONTACT.deliveryConfigured || lines.some((line) => line.product.requestOnly);
 
   const waText = encodeURIComponent(
-    `Assalam o Alaikum, I'd like to order:\n${lines.map((l) => `• ${l.product.name} (${l.variant}) × ${l.qty} = ${formatPrice(l.total)}`).join("\n")}\n${CONTACT.deliveryConfigured ? "Total" : "Products subtotal"}: ${formatPrice(total)}${CONTACT.deliveryConfigured ? "" : "\nDelivery: To be confirmed"}`,
+    `Assalam o Alaikum, I'd like to place an order request:\n${lines.map((l) => `• ${l.product.name} (${l.variant}) × ${l.qty} = ${formatPrice(l.total)}`).join("\n")}\n${requestMode ? "Estimated product subtotal" : "Total"}: ${formatPrice(total)}${CONTACT.deliveryConfigured ? "" : "\nDelivery: To be confirmed"}${requestMode ? "\nPlease confirm prices and shipping before fulfillment." : ""}`,
   );
 
   if (!lines.length) {
@@ -69,7 +70,8 @@ function Cart() {
         <aside className="h-fit rounded-lg border border-border bg-card p-5">
           <h2 className="mb-4 text-xl">Order Summary</h2>
           <Totals />
-          <Button asChild size="lg" block className="mt-5"><Link to="/checkout">Proceed to Checkout</Link></Button>
+          {requestMode && <p className="mt-3 text-xs text-muted-foreground">Prices are estimates. Submit a request without paying upfront; Sweet Trade will confirm costs and delivery.</p>}
+          <Button asChild size="lg" block className="mt-5"><Link to="/checkout">{requestMode ? "Continue to Order Request" : "Proceed to Checkout"}</Link></Button>
           {CONTACT.whatsapp && <Button asChild size="lg" variant="outline" block className="mt-3 border-success text-success hover:bg-success/10">
             <a href={`https://wa.me/${CONTACT.whatsapp}?text=${waText}`} target="_blank" rel="noreferrer"><MessageCircle /> WhatsApp Order</a>
           </Button>}

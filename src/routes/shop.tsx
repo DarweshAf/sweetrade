@@ -79,7 +79,7 @@ function Shop() {
       <fieldset>
         <legend className="mb-3 text-sm font-semibold">Availability</legend>
         <div className="space-y-2.5">
-          {[["in", "In Stock", products.filter((p) => p.inStock).length], ["out", "Out of Stock", products.filter((p) => !p.inStock).length]].map(([v, l, n]) => (
+          {[["in", "Available to order / request", products.filter((p) => p.inStock).length], ["out", "Currently unavailable", products.filter((p) => !p.inStock).length]].map(([v, l, n]) => (
             <label key={v} className="flex items-center gap-2.5 text-sm">
               <input type="checkbox" className={radio} checked={s.stock === v} onChange={(e) => set({ stock: e.target.checked ? (v as string) : undefined })} />
               {l} <span className="text-muted-foreground">({n})</span>

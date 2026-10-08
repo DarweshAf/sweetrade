@@ -62,7 +62,7 @@ function Orders() {
                 <div className="flex flex-wrap items-center gap-3 p-4">
                   <button onClick={() => setOpen(open === o.id ? null : o.id)} className="min-w-0 flex-1 text-left">
                     <b className="block font-medium">#{o.id.slice(0, 8).toUpperCase()} · {o.customer_name}</b>
-                    <span className="text-sm text-muted-foreground">{new Date(o.created_at).toLocaleString()} · {o.area} · {o.payment_method}</span>
+                    <span className="text-sm text-muted-foreground">{new Date(o.created_at).toLocaleString()} · {[o.city, o.province].filter(Boolean).join(", ") || o.area} · {o.payment_method}</span>
                   </button>
                   <b>{formatPrice(o.total)}</b>
                   <select value={o.status} onChange={(e) => setStatus(o.id, e.target.value)} className={`${adminField} w-auto capitalize`} aria-label="Order status">
@@ -74,7 +74,7 @@ function Orders() {
                   <div className="grid gap-4 border-t border-border p-4 text-sm sm:grid-cols-2">
                     <div className="space-y-1">
                       <p><b>Phone:</b> <a className="text-primary" href={`tel:${o.phone}`}>{o.phone}</a></p>
-                      <p><b>Address:</b> {o.address}, {o.area}, Karachi</p>
+                      <p><b>Address:</b> {[o.address, o.area, o.city, o.province, "Pakistan"].filter(Boolean).join(", ")}</p>
                       {o.notes && <p className="whitespace-pre-line"><b>Notes:</b> {o.notes}</p>}
                     </div>
                     <div>

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/admin/categories")({
 });
 
 function Categories() {
-  const { categories, countIn } = useCatalog();
+  const { categories, countIn, isPreview } = useCatalog();
   const qc = useQueryClient();
   const [edit, setEdit] = useState<Category | "new" | null>(null);
   const refresh = () => qc.invalidateQueries({ queryKey: ["catalog"] });
@@ -33,6 +33,7 @@ function Categories() {
         <h1 className="text-3xl">Categories</h1>
         <Button onClick={() => setEdit("new")}><Plus /> Add category</Button>
       </div>
+      {isPreview && <p role="status" className="mb-5 rounded-lg border border-border bg-secondary p-4 text-sm">Showing preview categories. Set up the live catalog database before editing categories.</p>}
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {categories.map((c) => (
           <li key={c.slug} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">

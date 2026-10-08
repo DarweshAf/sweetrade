@@ -5,7 +5,7 @@ import { useCatalog } from "@/lib/catalog";
 const TRUST = [
   { icon: Leaf, title: "Natural Selection", body: "Browse our collection" },
   { icon: FileText, title: "Clear Product Information", body: "Know what you buy" },
-  { icon: MessageCircle, title: "Convenient Ordering", body: "Call or WhatsApp" },
+  { icon: MessageCircle, title: "Customer Support", body: "Call for assistance" },
   { icon: Truck, title: "Karachi Delivery", body: "Contact us for details" },
   { icon: Headphones, title: "Customer Support", body: "We are here to help" },
 ];
@@ -76,7 +76,7 @@ export function Footer() {
           <div>
             <h2 className="mb-3 font-sans text-sm font-semibold uppercase tracking-wider text-primary">Contact</h2>
             <ul className="space-y-2 text-sm text-ink-foreground/80">
-              <li className="flex items-center gap-2"><Phone className="size-4" /> {CONTACT.phone}</li>
+              <li className="flex items-center gap-2"><Phone className="size-4" /><a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="hover:text-primary">{CONTACT.phone}</a></li>
               {CONTACT.email && <li className="flex items-center gap-2"><Mail className="size-4" /> {CONTACT.email}</li>}
               {CONTACT.whatsapp && <li className="flex items-center gap-2"><MessageCircle className="size-4" /> WhatsApp ordering</li>}
             </ul>

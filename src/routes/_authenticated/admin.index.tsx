@@ -25,7 +25,7 @@ function Dashboard() {
   const stats = [
     ["Total orders", d?.orders.length ?? "—"],
     ["Pending orders", d?.orders.filter((o) => o.status === "pending").length ?? "—"],
-    ["Revenue", d ? formatPrice(revenue) : "—"],
+    ["Non-cancelled order value", d ? formatPrice(revenue) : "—"],
     ["Products", d ? `${d.products.length} (${d.products.filter((p) => !p.in_stock).length} out of stock)` : "—"],
   ];
   return (
@@ -44,7 +44,7 @@ function Dashboard() {
           <h2 className="text-lg">Recent orders</h2>
           <Link to="/admin/orders" className="text-sm text-primary">View all</Link>
         </div>
-        {d?.orders.length ? (
+        {q.isError ? <p role="alert" className="p-6 text-sm text-destructive">Unable to load dashboard data.</p> : d?.orders.length ? (
           <ul className="divide-y divide-border">
             {d.orders.slice(0, 6).map((o) => (
               <li key={o.id} className="flex items-center justify-between gap-3 p-4 text-sm">

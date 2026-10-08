@@ -44,7 +44,7 @@ function Promo({ img, title, sub, cat, big = false }: { img: string; title: stri
 }
 
 function Home() {
-  const { categories: CATEGORIES, countIn, products, settings } = useCatalog();
+  const { categories: CATEGORIES, countIn, products, settings, isPreview } = useCatalog();
   const hw = settings.heroTitle.trim().split(/\s+/);
   const heroTail = hw.length > 2 ? hw.slice(-2).join(" ") : hw.join(" ");
   const heroLead = hw.length > 2 ? hw.slice(0, -2).join(" ") : "";
@@ -64,12 +64,13 @@ function Home() {
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Button asChild size="lg"><Link to="/shop">Shop Now</Link></Button>
-              <Button asChild size="lg" variant="outline" className="bg-card"><Link to="/shop">Explore Collections</Link></Button>
+              <Button asChild size="lg" variant="outline" className="bg-card"><a href="#categories">Explore Categories</a></Button>
             </div>
           </div>
         </div>
       </section>
 
+      {isPreview && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">Catalog preview: online purchasing is temporarily unavailable. <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for availability and prices.</p></div>}
       <section className="border-b border-border bg-card">
         <ul className="container-page grid grid-cols-2 gap-4 py-5 lg:grid-cols-4">
           {HIGHLIGHTS.map(({ icon: I, a, b }) => (
@@ -112,8 +113,8 @@ function Home() {
       <section className="container-page grid gap-4 pb-12 sm:pb-16">
         <Promo big img={honey} title="The Honey Collection" sub="Pure, natural and full of goodness." cat="honey" />
         <div className="grid gap-4 md:grid-cols-2">
-          <Promo img={shilajit} title="Natural Essentials" sub="Shilajit, Saffron & Olive Oil" cat="shilajit" />
-          <Promo img={dates} title="Traditional Favorites" sub="Dates, Revri & Pickles" cat="dates" />
+          <Promo img={shilajit} title="Shilajit Essentials" sub="Explore our herbal collection" cat="shilajit" />
+          <Promo img={dates} title="Dates & Dried Fruits" sub="Explore dates and dried fruits" cat="dates" />
         </div>
       </section>
     </>

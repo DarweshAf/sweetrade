@@ -51,7 +51,7 @@ function Orders() {
           {ORDER_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
       </div>
-      {q.isLoading ? <p className="text-muted-foreground">Loading…</p> : !rows.length ? (
+      {q.isLoading ? <p className="text-muted-foreground">Loading…</p> : q.isError ? <div role="alert" className="rounded-lg border border-destructive p-5 text-sm">Unable to load orders. Please retry later.</div> : !rows.length ? (
         <p className="rounded-lg border border-border bg-card p-8 text-center text-sm text-muted-foreground">No orders.</p>
       ) : (
         <ul className="space-y-3">

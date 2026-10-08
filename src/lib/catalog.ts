@@ -46,12 +46,14 @@ export interface Settings {
 }
 
 export interface Catalog {
+  isPreview: boolean;
   products: Product[];
   categories: Category[];
   settings: Settings;
 }
 
 const fallback = (): Catalog => ({
+  isPreview: true,
   // Bundled products are a non-purchasable preview; never use demo prices for orders.
   products: FALLBACK_PRODUCTS.map((product) => ({ ...product, inStock: false, badge: undefined, variants: [{ label: "Contact for price", price: 0 }] })),
   categories: FALLBACK_CATEGORIES.map((c, i) => ({ ...c, imageRaw: null, sortOrder: i })),
@@ -77,6 +79,7 @@ export async function fetchCatalog(): Promise<Catalog> {
   if (!p.data?.length || !c.data?.length) return fallback();
   const fb = fallback();
   return {
+    isPreview: false,
     categories: (c.data ?? []).map((x) => ({
       slug: x.slug,
       name: x.name,

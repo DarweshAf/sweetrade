@@ -57,7 +57,7 @@ function Products() {
           <Button onClick={() => setEdit("new")}><Plus /> Add product</Button>
         </div>
       </div>
-      {q.isLoading ? <p className="text-muted-foreground">Loading…</p> : (
+      {q.isLoading ? <p className="text-muted-foreground">Loading…</p> : q.isError ? <div role="alert" className="rounded-lg border border-destructive p-5 text-sm">Unable to load products. <Button variant="outline" size="sm" onClick={() => q.refetch()}>Retry</Button></div> : (
         <ul className="space-y-2">
           {rows.map((p) => {
             const vs = (p.variants as unknown as V[]) ?? [];

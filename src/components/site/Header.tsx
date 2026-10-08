@@ -43,7 +43,6 @@ function SearchBox({ onDone }: { onDone?: () => void }) {
 export function Header() {
   const { contact: CONTACT } = useCatalog();
   const { count } = useStore();
-  const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (

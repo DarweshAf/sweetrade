@@ -15,7 +15,7 @@ const SECTIONS: { key: SiteSection; label: string }[] = [
   { key: "footer", label: "Footer & trust" },
   { key: "faq", label: "FAQs" },
   { key: "policies", label: "Policies" },
-  { key: "checkout", label: "Delivery areas" },
+  { key: "checkout", label: "Suggested cities" },
 ];
 const fieldClass = "min-h-11 w-full rounded-md border border-input bg-card px-3 py-2 text-sm focus:border-primary focus:outline-none";
 const multiline = fieldClass + " min-h-24 resize-y";
@@ -59,11 +59,11 @@ export function AdminContentEditor() {
   const qc = useQueryClient();
   const [selected, setSelected] = useState<SiteSection>("home");
   const [draft, setDraft] = useState<SiteContent>(content);
-  const [areasText, setAreasText] = useState(content.checkout.areas.join("\n"));
+  const [citiesText, setCitiesText] = useState(content.checkout.cities.join("\n"));
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     setDraft(content);
-    setAreasText(content.checkout.areas.join("\n"));
+    setCitiesText(content.checkout.cities.join("\n"));
   }, [content]);
 
   const update = <K extends SiteSection>(key: K, patch: Partial<SiteContent[K]>) => {
@@ -81,10 +81,7 @@ export function AdminContentEditor() {
     update("faq", { items: draft.faq.items.map((v, i) => i === index ? { ...v, ...patch } : v) });
   const save = async () => {
     if (busy) return;
-    const areas = [...new Set(areasText.split(/\r?\n/).map((x) => x.trim()).filter(Boolean))];
-    if (selected === "checkout" && !areas.length) {
-      toast.error("Add at least one delivery area."); return;
-    }
+    const cities = [...new Set(citiesText.split(/\r?\n/).map((x) => x.trim()).filter(Boolean))];
     if (selected === "home" && draft.home.promos.some((p) => !p.title.trim() || !categories.some((c) => c.slug === p.category))) {
       toast.error("Every promotion needs a title and a valid product category."); return;
     }
@@ -104,7 +101,7 @@ export function AdminContentEditor() {
     try {
       const { error } = await supabase.from("site_content").upsert({
         section: selected,
-        content: (selected === "checkout" ? { areas } : draft[selected]) as unknown as Json,
+        content: (selected === "checkout" ? { cities } : draft[selected]) as unknown as Json,
         updated_at: new Date().toISOString(),
       }, { onConflict: "section" });
       if (error) throw error;
@@ -119,7 +116,7 @@ export function AdminContentEditor() {
 
   return <section id="website-content" className="mt-8 scroll-mt-6 rounded-lg border border-border bg-card p-4 sm:p-6" aria-label="Website content management">
     <h2 className="text-2xl">Website Content</h2>
-    <p className="mt-1 text-sm text-muted-foreground">Edit the text, images, promotions, FAQ and delivery areas visible to shoppers. Choose a section, make changes, then save.</p>
+    <p className="mt-1 text-sm text-muted-foreground">Edit the text, images, promotions, FAQs and suggested Pakistan cities visible to shoppers. Choose a section, make changes, then save.</p>
     {isPreview && <p role="status" className="mt-3 text-sm text-destructive">The public catalog is in preview mode. Verify database connection before publishing edits.</p>}
     <div className="no-scrollbar mt-5 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Content sections">
       {SECTIONS.map(({ key, label }) =>
@@ -191,8 +188,11 @@ export function AdminContentEditor() {
           value={draft.policies[key]} rows={8}
           onChange={(v) => update("policies", { [key]: v })} />)}
       </>}
-      {selected === "checkout" && <Text label="Karachi delivery areas — one per line"
-        value={areasText} rows={12} onChange={setAreasText} />}
+      {selected === "checkout" && <>
+        <p className="text-sm text-muted-foreground">These are suggestions, not a restriction. Customers can type any city in Pakistan at checkout. Shipping fees still need to be confirmed in Settings.</p>
+        <Text label="Suggested Pakistan cities — one per line"
+          value={citiesText} rows={12} onChange={setCitiesText} />
+      </>}
     </div>
     <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
       <p className="text-xs text-muted-foreground">Only the selected section will be saved.</p>

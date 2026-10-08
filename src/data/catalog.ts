@@ -11,10 +11,10 @@ import ghee from "@/assets/p-ghee.jpg";
 
 export const CONTACT = {
   phone: "+92 334 3645850",
-  whatsapp: "923343645850",
+  whatsapp: "", // Activate only after WhatsApp is confirmed on the business number.
   email: "info@sweetrade.com",
-  freeDeliveryThreshold: 3000,
-  deliveryFee: 200,
+  freeDeliveryThreshold: 0,
+  deliveryFee: 0,
 };
 
 export const CATEGORIES = [

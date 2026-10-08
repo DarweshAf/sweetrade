@@ -92,10 +92,10 @@ export function Header() {
           <span className="lg:hidden" />
 
           <div className="flex items-center">
-            <button className="tap-target lg:hidden" aria-label="Search" onClick={() => setSearchOpen((s) => !s)}>
+            <button className="tap-target lg:hidden" aria-label="Search" aria-expanded={searchOpen} onClick={() => setSearchOpen((s) => !s)}>
               <Search className="size-5" />
             </button>
-                        <Link to="/wishlist" className="tap-target hidden sm:inline-flex" aria-label="Wishlist">
+            <Link to="/wishlist" className="tap-target" aria-label="Wishlist">
               <Heart className="size-5" />
             </Link>
             <Link to="/cart" className="tap-target relative -mr-2 hidden sm:inline-flex" aria-label={`Cart, ${count} items`}>

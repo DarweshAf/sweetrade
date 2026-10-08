@@ -23,7 +23,7 @@ function About() {
           <p className="text-sm font-semibold uppercase tracking-wider text-primary">A sweet way to trade</p>
           <h1 className="mt-2 text-4xl sm:text-5xl">Sweet Taste… Healthy Life</h1>
           <p className="mt-5 text-muted-foreground">
-            Sweet Trade offers carefully selected natural products — honey, shilajit, saffron, olive oil, dates, desi ghee and traditional sweets — delivered with care across Karachi.
+            Sweet Trade offers carefully selected natural products — honey, shilajit, saffron, olive oil, dates, pickles and traditional sweets — delivered with care across Karachi.
           </p>
           <p className="mt-3 text-muted-foreground">We keep things simple: clear product information, honest pricing and easy ordering by phone or WhatsApp.</p>
           <Button asChild size="lg" className="mt-7"><Link to="/shop">Shop Products</Link></Button>

@@ -43,6 +43,7 @@ export interface Product {
   variants: Variant[];
   inStock: boolean;
   priceVerified?: boolean;
+  requestOnly?: boolean;
   badge?: "Bestseller" | "New" | "Premium";
   featured?: boolean;
   short: string;

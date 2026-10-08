@@ -1,171 +1,93 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
-import { products, type Product, type Variant } from "@/data/catalog";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { CONTACT, products, type Product, type Variant } from "@/data/catalog";
 
 export interface CartLine {
   productId: string;
-  variantId: string;
+  variant: string;
   qty: number;
 }
-
 export interface ResolvedLine extends CartLine {
   product: Product;
-  variant: Variant;
-  lineTotal: number;
+  v: Variant;
+  total: number;
 }
 
-interface StoreValue {
-  hydrated: boolean;
-  lines: CartLine[];
-  resolved: ResolvedLine[];
+interface Store {
+  lines: ResolvedLine[];
   count: number;
   subtotal: number;
-  addToCart: (productId: string, variantId: string, qty?: number) => void;
-  setQty: (productId: string, variantId: string, qty: number) => void;
-  removeLine: (productId: string, variantId: string) => void;
-  clearCart: () => void;
-  cartOpen: boolean;
-  setCartOpen: (open: boolean) => void;
+  delivery: number;
+  total: number;
+  add: (productId: string, variant: string, qty?: number) => void;
+  setQty: (productId: string, variant: string, qty: number) => void;
+  remove: (productId: string, variant: string) => void;
+  clear: () => void;
   wishlist: string[];
-  toggleWishlist: (productId: string) => void;
-  isWishlisted: (productId: string) => boolean;
-  recentlyViewed: string[];
-  markViewed: (productId: string) => void;
+  toggleWish: (id: string) => void;
 }
 
-const StoreContext = createContext<StoreValue | null>(null);
-
-const CART_KEY = "gn.cart.v1";
-const WISH_KEY = "gn.wishlist.v1";
-const VIEWED_KEY = "gn.viewed.v1";
-
-function read<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
+const Ctx = createContext<Store | null>(null);
+const KEY = "st.cart.v1";
+const WKEY = "st.wish.v1";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [hydrated, setHydrated] = useState(false);
-  const [lines, setLines] = useState<CartLine[]>([]);
-  const [wishlist, setWishlist] = useState<string[]>([]);
-  const [recentlyViewed, setRecentlyViewed] = useState<string[]>([]);
-  const [cartOpen, setCartOpen] = useState(false);
+  const [raw, setRaw] = useState<CartLine[]>([]);
+  const [wishlist, setWish] = useState<string[]>([]);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setLines(read<CartLine[]>(CART_KEY, []));
-    setWishlist(read<string[]>(WISH_KEY, []));
-    setRecentlyViewed(read<string[]>(VIEWED_KEY, []));
-    setHydrated(true);
+    try {
+      setRaw(JSON.parse(localStorage.getItem(KEY) || "[]"));
+      setWish(JSON.parse(localStorage.getItem(WKEY) || "[]"));
+    } catch {
+      /* ignore corrupt storage */
+    }
+    setReady(true);
   }, []);
+  useEffect(() => {
+    if (ready) localStorage.setItem(KEY, JSON.stringify(raw));
+  }, [raw, ready]);
+  useEffect(() => {
+    if (ready) localStorage.setItem(WKEY, JSON.stringify(wishlist));
+  }, [wishlist, ready]);
 
-  useEffect(() => {
-    if (hydrated) localStorage.setItem(CART_KEY, JSON.stringify(lines));
-  }, [lines, hydrated]);
-  useEffect(() => {
-    if (hydrated) localStorage.setItem(WISH_KEY, JSON.stringify(wishlist));
-  }, [wishlist, hydrated]);
-  useEffect(() => {
-    if (hydrated) localStorage.setItem(VIEWED_KEY, JSON.stringify(recentlyViewed));
-  }, [recentlyViewed, hydrated]);
-
-  const addToCart = useCallback((productId: string, variantId: string, qty = 1) => {
-    setLines((prev) => {
-      const i = prev.findIndex((l) => l.productId === productId && l.variantId === variantId);
-      if (i === -1) return [...prev, { productId, variantId, qty }];
-      const next = [...prev];
-      next[i] = { ...next[i], qty: Math.min(99, next[i].qty + qty) };
-      return next;
+  const value = useMemo<Store>(() => {
+    const lines = raw.flatMap<ResolvedLine>((l) => {
+      const product = products.find((p) => p.id === l.productId);
+      const v = product?.variants.find((x) => x.label === l.variant);
+      return product && v ? [{ ...l, product, v, total: v.price * l.qty }] : [];
     });
-  }, []);
-
-  const setQty = useCallback((productId: string, variantId: string, qty: number) => {
-    setLines((prev) =>
-      qty <= 0
-        ? prev.filter((l) => !(l.productId === productId && l.variantId === variantId))
-        : prev.map((l) =>
-            l.productId === productId && l.variantId === variantId
-              ? { ...l, qty: Math.min(99, qty) }
-              : l,
-          ),
-    );
-  }, []);
-
-  const removeLine = useCallback((productId: string, variantId: string) => {
-    setLines((prev) => prev.filter((l) => !(l.productId === productId && l.variantId === variantId)));
-  }, []);
-
-  const clearCart = useCallback(() => setLines([]), []);
-
-  const toggleWishlist = useCallback((productId: string) => {
-    setWishlist((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
-    );
-  }, []);
-
-  const markViewed = useCallback((productId: string) => {
-    setRecentlyViewed((prev) => [productId, ...prev.filter((id) => id !== productId)].slice(0, 8));
-  }, []);
-
-  const resolved = useMemo(() => {
-    return lines.flatMap<ResolvedLine>((line) => {
-      const product = products.find((p) => p.id === line.productId);
-      const variant = product?.variants.find((v) => v.id === line.variantId);
-      if (!product || !variant) return [];
-      return [{ ...line, product, variant, lineTotal: variant.price * line.qty }];
-    });
-  }, [lines]);
-
-  const value = useMemo<StoreValue>(
-    () => ({
-      hydrated,
+    const subtotal = lines.reduce((n, l) => n + l.total, 0);
+    const delivery = subtotal === 0 || subtotal >= CONTACT.freeDeliveryThreshold ? 0 : CONTACT.deliveryFee;
+    const same = (l: CartLine, id: string, v: string) => l.productId === id && l.variant === v;
+    return {
       lines,
-      resolved,
-      count: resolved.reduce((n, l) => n + l.qty, 0),
-      subtotal: resolved.reduce((n, l) => n + l.lineTotal, 0),
-      addToCart,
-      setQty,
-      removeLine,
-      clearCart,
-      cartOpen,
-      setCartOpen,
+      count: lines.reduce((n, l) => n + l.qty, 0),
+      subtotal,
+      delivery,
+      total: subtotal + delivery,
+      add: (id, v, qty = 1) =>
+        setRaw((prev) =>
+          prev.some((l) => same(l, id, v))
+            ? prev.map((l) => (same(l, id, v) ? { ...l, qty: Math.min(99, l.qty + qty) } : l))
+            : [...prev, { productId: id, variant: v, qty }],
+        ),
+      setQty: (id, v, qty) =>
+        setRaw((prev) =>
+          qty < 1 ? prev.filter((l) => !same(l, id, v)) : prev.map((l) => (same(l, id, v) ? { ...l, qty } : l)),
+        ),
+      remove: (id, v) => setRaw((prev) => prev.filter((l) => !same(l, id, v))),
+      clear: () => setRaw([]),
       wishlist,
-      toggleWishlist,
-      isWishlisted: (id: string) => wishlist.includes(id),
-      recentlyViewed,
-      markViewed,
-    }),
-    [
-      hydrated,
-      lines,
-      resolved,
-      addToCart,
-      setQty,
-      removeLine,
-      clearCart,
-      cartOpen,
-      wishlist,
-      toggleWishlist,
-      recentlyViewed,
-      markViewed,
-    ],
-  );
+      toggleWish: (id) => setWish((w) => (w.includes(id) ? w.filter((x) => x !== id) : [...w, id])),
+    };
+  }, [raw, wishlist]);
 
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
-export function useStore(): StoreValue {
-  const ctx = useContext(StoreContext);
-  if (!ctx) throw new Error("useStore must be used inside StoreProvider");
-  return ctx;
+export function useStore() {
+  const c = useContext(Ctx);
+  if (!c) throw new Error("useStore outside StoreProvider");
+  return c;
 }

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { CheckCircle2 } from "lucide-react";
-import { formatPrice, KARACHI_AREAS, PAYMENT_METHODS } from "@/data/catalog";
+import { formatPrice, PAYMENT_METHODS } from "@/data/catalog";
 import { useStore } from "@/lib/store";
 import { useCatalog } from "@/lib/catalog";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,7 +25,7 @@ const field = "h-11 w-full rounded-md border border-input bg-card px-3 text-sm f
 
 function Checkout() {
   const { lines, clear } = useStore();
-  const { settings } = useCatalog();
+  const { settings, content } = useCatalog();
   const paymentOptions = PAYMENT_METHODS.filter((method) => settings.paymentMethods.includes(method));
   const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "area" | "address", string>>>({});
   const [pay, setPay] = useState<string>(paymentOptions[0] ?? "");
@@ -107,7 +107,7 @@ function Checkout() {
             <L htmlFor="area">Area *</L>
             <select id="area" name="area" className={field} defaultValue="" aria-invalid={!!errors.area} aria-describedby="area-err">
               <option value="" disabled>Select area</option>
-              {KARACHI_AREAS.map((a) => <option key={a}>{a}</option>)}
+              {content.checkout.areas.map((a) => <option key={a}>{a}</option>)}
             </select><Err k="area" />
           </div>
           <div className="sm:col-span-2"><L htmlFor="address">Address *</L><input id="address" name="address" autoComplete="street-address" placeholder="House, street, block" className={field} aria-invalid={!!errors.address} aria-describedby="address-err" /><Err k="address" /></div>

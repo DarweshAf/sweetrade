@@ -65,8 +65,12 @@ function AdminLayout() {
         <div className="flex items-center justify-between p-4 lg:block">
           <Logo />
           <span className="hidden text-xs text-muted-foreground lg:mt-2 lg:block">Admin Panel</span>
+          <div className="flex gap-2 lg:hidden">
+            <Button asChild size="sm" variant="outline"><Link to="/">Store</Link></Button>
+            <Button size="sm" variant="outline" onClick={signOut}>Sign out</Button>
+          </div>
         </div>
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:pb-0">
+        <nav className="hidden lg:flex lg:flex-col lg:gap-1 lg:px-3">
           {NAV.map((n) => (
             <Link
               key={n.to}
@@ -85,13 +89,24 @@ function AdminLayout() {
           <p className="truncate px-3 pt-1 text-xs text-muted-foreground">{user.email}</p>
         </div>
       </aside>
-      <div className="min-w-0 p-4 sm:p-6 lg:p-8">
-        <div className="mb-4 flex justify-end gap-2 lg:hidden">
-          <Button asChild size="sm" variant="outline"><Link to="/">View store</Link></Button>
-          <Button size="sm" variant="outline" onClick={signOut}>Sign out</Button>
-        </div>
+      <div className="min-w-0 p-4 pb-24 sm:p-6 lg:p-8 lg:pb-8">
         <Outlet />
       </div>
+      <nav
+        aria-label="Admin"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      >
+        {NAV.map((n) => (
+          <Link
+            key={n.to}
+            to={n.to}
+            activeOptions={{ exact: "exact" in n }}
+            className="flex flex-col items-center gap-0.5 py-2 text-[10px] font-medium text-muted-foreground data-[status=active]:text-primary"
+          >
+            <n.icon className="size-5" aria-hidden /> {n.label}
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Heart, Menu, MessageCircle, Phone, Search, ShoppingCart, User, X } from "lucide-react";
+import { Heart, Home, MessageCircle, Phone, Search, ShoppingCart, Store, User } from "lucide-react";
 import { Logo } from "./Logo";
 import { useStore } from "@/lib/store";
 import { formatPrice } from "@/data/catalog";
@@ -43,7 +43,6 @@ function SearchBox({ onDone }: { onDone?: () => void }) {
 export function Header() {
   const { contact: CONTACT } = useCatalog();
   const { count } = useStore();
-  const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
@@ -67,12 +66,7 @@ export function Header() {
 
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
         <div className="container-page grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 lg:h-20 lg:gap-8">
-          <div className="flex items-center gap-1">
-            <button className="tap-target -ml-2 lg:hidden" aria-label="Open menu" onClick={() => setOpen(true)}>
-              <Menu className="size-5" />
-            </button>
-            <Logo className="h-10 lg:h-14" />
-          </div>
+          <Logo className="h-10 lg:h-14" />
 
           <nav aria-label="Main" className="hidden items-center gap-6 lg:flex">
             {NAV.map((n) => (
@@ -101,7 +95,7 @@ export function Header() {
             <Link to="/shop" className="tap-target hidden sm:inline-flex" aria-label="Wishlist">
               <Heart className="size-5" />
             </Link>
-            <Link to="/cart" className="tap-target relative -mr-2" aria-label={`Cart, ${count} items`}>
+            <Link to="/cart" className="tap-target relative -mr-2 hidden sm:inline-flex" aria-label={`Cart, ${count} items`}>
               <ShoppingCart className="size-5" />
               {count > 0 && (
                 <span className="absolute right-1 top-1 grid min-w-4.5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold leading-4.5 text-primary-foreground">
@@ -118,29 +112,33 @@ export function Header() {
         )}
       </header>
 
-      {open && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-          <div className="absolute inset-0 bg-ink/50" onClick={() => setOpen(false)} />
-          <div className="absolute inset-y-0 left-0 flex w-[85%] max-w-xs flex-col bg-background p-5 animate-in slide-in-from-left duration-200">
-            <div className="mb-6 flex items-center justify-between">
-              <Logo className="h-10" />
-              <button className="tap-target" aria-label="Close menu" onClick={() => setOpen(false)}>
-                <X className="size-5" />
-              </button>
-            </div>
-            <nav className="flex flex-col">
-              {NAV.map((n) => (
-                <Link key={n.label} to={n.to} onClick={() => setOpen(false)} className="border-b border-border py-3.5 text-base font-medium">
-                  {n.label}
-                </Link>
-              ))}
-            </nav>
-            <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="mt-auto inline-flex items-center gap-2 text-sm text-muted-foreground">
-              <Phone className="size-4" /> {CONTACT.phone}
-            </a>
-          </div>
-        </div>
-      )}
+      <nav
+        aria-label="Mobile"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      >
+        {[
+          { to: "/", label: "Home", icon: Home, exact: true },
+          { to: "/shop", label: "Shop", icon: Store, exact: false },
+          { to: "/contact", label: "Contact", icon: Phone, exact: false },
+          { to: "/cart", label: "Cart", icon: ShoppingCart, exact: false },
+          { to: "/auth", label: "Account", icon: User, exact: false },
+        ].map((n) => (
+          <Link
+            key={n.label}
+            to={n.to}
+            activeOptions={{ exact: n.exact }}
+            className="relative flex flex-col items-center gap-0.5 py-2 text-[10px] font-medium text-muted-foreground data-[status=active]:text-primary"
+          >
+            <n.icon className="size-5" aria-hidden />
+            {n.label}
+            {n.label === "Cart" && count > 0 && (
+              <span className="absolute right-[calc(50%-1.4rem)] top-1 grid min-w-4 place-items-center rounded-full bg-primary px-1 text-[9px] font-bold leading-4 text-primary-foreground">
+                {count}
+              </span>
+            )}
+          </Link>
+        ))}
+      </nav>
     </>
   );
 }

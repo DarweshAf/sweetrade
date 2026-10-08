@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useCatalog } from "@/lib/catalog";
 
 export const Route = createFileRoute("/faq")({
-  head: () => ({ meta: [{ title: "Frequently Asked Questions | Sweet Trade" }, { name: "description", content: "Information about frequently asked questions at Sweet Trade, Karachi." }] }),
+  head: () => ({ meta: [{ title: "Frequently Asked Questions | Sweet Trade" }, { name: "description", content: "Information about frequently asked questions at Sweet Trade, Pakistan." }] }),
   component: Page,
 });
 

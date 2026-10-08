@@ -21,7 +21,7 @@ export const Route = createFileRoute("/shop")({
       { title: "Shop All Products — SweeTrade" },
       { name: "description", content: "Browse honey, shilajit, saffron, olive oil, dates, sweets and pickles. Filter by category, price and availability." },
       { property: "og:title", content: "Shop All Products — SweeTrade" },
-      { property: "og:description", content: "Natural products delivered across Karachi." },
+      { property: "og:description", content: "Discover natural products for customers across Pakistan." },
     ],
   }),
   component: Shop,

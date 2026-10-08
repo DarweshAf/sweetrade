@@ -67,10 +67,11 @@ function SettingsPage() {
           <div className="sm:col-span-2"><F name="email" label="Email" def={s.email} type="email" /></div>
         </section>
         <section className="grid gap-4 sm:grid-cols-2">
-          <h2 className="text-lg sm:col-span-2">Delivery</h2>
-          <F name="delivery_fee" label="Delivery fee (Rs.)" def={s.deliveryFee} type="number" />
-          <F name="free_delivery_threshold" label="Free delivery above (Rs.)" def={s.freeDeliveryThreshold} type="number" />
-          <label className="flex min-h-11 items-start gap-3 sm:col-span-2"><input type="checkbox" name="delivery_configured" defaultChecked={s.deliveryConfigured} className="mt-1 size-5 accent-primary" /><span className="text-sm">I confirm these delivery charges are accurate. Enable checkout delivery calculations.</span></label>
+          <h2 className="text-lg sm:col-span-2">Pakistan-wide Delivery</h2>
+          <p className="text-sm text-muted-foreground sm:col-span-2">These are single store-wide rates. Enable checkout only after confirming the fee and coverage for all destinations you intend to accept. If fees differ by city, leave checkout disabled and confirm individual charges with customers.</p>
+          <F name="delivery_fee" label="Flat Pakistan delivery fee (Rs.)" def={s.deliveryFee} type="number" />
+          <F name="free_delivery_threshold" label="Free delivery threshold (Rs.)" def={s.freeDeliveryThreshold} type="number" />
+          <label className="flex min-h-11 items-start gap-3 sm:col-span-2"><input type="checkbox" name="delivery_configured" defaultChecked={s.deliveryConfigured} className="mt-1 size-5 accent-primary" /><span className="text-sm">I confirm these rates and coverage are valid for the Pakistan destinations I accept; enable online checkout.</span></label>
         </section>
         <fieldset className="rounded-lg border border-border p-4">
           <legend className="px-2 text-lg">Accepted Payment Methods</legend>

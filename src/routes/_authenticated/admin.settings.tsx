@@ -53,7 +53,12 @@ function SettingsPage() {
 
   return (
     <div className="max-w-3xl">
-      <h1 className="mb-6 text-3xl">Site Settings</h1>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-3xl">Site Settings</h1>
+        <a href="#website-content" className="inline-flex min-h-11 items-center rounded-md border border-primary px-3 text-sm font-semibold text-primary hover:bg-primary-soft">
+          Edit website text, images & FAQs ↓
+        </a>
+      </div>
       <form onSubmit={save} className="space-y-6 rounded-lg border border-border bg-card p-5 sm:p-6">
         <section className="grid gap-4 sm:grid-cols-2">
           <h2 className="text-lg sm:col-span-2">Contact</h2>

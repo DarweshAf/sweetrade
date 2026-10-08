@@ -44,7 +44,7 @@ const TABS = ["Description", "Ingredients", "Storage", "Delivery"] as const;
 function ProductPage() {
   const { categoryOf, contact: CONTACT, products } = useCatalog();
   const { product: p } = Route.useLoaderData();
-  const { add, wishlist, toggleWish } = useStore();
+  const { add, startBuyNow, wishlist, toggleWish } = useStore();
   const navigate = useNavigate();
   const [img, setImg] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
@@ -60,7 +60,14 @@ function ProductPage() {
   const addIt = () => {
     if (!purchasable) return;
     add(p.id, v.label, qty);
-    toast.success(`${p.name} (${v.label}) × ${qty} added to ${p.requestOnly ? "your order request" : "cart"}`);
+    toast.success(`${p.name} (${v.label}) × ${qty} added to cart`, {
+      action: { label: "View Cart", onClick: () => navigate({ to: "/cart" }) },
+    });
+  };
+  const buyIt = () => {
+    if (!purchasable) return;
+    startBuyNow(p.id, v.label, qty);
+    navigate({ to: "/checkout" });
   };
 
   const tabBody: Record<(typeof TABS)[number], string> = {
@@ -141,8 +148,8 @@ function ProductPage() {
           <div className="mt-6 hidden gap-3 sm:grid sm:grid-cols-2">
             {purchasable ? (
               <>
-                <Button size="lg" onClick={addIt}>{p.requestOnly ? "Add to Request" : "Add to Cart"}</Button>
-                <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary-soft" onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>{p.requestOnly ? "Request Now" : "Buy Now"}</Button>
+                <Button size="lg" onClick={addIt}>Add to Cart</Button>
+                <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary-soft" onClick={buyIt}>Buy Now</Button>
               </>
             ) : (
               <>
@@ -181,8 +188,8 @@ function ProductPage() {
       <div className="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-30 grid grid-cols-2 gap-3 border-t border-border bg-background p-3 shadow-raised sm:hidden">
         {purchasable ? (
           <>
-            <Button onClick={addIt}>{p.requestOnly ? "Add to Request" : "Add to Cart"}</Button>
-            <Button variant="outline" className="border-primary text-primary" onClick={() => { addIt(); navigate({ to: "/checkout" }); }}>{p.requestOnly ? "Request Now" : "Buy Now"}</Button>
+            <Button onClick={addIt}>Add to Cart</Button>
+            <Button variant="outline" className="border-primary text-primary" onClick={buyIt}>Buy Now</Button>
           </>
         ) : (
           <>

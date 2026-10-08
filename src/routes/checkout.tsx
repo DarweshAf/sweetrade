@@ -22,14 +22,14 @@ const field = "h-11 w-full rounded-md border border-input bg-card px-3 text-sm f
 
 function Checkout() {
   const { lines, clear } = useStore();
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "area" | "address", string>>>({});
   const [pay, setPay] = useState<string>(PAYMENT_METHODS[0]);
   const [done, setDone] = useState(false);
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
-    const err: Record<string, string> = {};
+    const err: Partial<Record<"name" | "phone" | "area" | "address", string>> = {};
     if (!String(f.get("name")).trim()) err.name = "Please enter your full name";
     if (!/^(\+92|0)3\d{2}\s?\d{7}$/.test(String(f.get("phone")).replace(/[\s-]/g, "").replace(/^(\+92|0)(3\d{2})(\d{7})$/, "$1$2$3"))) err.phone = "Enter a valid mobile number, e.g. 0334 3645850";
     if (!f.get("area")) err.area = "Select your area";
@@ -61,7 +61,7 @@ function Checkout() {
     );
   }
 
-  const Err = ({ k }: { k: string }) => (errors[k] ? <p id={`${k}-err`} className="mt-1 text-xs text-destructive">{errors[k]}</p> : null);
+  const Err = ({ k }: { k: "name" | "phone" | "area" | "address" }) => (errors[k] ? <p id={`${k}-err`} className="mt-1 text-xs text-destructive">{errors[k]}</p> : null);
   const L = ({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) => <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium">{children}</label>;
 
   return (

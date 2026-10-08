@@ -5,7 +5,7 @@ import { CATEGORIES, countIn, formatPrice, priceFrom, products } from "@/data/ca
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
 
-type Search = { category?: string; q?: string; sort?: string; stock?: string; max?: number };
+type Search = { category?: string | undefined; q?: string | undefined; sort?: string | undefined; stock?: string | undefined; max?: number | undefined };
 
 export const Route = createFileRoute("/shop")({
   validateSearch: (s: Record<string, unknown>): Search => ({

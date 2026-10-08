@@ -43,7 +43,7 @@ function ProductPage() {
   const { add, wishlist, toggleWish } = useStore();
   const navigate = useNavigate();
   const [img, setImg] = useState(0);
-  const [variant, setVariant] = useState(p.variants[0].label);
+  const [variant, setVariant] = useState(p.variants[0]!.label);
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState<(typeof TABS)[number]>("Description");
   const v = p.variants.find((x) => x.label === variant)!;

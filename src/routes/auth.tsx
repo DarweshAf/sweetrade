@@ -37,12 +37,12 @@ function AuthPage() {
     const f = new FormData(e.currentTarget);
     const email = String(f.get("email")).trim();
     const password = String(f.get("password"));
-    if (password.length < 8) return toast.error("Password must be at least 8 characters");
+    if (password.length < 8) { toast.error("Password must be at least 8 characters"); return; }
     setBusy(true);
     if (mode === "in") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       navigate({ to: "/admin", replace: true });
     } else {
       const { data, error } = await supabase.auth.signUp({
@@ -51,7 +51,7 @@ function AuthPage() {
         options: { emailRedirectTo: `${window.location.origin}/admin` },
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       if (data.session) navigate({ to: "/admin", replace: true });
       else setSent(true);
     }

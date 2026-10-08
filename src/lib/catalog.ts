@@ -93,7 +93,7 @@ export async function fetchCatalog(): Promise<Catalog> {
         gallery: gallery.length ? gallery : [image],
         variants: (Array.isArray(x.variants) ? x.variants : []) as unknown as Variant[],
         inStock: x.in_stock,
-        badge: (x.badge || undefined) as Product["badge"],
+        ...(x.badge ? { badge: x.badge as NonNullable<Product["badge"]> } : {}),
         featured: x.featured,
         short: x.short,
         description: x.description,

@@ -17,8 +17,9 @@ import sweets from "@/assets/p-sweets.jpg";
 import pickle from "@/assets/p-pickle.jpg";
 import ghee from "@/assets/p-ghee.jpg";
 import hero from "@/assets/hero.jpg";
+import logo from "@/assets/sweetrade-logo.png.asset.json";
 
-export const LOCAL_IMAGES: Record<string, string> = { honey, shilajit, saffron, olive, dates, sweets, pickle, ghee, hero };
+export const LOCAL_IMAGES: Record<string, string> = { honey, shilajit, saffron, olive, dates, sweets, pickle, ghee, hero, logo: logo.url };
 
 /** DB stores either "local:<key>" (bundled image) or a full URL (uploaded). */
 export const resolveImage = (v?: string | null) => {

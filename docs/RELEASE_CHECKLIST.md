@@ -2,15 +2,27 @@
 
 This repository can be edited using GitHub directly. No Lovable prompt credits, GitHub Actions, or CLI workflows are required for code edits.
 
+## Changes applied to the current Lovable Cloud project
+Project: `14cceb1a-dc3e-4ba8-8195-2f8251f24ad8` (Sweet Trade).
+
+On October 8, 2026, migrations `0001_secure_store.sql`, `0002_verify_product_prices.sql` and `0003_confirm_shipping.sql` were applied directly through the project's connected PostgreSQL database. Verification queries confirmed:
+- 14 products, with the corrected product names.
+- 0 verified product prices and 0 products available to order until the merchant confirms them.
+- The existing admin role was retained and the first-user-admin escalation function is disabled.
+- The shipping configuration is unconfirmed; checkout is blocked until the merchant confirms it.
+- Previously seeded draft prices are retained in the administrator database, but not published as verified storefront prices.
+
+These database changes are specific to this Lovable project, **not a proof that any external deployment database is migrated**.
+
 ## Required before a production launch
-- Apply `drizzle/migrations/0001_secure_store.sql` to the **correct** Supabase database (the repo's `supabase/config.toml` project ID is authoritative). Do not run on a different project.
+- On any different deployment/database, apply and verify `0001`, `0002` and `0003` against the verified project identity before release.
 - Assign the first administrator only through a trusted, privileged process; public sign-up is disabled and no new account becomes admin automatically.
 - Review and set the true prices, sizes, inventory, product gallery images and verified ingredients for all 14 products in admin.
-- Confirm delivery fees and free-shipping threshold, if any. Configure only active payment methods.
+- Confirm delivery fees and free-shipping threshold, if any, then enable the explicit delivery-confirmation checkbox in Admin → Settings. Configure only active payment methods.
 - Confirm the business WhatsApp number before enabling WhatsApp ordering.
 - Review the site's privacy, return and delivery copy with the business.
-- Verify the production domain is deployed to this exact GitHub commit.
-- Run build, lint and browser E2E tests on the intended deployment; these were not run by the direct GitHub editing workflow.
+- Publish/deploy only after business details are verified. Confirm the production domain is actually mapped to this project and the latest GitHub commit.
+- Run build, lint and browser E2E tests on the intended deployment; direct GitHub edits and Lovable database inspections do not replace these tests.
 
 ## Manual-browser QA matrix
 - Desktop widths 1024 and 1440; mobile widths 320, 360, 390 and 430.

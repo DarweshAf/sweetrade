@@ -15,7 +15,7 @@ export interface SiteContent {
   };
   about: { eyebrow: string; title: string; introduction: string; detail: string; image: string };
   footer: {
-    tagline: string; description: string;
+    brandName: string; logoImage: string; tagline: string; description: string;
     trust: ShortFeature[];
     facebook: string; instagram: string;
   };
@@ -51,6 +51,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     image: "local:hero",
   },
   footer: {
+    brandName: "Sweet Trade",
+    logoImage: "local:logo",
     tagline: "Sweet Taste… Healthy Life",
     description: "Carefully selected natural products delivered across Karachi.",
     facebook: "",

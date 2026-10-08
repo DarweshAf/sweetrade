@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Heart, Home, MessageCircle, Phone, Search, ShoppingCart } from "lucide-react";
+import { Heart, Home, MessageCircle, Phone, Search, ShoppingCart, Grid2X2 } from "lucide-react";
 import { Logo } from "./Logo";
 import { useStore } from "@/lib/store";
 import { formatPrice } from "@/data/catalog";
@@ -51,15 +51,13 @@ export function Header() {
         <div className="container-page flex h-9 items-center justify-center gap-6 text-xs sm:justify-between">
           <span className="hidden sm:block" />
           <p className="text-center">
-            Free delivery in Karachi on orders above {formatPrice(CONTACT.freeDeliveryThreshold)}
+            {CONTACT.freeDeliveryThreshold > 0 ? `Free delivery in Karachi on orders above ${formatPrice(CONTACT.freeDeliveryThreshold)}` : "Natural products delivered in Karachi"}
           </p>
           <div className="hidden items-center gap-4 sm:flex">
             <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-1.5 hover:text-primary">
               <Phone className="size-3.5" aria-hidden /> {CONTACT.phone}
             </a>
-            <a href={`https://wa.me/${CONTACT.whatsapp}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 hover:text-primary">
-              <MessageCircle className="size-3.5" aria-hidden /> WhatsApp
-            </a>
+            {CONTACT.whatsapp && <a href={`https://wa.me/${CONTACT.whatsapp}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 hover:text-primary"><MessageCircle className="size-3.5" aria-hidden /> WhatsApp</a>}
           </div>
         </div>
       </div>
@@ -122,7 +120,7 @@ export function Header() {
           <Home className="size-5" aria-hidden />Home
         </Link>
         <Link to="/shop" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
-          <ShoppingCart className="size-5" aria-hidden />Categories
+          <Grid2X2 className="size-5" aria-hidden />Categories
         </Link>
         <button type="button" onClick={() => setSearchOpen(true)} aria-label="Search products" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground">
           <Search className="size-5" aria-hidden />Search

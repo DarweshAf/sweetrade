@@ -11,9 +11,9 @@ import dates from "@/assets/p-dates.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SweeTrade — Experience Nature's Finest" },
+      { title: "Sweet Trade — Experience Nature's Finest" },
       { name: "description", content: "Carefully selected honey, saffron, shilajit, olive oil, dates and traditional delicacies, delivered across Karachi." },
-      { property: "og:title", content: "SweeTrade — Experience Nature's Finest" },
+      { property: "og:title", content: "Sweet Trade — Experience Nature's Finest" },
       { property: "og:description", content: "Natural products delivered with care across Karachi." },
     ],
   }),
@@ -21,9 +21,9 @@ export const Route = createFileRoute("/")({
 });
 
 const HIGHLIGHTS = [
-  { icon: ShieldCheck, a: "Premium Quality", b: "Natural Products" },
+  { icon: ShieldCheck, a: "Natural Products", b: "Explore our collection" },
   { icon: Heart, a: "Carefully Selected", b: "Sourcing" },
-  { icon: Truck, a: "Fast Delivery", b: "in Karachi" },
+  { icon: Truck, a: "Karachi Delivery", b: "Ask for delivery details" },
   { icon: MessageCircle, a: "Easy Ordering", b: "Call or WhatsApp" },
 ];
 
@@ -81,7 +81,7 @@ function Home() {
         </ul>
       </section>
 
-      <section className="container-page section-y">
+      <section id="categories" className="container-page section-y">
         <div className="mb-5 flex items-end justify-between gap-4">
           <h2 className="text-2xl sm:text-3xl">Shop by Category</h2>
           <Link to="/shop" className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-primary">View All <ArrowRight className="size-4" /></Link>
@@ -105,7 +105,7 @@ function Home() {
           <Link to="/shop" className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-primary">View All <ArrowRight className="size-4" /></Link>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
-          {featured.map((p) => <ProductCard key={p.id} product={p} showFrom />)}
+          {featured.length ? featured.map((p) => <ProductCard key={p.id} product={p} showFrom />) : <p className="col-span-full text-sm text-muted-foreground">Featured products will appear here when available.</p>}
         </div>
       </section>
 

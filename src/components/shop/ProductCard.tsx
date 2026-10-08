@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 export function ProductCard({ product, showFrom = false }: { product: Product; showFrom?: boolean }) {
   const { add, wishlist, toggleWish } = useStore();
   const wished = wishlist.includes(product.id);
-  const first = product.variants[0]!;
+  const first = product.variants[0];
+  const purchasable = Boolean(product.inStock && first && first.price > 0);
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-card">
@@ -43,18 +44,19 @@ export function ProductCard({ product, showFrom = false }: { product: Product; s
         </Link>
         <p className="mt-1 text-sm font-bold text-primary">
           {showFrom && <span className="font-medium">From </span>}
-          {formatPrice(showFrom ? priceFrom(product) : first.price)}
+          {purchasable ? formatPrice(showFrom ? priceFrom(product) : first!.price) : "Price on request"}
         </p>
         <Button
           size="sm"
           className="mt-3 w-full"
-          disabled={!product.inStock}
+          disabled={!purchasable}
           onClick={() => {
+            if (!purchasable || !first) return;
             add(product.id, first.label);
             toast.success(`${product.name} (${first.label}) added to cart`);
           }}
         >
-          {product.inStock ? "Add to Cart" : "Out of Stock"}
+          {purchasable ? "Add to Cart" : "Enquire to Order"}
         </Button>
       </div>
     </article>

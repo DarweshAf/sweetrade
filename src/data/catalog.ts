@@ -70,21 +70,22 @@ const p = (
   name,
   category,
   image,
-  gallery: [image, honey, dates, saffron].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4),
+  gallery: [image],
   variants,
   inStock: true,
-  short: `Carefully selected ${name.toLowerCase()} with natural taste and quality.`,
-  description: `Our ${name} is carefully sourced and packed to preserve its natural character. A wholesome addition to your daily routine and family kitchen.`,
-  ingredients: "100% natural. No added preservatives or colours.",
-  storage: "Store in a cool, dry place away from direct sunlight. Keep the lid tightly closed.",
+  short: `Discover ${name}. Contact us for product details and availability.`,
+  description: `${name}. Please contact Sweet Trade for confirmed ingredients, origin, packaging and storage information.`,
+  ingredients: "",
+  storage: "",
   ...extra,
+  badge: undefined, // Display promotional badges only when verified in the live catalog.
 });
 
 export const products: Product[] = [
   p("1", "robinia-honey", "Robinia Honey", "honey", honey, w(2000, 3600, 6000), { badge: "Bestseller", featured: true }),
   p("2", "organic-shilajit", "Salajeet (Shilajit)", "shilajit", shilajit, [{ label: "10g", price: 2500 }, { label: "20g", price: 4600 }, { label: "50g", price: 10000 }], { badge: "Bestseller", featured: true }),
   p("3", "premium-saffron", "Zaffran (Saffron)", "saffron", saffron, [{ label: "1g", price: 1200 }, { label: "3g", price: 3300 }, { label: "5g", price: 5200 }], { badge: "Premium", featured: true }),
-  p("4", "shilajit-drops", "Shilajit Vigour Drops", "shilajit", shilajit, [{ label: "30ml", price: 1800 }, { label: "60ml", price: 3400 }]),
+  p("4", "shilajit-drops", "Salajix Drops", "shilajit", shilajit, [{ label: "30ml", price: 1800 }, { label: "60ml", price: 3400 }]),
   p("5", "dry-mix-honey", "Dry Mix Honey", "honey", honey, w(1800, 3300, 6200), { badge: "New", featured: true }),
   p("6", "zaitoon-honey", "Zaitoon Honey", "honey", honey, w(1900, 3500, 6500)),
   p("7", "zaitoon-oil", "Zaitoon Oil", "olive-oil", olive, [{ label: "250ml", price: 2200 }, { label: "500ml", price: 4000 }, { label: "1L", price: 7500 }], { featured: true }),
@@ -93,8 +94,8 @@ export const products: Product[] = [
   p("10", "dehydrated-fruits", "Dehydrated Fruits", "dates", dates, w(1500, 2800, 5200)),
   p("11", "crunch-max-revdi", "Crunch Max Revdi", "sweets", sweets, w(1200, 2200, 4000)),
   p("12", "saudi-dates", "Saudi Dates", "dates", dates, w(1500, 2800, 5000), { featured: true }),
-  p("13", "mango-pickle", "Mango Achaar", "pickles", pickle, [{ label: "500g", price: 900 }, { label: "1kg", price: 1600 }], { inStock: false }),
-  p("14", "desi-ghee", "Naturally Pure Desi Ghee", "sweets", ghee, [{ label: "500g", price: 2200 }, { label: "1kg", price: 4200 }]),
+  p("13", "mix-hyderabadi-achar", "Mix Hyderabadi Achar (Mustard Oil)", "pickles", pickle, [{ label: "500g", price: 900 }, { label: "1kg", price: 1600 }]),
+  p("14", "achar-in-olive-oil", "Achar in Olive Oil", "pickles", pickle, [{ label: "500g", price: 900 }, { label: "1kg", price: 1600 }]),
 ];
 
 export const formatPrice = (n: number) => `Rs. ${n.toLocaleString("en-PK")}`;

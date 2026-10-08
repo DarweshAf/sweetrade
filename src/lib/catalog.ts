@@ -51,7 +51,8 @@ export interface Catalog {
 }
 
 const fallback = (): Catalog => ({
-  products: FALLBACK_PRODUCTS,
+  // Bundled products are a non-purchasable preview; never use demo prices for orders.
+  products: FALLBACK_PRODUCTS.map((product) => ({ ...product, inStock: false, badge: undefined, variants: [{ label: "Contact for price", price: 0 }] })),
   categories: FALLBACK_CATEGORIES.map((c, i) => ({ ...c, imageRaw: null, sortOrder: i })),
   settings: {
     ...FALLBACK_CONTACT,
@@ -71,6 +72,7 @@ export async function fetchCatalog(): Promise<Catalog> {
     console.error("catalog load failed", p.error ?? c.error);
     return fallback();
   }
+  if (!p.data?.length || !c.data?.length) return fallback();
   const fb = fallback();
   return {
     categories: (c.data ?? []).map((x) => ({

@@ -19,13 +19,13 @@ export const Route = createFileRoute("/product/$slug")({
     return { product };
   },
   head: ({ loaderData }) => {
-    if (!loaderData) return { meta: [{ title: "Product not found — SweeTrade" }, { name: "robots", content: "noindex" }] };
+    if (!loaderData) return { meta: [{ title: "Product not found — Sweet Trade" }, { name: "robots", content: "noindex" }] };
     const p = loaderData.product;
     return {
       meta: [
-        { title: `${p.name} — SweeTrade` },
+        { title: `${p.name} — Sweet Trade` },
         { name: "description", content: p.short },
-        { property: "og:title", content: `${p.name} — SweeTrade` },
+        { property: "og:title", content: `${p.name} — Sweet Trade` },
         { property: "og:description", content: p.short },
       ],
     };
@@ -67,7 +67,7 @@ function ProductPage() {
     Description: p.description,
     Ingredients: p.ingredients,
     Storage: p.storage,
-    Delivery: `Delivery across Karachi within 1–3 working days. Free delivery on orders above ${formatPrice(CONTACT.freeDeliveryThreshold)}; otherwise ${formatPrice(CONTACT.deliveryFee)}. Cash on Delivery available.`,
+    Delivery: CONTACT.freeDeliveryThreshold > 0 ? `Karachi delivery: free above ${formatPrice(CONTACT.freeDeliveryThreshold)}, otherwise ${formatPrice(CONTACT.deliveryFee)}. Contact us to confirm delivery timing.` : "Contact us to confirm delivery charges and timing.",
   };
 
   return (

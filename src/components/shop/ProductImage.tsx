@@ -27,10 +27,11 @@ export function ProductImage({
 }) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const ref = useRef<HTMLImageElement>(null);
+  useEffect(() => { setStatus("loading"); }, [src]);
   useEffect(() => {
     const el = ref.current;
     if (el?.complete) setStatus(el.naturalWidth > 0 ? "ready" : "error");
-  }, [src]);
+  }, [src, status]);
 
   const ratioClass = {
     "4/5": "aspect-4/5",
@@ -64,9 +65,6 @@ export function ProductImage({
           <ImageOff className="size-5 text-muted-foreground" aria-hidden="true" />
           <span className="text-xs text-muted-foreground">Image unavailable</span>
         </div>
-      )}
-      {false && (
-        <div className="absolute inset-0 animate-pulse bg-muted" aria-hidden="true" />
       )}
     </div>
   );

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 export function ProductCard({ product, showFrom = false }: { product: Product; showFrom?: boolean }) {
   const { add, wishlist, toggleWish } = useStore();
   const wished = wishlist.includes(product.id);
-  const first = product.variants[0];
+  const first = product.variants[0]!;
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-card">

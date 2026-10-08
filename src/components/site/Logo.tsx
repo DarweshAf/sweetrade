@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import logo from "@/assets/sweetrade-logo.png.asset.json";
+import { resolveImage, useCatalog } from "@/lib/catalog";
 
 export function Logo({ className = "h-10 sm:h-12" }: { className?: string }) {
+  const { content } = useCatalog();
   return (
-    <Link to="/" aria-label="Sweet Trade home" className="inline-flex shrink-0 items-center">
-      <img src={logo.url} alt="Sweet Trade — Sweet Taste, Healthy Life" className={`${className} w-auto mix-blend-multiply`} width={920} height={665} />
+    <Link to="/" aria-label={`${content.footer.brandName} home`} className="inline-flex shrink-0 items-center">
+      <img src={resolveImage(content.footer.logoImage)} alt={content.footer.brandName}
+        className={`${className} w-auto max-w-44 object-contain mix-blend-multiply`} width={920} height={665} />
     </Link>
   );
 }

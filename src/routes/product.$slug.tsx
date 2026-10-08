@@ -74,7 +74,7 @@ function ProductPage() {
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
         <div>
           <div className="relative overflow-hidden rounded-lg border border-border">
-            <ProductImage src={p.gallery[img]} alt={p.name} ratio="1/1" priority />
+            <ProductImage src={p.gallery[img] ?? p.image} alt={p.name} ratio="1/1" priority />
             <button onClick={() => toggleWish(p.id)} aria-pressed={wished} aria-label="Toggle wishlist" className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-card shadow-card">
               <Heart className={`size-5 ${wished ? "fill-primary text-primary" : ""}`} />
             </button>

@@ -1,12 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Heart, ShieldCheck, Truck, MessageCircle } from "lucide-react";
-import hero from "@/assets/hero.jpg";
-import { useCatalog } from "@/lib/catalog";
+import { resolveImage, useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
-import honey from "@/assets/p-honey.jpg";
-import shilajit from "@/assets/p-shilajit.jpg";
-import dates from "@/assets/p-dates.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,12 +16,7 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const HIGHLIGHTS = [
-  { icon: ShieldCheck, a: "Natural Products", b: "Explore our collection" },
-  { icon: Heart, a: "Carefully Selected", b: "Sourcing" },
-  { icon: Truck, a: "Karachi Delivery", b: "Ask for delivery details" },
-  { icon: MessageCircle, a: "Easy Ordering", b: "Call or WhatsApp" },
-];
+const HIGHLIGHT_ICONS = [ShieldCheck, Heart, Truck, MessageCircle];
 
 function Promo({ img, title, sub, cat, big = false }: { img: string; title: string; sub: string; cat: string; big?: boolean }) {
   return (
@@ -44,7 +35,7 @@ function Promo({ img, title, sub, cat, big = false }: { img: string; title: stri
 }
 
 function Home() {
-  const { categories: CATEGORIES, countIn, products, settings, isPreview, requiresPricing } = useCatalog();
+  const { categories: CATEGORIES, countIn, products, settings, isPreview, requiresPricing, content } = useCatalog();
   const hw = settings.heroTitle.trim().split(/\s+/);
   const heroTail = hw.length > 2 ? hw.slice(-2).join(" ") : hw.join(" ");
   const heroLead = hw.length > 2 ? hw.slice(0, -2).join(" ") : "";
@@ -52,7 +43,7 @@ function Home() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <img src={hero} alt="Honey, dates, saffron and olive oil on a wooden table" width={1600} height={912} className="absolute inset-0 size-full object-cover object-right" />
+        <img src={resolveImage(content.home.heroImage)} alt="Sweet Trade natural products" width={1600} height={912} className="absolute inset-0 size-full object-cover object-right" />
         <div className="hero-fade absolute inset-0" />
         <div className="container-page relative py-16 sm:py-24 lg:py-28">
           <div className="max-w-lg">
@@ -73,12 +64,13 @@ function Home() {
       {(isPreview || requiresPricing) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">Online purchasing is not yet active until product prices are confirmed. <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for availability and prices.</p></div>}
       <section className="border-b border-border bg-card">
         <ul className="container-page grid grid-cols-2 gap-4 py-5 lg:grid-cols-4">
-          {HIGHLIGHTS.map(({ icon: I, a, b }) => (
-            <li key={a} className="flex items-center gap-3 text-sm leading-tight">
+          {content.home.highlights.map((feature, i) => {
+            const I = HIGHLIGHT_ICONS[i] ?? ShieldCheck;
+            return <li key={i} className="flex items-center gap-3 text-sm leading-tight">
               <I className="size-7 shrink-0 text-primary" strokeWidth={1.5} aria-hidden />
-              <span><span className="block font-medium">{a}</span><span className="text-muted-foreground">{b}</span></span>
-            </li>
-          ))}
+              <span><span className="block font-medium">{feature.title}</span><span className="text-muted-foreground">{feature.body}</span></span>
+            </li>;
+          })}
         </ul>
       </section>
 
@@ -110,13 +102,16 @@ function Home() {
         </div>
       </section>
 
-      <section className="container-page grid gap-4 pb-12 sm:pb-16">
-        <Promo big img={honey} title="The Honey Collection" sub="Pure, natural and full of goodness." cat="honey" />
-        <div className="grid gap-4 md:grid-cols-2">
-          <Promo img={shilajit} title="Shilajit Essentials" sub="Explore our herbal collection" cat="shilajit" />
-          <Promo img={dates} title="Dates & Dried Fruits" sub="Explore dates and dried fruits" cat="dates" />
-        </div>
-      </section>
+      {content.home.promos.length > 0 && (
+        <section className="container-page grid gap-4 pb-12 sm:pb-16">
+          <Promo big img={resolveImage(content.home.promos[0].image)}
+            title={content.home.promos[0].title} sub={content.home.promos[0].sub} cat={content.home.promos[0].category} />
+          {content.home.promos.length > 1 && <div className="grid gap-4 md:grid-cols-2">
+            {content.home.promos.slice(1).map((promo, i) => <Promo key={i}
+              img={resolveImage(promo.image)} title={promo.title} sub={promo.sub} cat={promo.category} />)}
+          </div>}
+        </section>
+      )}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +26,11 @@ export function ProductImage({
   sizes?: string;
 }) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const ref = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (el?.complete) setStatus(el.naturalWidth > 0 ? "ready" : "error");
+  }, [src]);
 
   const ratioClass = {
     "4/5": "aspect-4/5",
@@ -38,6 +43,7 @@ export function ProductImage({
     <div className={cn("img-frame", ratioClass, className)}>
       {status !== "error" ? (
         <img
+          ref={ref}
           src={src}
           alt={alt}
           sizes={sizes}

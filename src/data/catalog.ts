@@ -106,9 +106,4 @@ export const findProduct = (slug: string) => products.find((x) => x.slug === slu
 export const categoryOf = (slug: string) => CATEGORIES.find((c) => c.slug === slug);
 export const countIn = (slug: string) => products.filter((x) => x.category === slug).length;
 
-export const KARACHI_AREAS = [
-  "DHA", "Clifton", "Gulshan-e-Iqbal", "Gulistan-e-Jauhar", "North Nazimabad",
-  "PECHS", "Bahadurabad", "Saddar", "Korangi", "Malir", "Federal B Area", "Nazimabad",
-];
-
 export const PAYMENT_METHODS = ["Cash on Delivery", "Bank Transfer", "JazzCash", "Easypaisa"] as const;

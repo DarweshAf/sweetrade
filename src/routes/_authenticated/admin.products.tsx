@@ -18,6 +18,15 @@ export const Route = createFileRoute("/_authenticated/admin/products")({
 type Row = Tables<"products">;
 interface V { label: string; price: number }
 
+// These are shortcuts only: sellers set the actual price for each pack.
+const QUICK_WEIGHTS = [
+  { label: "1g", title: "1 gram" },
+  { label: "2g", title: "2 grams" },
+  { label: "500g", title: "Half kg · 500g" },
+  { label: "1kg", title: "1 kg" },
+] as const;
+const MORE_SIZES = ["3g", "5g", "10g", "20g", "50g", "100g", "250g", "30ml", "60ml", "250ml", "500ml", "1L"] as const;
+
 function Products() {
   const qc = useQueryClient();
   const [edit, setEdit] = useState<Row | "new" | null>(null);
@@ -62,12 +71,16 @@ function Products() {
         <ul className="space-y-2">
           {rows.map((p) => {
             const vs = (p.variants as unknown as V[]) ?? [];
+            const priced = vs.filter((v) => Number.isFinite(v.price) && v.price > 0);
+            const priceSummary = vs.length === 0 ? "No sizes yet" : p.price_verified && priced.length
+              ? `From ${formatPrice(Math.min(...priced.map((v) => v.price)))} · ${vs.length} sizes`
+              : `${vs.length} size options · Prices not confirmed`;
             return (
               <li key={p.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-3">
                 <img src={resolveImage(p.image_url)} alt="" className="size-14 rounded object-cover" />
                 <span className="min-w-0 flex-1">
                   <b className="block truncate font-medium">{p.name}</b>
-                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {vs.length ? `${p.price_verified ? "from" : "draft from"} ${formatPrice(Math.min(...vs.map((v) => v.price)))}` : "no sizes"}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.is_archived ? " · Archived" : ""}</span>
+                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {priceSummary}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.is_archived ? " · Archived" : ""}</span>
                 </span>
                 <button onClick={() => toggleStock(p)} className={`rounded-full px-3 py-1 text-xs font-medium ${p.in_stock ? "bg-primary-soft text-primary" : "bg-secondary text-muted-foreground"}`}>
                   {p.in_stock ? "In stock" : "Out of stock"}
@@ -94,7 +107,12 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
   const [image, setImage] = useState<string | null>(row?.image_url ?? null);
   const [gallery, setGallery] = useState<string[]>(row?.gallery ?? []);
   const [variants, setVariants] = useState<V[]>(((row?.variants as unknown as V[]) ?? []).length ? (row!.variants as unknown as V[]) : [{ label: "", price: 0 }]);
+  const [moreSizesOpen, setMoreSizesOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const addSize = (label: string) => setVariants((current) => {
+    if (current.some((v) => v.label.trim().toLowerCase() === label.toLowerCase())) return current;
+    return [...current.filter((v) => v.label.trim() || v.price > 0), { label, price: 0 }];
+  });
 
   const upload = async (files: FileList | null, main: boolean) => {
     if (!files?.length) return;
@@ -113,10 +131,21 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
     const s = (k: string) => String(f.get(k) ?? "").trim();
     const name = s("name");
     const slug = slugify(s("slug") || name);
-    const vs = variants.filter((v) => v.label.trim() && v.price > 0).map((v) => ({ label: v.label.trim(), price: Math.round(v.price) }));
+    // Save unpriced size options as drafts so the seller can enter actual prices later.
+    const vs = variants.filter((v) => v.label.trim()).map((v) => ({
+      label: v.label.trim(), price: Number.isFinite(v.price) && v.price >= 0 ? Math.round(v.price) : 0,
+    }));
     if (!name || !slug) { toast.error("Name is required"); return; }
+    if (variants.some((v) => !v.label.trim() && v.price > 0)) {
+      toast.error("Every price needs a size or weight label"); return;
+    }
+    if (new Set(vs.map((v) => v.label.toLowerCase())).size !== vs.length) {
+      toast.error("Each size must be unique (for example, only one 500g option)"); return;
+    }
     const priceVerified = f.get("price_verified") === "on";
-    if (priceVerified && !vs.length) { toast.error("Add a valid size and price before confirming product prices"); return; }
+    if (priceVerified && (!vs.length || vs.some((v) => v.price <= 0))) {
+      toast.error("Enter a real price for every listed size before confirming prices"); return;
+    }
     if (f.get("in_stock") === "on" && !priceVerified) { toast.error("Confirm prices before marking this item available"); return; }
     const data = {
       name, slug,
@@ -164,19 +193,53 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
         </div>
       </div>
 
-      <div>
-        <L>Sizes & prices (required when confirming prices)</L>
+      <fieldset className="space-y-3 rounded-lg border border-border p-3 sm:p-4">
+        <legend className="px-1 text-sm font-semibold">Sizes / weights & prices</legend>
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          Add the sizes this product is actually sold in. Set a separate PKR price for each size.
+          Half kg means 500g. Prices are not calculated automatically or shown to shoppers until verified.
+        </p>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Quick add weight options">
+          {QUICK_WEIGHTS.map((option) => (
+            <Button key={option.label} type="button" size="sm" variant="outline"
+              disabled={variants.some((v) => v.label.trim().toLowerCase() === option.label.toLowerCase())}
+              onClick={() => addSize(option.label)}>
+              <Plus className="size-3.5" /> {option.title}
+            </Button>
+          ))}
+        </div>
+        <button type="button" className="text-xs font-semibold text-primary hover:underline"
+          onClick={() => setMoreSizesOpen((open) => !open)} aria-expanded={moreSizesOpen}>
+          {moreSizesOpen ? "Hide other sizes" : "More sizes (grams & millilitres)"}
+        </button>
+        {moreSizesOpen && (
+          <div className="flex flex-wrap gap-2" role="group" aria-label="More packaging sizes">
+            {MORE_SIZES.map((label) => (
+              <Button key={label} type="button" size="sm" variant="outline"
+                disabled={variants.some((v) => v.label.trim().toLowerCase() === label.toLowerCase())}
+                onClick={() => addSize(label)}>{label}</Button>
+            ))}
+          </div>
+        )}
         <div className="space-y-2">
           {variants.map((v, i) => (
-            <div key={i} className="flex gap-2">
-              <input aria-label="Size" value={v.label} onChange={(e) => setVariants((a) => a.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)))} placeholder="e.g. 500g" className={adminField} />
-              <input aria-label="Price" type="number" min={0} value={v.price || ""} onChange={(e) => setVariants((a) => a.map((x, j) => (j === i ? { ...x, price: Number(e.target.value) } : x)))} placeholder="Price Rs." className={adminField} />
-              <button type="button" onClick={() => setVariants((a) => a.filter((_, j) => j !== i))} className="p-2 text-muted-foreground hover:text-destructive" aria-label="Remove size"><X className="size-4" /></button>
+            <div key={i} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2">
+              <input aria-label={`Size or weight ${i + 1}`} value={v.label}
+                onChange={(e) => setVariants((a) => a.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)))}
+                placeholder="e.g. 500g" className={`${adminField} min-w-0`} />
+              <input aria-label={`Price in PKR for ${v.label || `size ${i + 1}`}`}
+                type="number" min={0} step={1} value={v.price || ""}
+                onChange={(e) => setVariants((a) => a.map((x, j) => (j === i ? { ...x, price: Number(e.target.value) } : x)))}
+                placeholder="Price (PKR)" className={`${adminField} min-w-0`} />
+              <button type="button" onClick={() => setVariants((a) => a.filter((_, j) => j !== i))}
+                className="tap-target text-muted-foreground hover:text-destructive"
+                aria-label={`Remove ${v.label || `size ${i + 1}`}`}><X className="size-4" /></button>
             </div>
           ))}
-          <Button type="button" size="sm" variant="outline" onClick={() => setVariants((a) => [...a, { label: "", price: 0 }])}><Plus /> Add size</Button>
+          <Button type="button" size="sm" variant="outline"
+            onClick={() => setVariants((a) => [...a, { label: "", price: 0 }])}><Plus /> Custom size</Button>
         </div>
-      </div>
+      </fieldset>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div>

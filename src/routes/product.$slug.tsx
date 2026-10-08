@@ -67,7 +67,7 @@ function ProductPage() {
     Description: p.description,
     Ingredients: p.ingredients || "Contact Sweet Trade to confirm the ingredients for this product.",
     Storage: p.storage || "Contact Sweet Trade for confirmed storage instructions.",
-    Delivery: CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Karachi delivery: free above ${formatPrice(CONTACT.freeDeliveryThreshold)}, otherwise ${formatPrice(CONTACT.deliveryFee)}. Contact us to confirm delivery timing.` : "Contact us to confirm delivery charges and timing.",
+    Delivery: CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Pakistan shipping: free above ${formatPrice(CONTACT.freeDeliveryThreshold)}, otherwise ${formatPrice(CONTACT.deliveryFee)} under current store-wide settings. Contact us to confirm service and delivery timing to your city.` : "Shipping charges and delivery timing for your city must be confirmed by Sweet Trade.",
   };
 
   return (
@@ -144,7 +144,7 @@ function ProductPage() {
           </div>
 
           <ul className="mt-7 grid grid-cols-1 gap-4 border-y border-border py-5 text-sm sm:grid-cols-3">
-            <li className="flex items-center gap-2.5"><Truck className="size-6 text-primary" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Karachi Delivery</b><span className="text-muted-foreground">Confirm delivery time</span></span></li>
+            <li className="flex items-center gap-2.5"><Truck className="size-6 text-primary" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Pakistan-wide Delivery</b><span className="text-muted-foreground">Confirm delivery time</span></span></li>
             <li className="flex items-center gap-2.5"><ShieldCheck className="size-6 text-primary" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Payment Options</b><span className="text-muted-foreground">Shown at checkout</span></span></li>
             <li className="flex items-center gap-2.5"><MessageCircle className="size-6 text-success" strokeWidth={1.5} /><span className="leading-tight"><b className="block font-medium">Customer Support</b><span className="text-muted-foreground">{CONTACT.phone}</span></span></li>
           </ul>

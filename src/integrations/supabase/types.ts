@@ -45,6 +45,10 @@ export type Database = {
         Row: {
           address: string
           area: string
+          province?: string | null
+          city?: string | null
+          province: string | null
+          city: string | null
           created_at: string
           customer_name: string
           delivery: number
@@ -79,6 +83,8 @@ export type Database = {
         Update: {
           address?: string
           area?: string
+          province?: string | null
+          city?: string | null
           created_at?: string
           customer_name?: string
           delivery?: number

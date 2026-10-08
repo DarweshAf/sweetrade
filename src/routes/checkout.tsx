@@ -42,7 +42,7 @@ function Checkout() {
   const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "province" | "city" | "area" | "address", string>>>({});
   const [pay, setPay] = useState<string>(paymentOptions[0] ?? "");
   const selectedPay = paymentOptions.some((method) => method === pay) ? pay : paymentOptions[0] ?? "";
-  const [done, setDone] = useState<string | null>(null);
+  const [done, setDone] = useState<{ reference: string; isRequest: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
@@ -87,7 +87,7 @@ function Checkout() {
         items: lines.map((l) => ({ product_id: l.productId, variant: l.variant, qty: l.qty })),
       });
       if (error) throw error;
-      setDone(id.slice(0, 8).toUpperCase());
+      setDone({ reference: id.slice(0, 8).toUpperCase(), isRequest: requestMode });
       clear();
     } catch (error) {
       console.error("Order submission failed", error);
@@ -101,8 +101,8 @@ function Checkout() {
     return (
       <div className="container-page py-24 text-center">
         <CheckCircle2 className="mx-auto size-12 text-success" />
-        <h1 className="mt-4 text-3xl">{requestMode ? "Your order request has been received" : "Thank you for your order"}</h1>
-        <p className="mt-2 text-muted-foreground">Reference #{done}. Sweet Trade will contact you by phone to confirm availability, final prices and delivery charges before processing the order. No payment has been collected.</p>
+        <h1 className="mt-4 text-3xl">{done.isRequest ? "Your order request has been received" : "Thank you for your order"}</h1>
+        <p className="mt-2 text-muted-foreground">Reference #{done.reference}. Sweet Trade will contact you by phone to confirm availability, final prices and delivery charges before processing the order. No payment has been collected.</p>
         <Button asChild size="lg" className="mt-6"><Link to="/shop">Continue Shopping</Link></Button>
       </div>
     );

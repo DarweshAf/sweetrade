@@ -13,7 +13,7 @@ export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
       { title: "Checkout — Sweet Trade" },
-      { name: "description", content: "Guest checkout with Karachi delivery and Cash on Delivery, Bank Transfer, JazzCash or Easypaisa." },
+      { name: "description", content: "Secure guest checkout for Karachi orders. Payment methods depend on store settings." },
       { property: "og:title", content: "Checkout — Sweet Trade" },
       { property: "og:description", content: "Complete your order." },
     ],
@@ -35,6 +35,7 @@ function Checkout() {
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (busy || !lines.length) return;
     const f = new FormData(e.currentTarget);
     const err: Partial<Record<"name" | "phone" | "area" | "address", string>> = {};
     if (!String(f.get("name")).trim()) err.name = "Please enter your full name";
@@ -45,11 +46,10 @@ function Checkout() {
     if (Object.keys(err).length > 0) return;
     if (!selectedPay) { toast.error("No payment option is currently available. Please contact us."); return; }
     setBusy(true);
-    const notes = [f.get("landmark") && `Landmark: ${f.get("landmark")}`, f.get("notes")].filter(Boolean).join("\n");
-    const id = crypto.randomUUID();
-    const { error } = await supabase
-      .from("orders")
-      .insert({
+    try {
+      const notes = [f.get("landmark") && `Landmark: ${f.get("landmark")}`, f.get("notes")].filter(Boolean).join("\n");
+      const id = crypto.randomUUID();
+      const { error } = await supabase.from("orders").insert({
         id,
         customer_name: String(f.get("name")).trim().slice(0, 120),
         phone: String(f.get("phone")).trim().slice(0, 30),
@@ -59,14 +59,15 @@ function Checkout() {
         payment_method: selectedPay,
         items: lines.map((l) => ({ product_id: l.productId, variant: l.variant, qty: l.qty })),
       });
-    setBusy(false);
-    if (error) {
-      console.error(error);
-      toast.error("Could not place your order. Please try again or order on WhatsApp.");
-      return;
+      if (error) throw error;
+      setDone(id.slice(0, 8).toUpperCase());
+      clear();
+    } catch (error) {
+      console.error("Order submission failed", error);
+      toast.error("Could not place your order. Please try again or contact Sweet Trade.");
+    } finally {
+      setBusy(false);
     }
-    setDone(id.slice(0, 8).toUpperCase());
-    clear();
   };
 
   if (done !== null) {

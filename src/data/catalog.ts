@@ -5,7 +5,6 @@ import olive from "@/assets/p-olive.jpg";
 import dates from "@/assets/p-dates.jpg";
 import sweets from "@/assets/p-sweets.jpg";
 import pickle from "@/assets/p-pickle.jpg";
-import ghee from "@/assets/p-ghee.jpg";
 
 /** Phase 1 (UI only): static catalog, shaped for a future database swap. */
 

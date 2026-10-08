@@ -98,18 +98,22 @@ function ProductPage() {
 
         <div>
           <h1 className="text-3xl sm:text-4xl">{p.name}</h1>
-          <p className="mt-3 text-2xl font-bold text-primary">{p.priceVerified && v.price > 0 ? formatPrice(v.price) : "Price on request"}</p>
+          <div className="mt-3" aria-live="polite" aria-atomic="true">
+            <p className="text-2xl font-bold text-primary">{p.priceVerified && v.price > 0 ? formatPrice(v.price) : "Price on request"}</p>
+            <p className="mt-1 text-sm text-muted-foreground">Selected size: {v.label}</p>
+          </div>
           <p className="mt-3 text-muted-foreground">{p.short}</p>
 
           <fieldset className="mt-6">
             <legend className="mb-2 text-sm font-semibold">Size / Weight</legend>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3" role="group" aria-label="Available sizes and prices">
               {p.variants.map((x) => (
                 <button
                   key={x.label}
+                  type="button"
                   onClick={() => setVariant(x.label)}
-                  aria-pressed={variant === x.label}
-                  className={`min-w-24 rounded-md border px-4 py-2 text-center transition-colors ${variant === x.label ? "border-primary bg-primary-soft" : "border-input hover:border-border-strong"}`}
+                  aria-pressed={v.label === x.label}
+                  className={`min-w-24 rounded-md border px-4 py-2 text-center transition-colors ${v.label === x.label ? "border-primary bg-primary-soft" : "border-input hover:border-border-strong"}`}
                 >
                   <span className="block text-sm font-semibold">{x.label}</span>
                   <span className="block text-xs text-muted-foreground">{p.priceVerified && x.price > 0 ? formatPrice(x.price) : "Ask for price"}</span>

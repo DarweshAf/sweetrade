@@ -60,8 +60,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Sweet Trade — Natural Products in Karachi" },
-      { name: "description", content: "Honey, shilajit, saffron, olive oil, dates and traditional sweets delivered across Karachi." },
+      { title: "Sweet Trade — Natural Products in Pakistan" },
+      { name: "description", content: "Honey, shilajit, saffron, olive oil, dates and traditional sweets available across Pakistan." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

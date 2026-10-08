@@ -2,8 +2,12 @@ import { formatPrice } from "@/data/catalog";
 import { useStore } from "@/lib/store";
 import { useCatalog } from "@/lib/catalog";
 
-export function Totals() {
-  const { subtotal, delivery, total, lines } = useStore();
+export function Totals({ checkout = false }: { checkout?: boolean }) {
+  const cart = useStore();
+  const lines = checkout ? cart.checkoutLines : cart.lines;
+  const subtotal = checkout ? cart.checkoutSubtotal : cart.subtotal;
+  const delivery = checkout ? cart.checkoutDelivery : cart.delivery;
+  const total = checkout ? cart.checkoutTotal : cart.total;
   const { settings } = useCatalog();
   const provisional = lines.some((l) => l.product.requestOnly) || !settings.deliveryConfigured;
   return (

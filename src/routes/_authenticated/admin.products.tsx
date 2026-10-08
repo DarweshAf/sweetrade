@@ -74,13 +74,13 @@ function Products() {
             const priced = vs.filter((v) => Number.isFinite(v.price) && v.price > 0);
             const priceSummary = vs.length === 0 ? "No sizes yet" : p.price_verified && priced.length
               ? `From ${formatPrice(Math.min(...priced.map((v) => v.price)))} · ${vs.length} sizes`
-              : `${vs.length} size options · Prices not confirmed`;
+              : priced.length ? `Demo from ${formatPrice(Math.min(...priced.map((v) => v.price)))} · ${vs.length} sizes` : `${vs.length} size options · Prices not confirmed`;
             return (
               <li key={p.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-3">
                 <img src={resolveImage(p.image_url)} alt="" className="size-14 rounded object-cover" />
                 <span className="min-w-0 flex-1">
                   <b className="block truncate font-medium">{p.name}</b>
-                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {priceSummary}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.is_archived ? " · Archived" : ""}</span>
+                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {priceSummary}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.allow_pending_orders ? " · Request orders allowed" : ""}{p.is_archived ? " · Archived" : ""}</span>
                 </span>
                 <button onClick={() => toggleStock(p)} className={`rounded-full px-3 py-1 text-xs font-medium ${p.in_stock ? "bg-primary-soft text-primary" : "bg-secondary text-muted-foreground"}`}>
                   {p.in_stock ? "In stock" : "Out of stock"}
@@ -143,10 +143,12 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
       toast.error("Each size must be unique (for example, only one 500g option)"); return;
     }
     const priceVerified = f.get("price_verified") === "on";
+    const allowPendingOrders = f.get("allow_pending_orders") === "on";
     if (priceVerified && (!vs.length || vs.some((v) => v.price <= 0))) {
       toast.error("Enter a real price for every listed size before confirming prices"); return;
     }
     if (f.get("in_stock") === "on" && !priceVerified) { toast.error("Confirm prices before marking this item available"); return; }
+    if (allowPendingOrders && (!vs.length || !vs.some((v) => v.price > 0))) { toast.error("Add at least one positive temporary price before enabling requests"); return; }
     const data = {
       name, slug,
       category_slug: s("category") || null,
@@ -155,6 +157,7 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
       variants: vs,
       in_stock: f.get("in_stock") === "on",
       price_verified: priceVerified,
+      allow_pending_orders: allowPendingOrders,
       featured: f.get("featured") === "on",
       badge: s("badge") || null,
       short: s("short"), description: s("description"), ingredients: s("ingredients"), storage: s("storage"),
@@ -197,7 +200,7 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
         <legend className="px-1 text-sm font-semibold">Sizes / weights & prices</legend>
         <p className="text-xs leading-relaxed text-muted-foreground">
           Add the sizes this product is actually sold in. Set a separate PKR price for each size.
-          Half kg means 500g. Unverified draft prices appear on the storefront as clearly labelled DEMO prices only; they cannot be ordered. Confirm actual prices and availability before enabling sales.
+          Half kg means 500g. Draft prices appear as estimates. If provisional requests are enabled below and in Site Settings, customers can submit requests without payment; final prices, stock and delivery must be confirmed before fulfilling.
         </p>
         <div className="flex flex-wrap gap-2" role="group" aria-label="Quick add weight options">
           {QUICK_WEIGHTS.map((option) => (
@@ -271,7 +274,8 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
       </div>
       <div className="flex flex-wrap items-center gap-5 text-sm">
         <label className="flex items-center gap-2"><input type="checkbox" name="price_verified" defaultChecked={row?.price_verified ?? false} className="size-4 accent-primary" /> I have verified these prices and variants</label>
-        <label className="flex items-center gap-2"><input type="checkbox" name="in_stock" defaultChecked={row?.in_stock ?? false} className="size-4 accent-primary" /> Available to order</label>
+        <label className="flex items-center gap-2"><input type="checkbox" name="in_stock" defaultChecked={row?.in_stock ?? false} className="size-4 accent-primary" /> Stock confirmed (requires verified prices)</label>
+        <label className="flex items-center gap-2"><input type="checkbox" name="allow_pending_orders" defaultChecked={row?.allow_pending_orders ?? false} className="size-4 accent-primary" /> Allow order requests at estimated prices (subject to store setting)</label>
         <label className="flex items-center gap-2"><input type="checkbox" name="featured" defaultChecked={row?.featured ?? false} className="size-4 accent-primary" /> Featured on homepage</label>
         <label className="flex items-center gap-2">Sort order <input name="sort_order" type="number" defaultValue={row?.sort_order ?? nextOrder} className={`${adminField} w-20`} /></label>
       </div>

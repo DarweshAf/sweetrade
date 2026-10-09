@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { SlidersHorizontal, X, SearchX } from "lucide-react";
 import { formatPrice, priceFrom } from "@/data/catalog";
 import { useCatalog } from "@/lib/catalog";
@@ -39,6 +39,32 @@ function Shop() {
   const s = Route.useSearch();
   const navigate = useNavigate({ from: "/shop" });
   const [open, setOpen] = useState(false);
+  const filterButton = useRef<HTMLButtonElement>(null);
+  const closeFilterButton = useRef<HTMLButtonElement>(null);
+  const filterPanel = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeFilterButton.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); setOpen(false); return; }
+      if (event.key !== "Tab" || !filterPanel.current) return;
+      const focusable = [...filterPanel.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href]'
+      )].filter((node) => node.offsetParent !== null);
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", onKeyDown);
+      filterButton.current?.focus();
+    };
+  }, [open]);
   const set = (patch: Partial<Search>) => navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
   const MIN = 0;
   const MAX = Math.max(1000, ...products.flatMap((p) => p.variants.map((v) => v.price)));
@@ -62,15 +88,15 @@ function Shop() {
   const active = Boolean(s.category || s.stock || s.q || s.max);
   const cat = CATEGORIES.find((c) => c.slug === s.category);
 
-  const radio = "size-4 accent-primary";
+  const radio = "size-5 shrink-0 accent-primary";
   const Filters = (
     <div className="space-y-7">
       <fieldset>
         <legend className="mb-3 text-sm font-semibold">Categories</legend>
         <div className="space-y-2.5">
-          <label className="flex items-center gap-2.5 text-sm"><input type="radio" className={radio} checked={!s.category} onChange={() => set({ category: undefined })} /> All products ({products.length})</label>
+          <label className="flex min-h-10 items-center gap-2.5 text-sm"><input type="radio" className={radio} checked={!s.category} onChange={() => set({ category: undefined })} /> All products ({products.length})</label>
           {CATEGORIES.map((c) => (
-            <label key={c.slug} className="flex items-center gap-2.5 text-sm">
+            <label key={c.slug} className="flex min-h-10 items-center gap-2.5 text-sm">
               <input type="radio" className={radio} checked={s.category === c.slug} onChange={() => set({ category: c.slug })} />
               {c.name} <span className="text-muted-foreground">({countIn(c.slug)})</span>
             </label>
@@ -79,14 +105,14 @@ function Shop() {
       </fieldset>
       <fieldset>
         <legend className="mb-3 text-sm font-semibold">Price Range</legend>
-        <input type="range" min={MIN} max={MAX} step={100} value={max} onChange={(e) => set({ max: Number(e.target.value) === MAX ? undefined : Number(e.target.value) })} className="w-full accent-primary" aria-label="Maximum price" />
+        <input type="range" min={MIN} max={MAX} step={100} value={max} onChange={(e) => set({ max: Number(e.target.value) === MAX ? undefined : Number(e.target.value) })} className="h-10 w-full accent-primary" aria-label="Maximum price" />
         <div className="mt-1 flex justify-between text-xs text-muted-foreground"><span>{formatPrice(MIN)}</span><span>{formatPrice(max)}</span></div>
       </fieldset>
       <fieldset>
         <legend className="mb-3 text-sm font-semibold">Availability</legend>
         <div className="space-y-2.5">
           {[["in", "Available to order / request", products.filter((p) => p.inStock).length], ["out", "Currently unavailable", products.filter((p) => !p.inStock).length]].map(([v, l, n]) => (
-            <label key={v} className="flex items-center gap-2.5 text-sm">
+            <label key={v} className="flex min-h-10 items-center gap-2.5 text-sm">
               <input type="checkbox" className={radio} checked={s.stock === v} onChange={(e) => set({ stock: e.target.checked ? (v as string) : undefined })} />
               {l} <span className="text-muted-foreground">({n})</span>
             </label>
@@ -122,12 +148,12 @@ function Shop() {
             </p>
             <div className="flex min-w-0 flex-wrap items-center gap-2">
               {active && <button type="button" onClick={() => navigate({ search: {} })} className="min-h-10 rounded-md px-2 text-xs font-semibold text-primary hover:underline">Clear filters</button>}
-              <Button variant="outline" size="sm" className="min-h-10 lg:hidden" onClick={() => setOpen(true)}>
+              <Button ref={filterButton} variant="outline" size="sm" className="min-h-11 lg:hidden" onClick={() => setOpen(true)}>
                 <SlidersHorizontal className="size-4" /> Filters
               </Button>
               <label className="sr-only" htmlFor="sort">Sort by</label>
               <select id="sort" aria-label="Sort products" value={s.sort ?? ""} onChange={(e) => set({ sort: e.target.value || undefined })}
-                className="min-h-10 min-w-0 max-w-full rounded-md border border-input bg-card px-2 text-sm">
+                className="min-h-11 min-w-0 max-w-full rounded-md border border-input bg-card px-2 text-base sm:text-sm">
                 <option value="">Featured</option>
                 <option value="low">Price: Low to High</option>
                 <option value="high">Price: High to Low</option>
@@ -150,15 +176,17 @@ function Shop() {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Filters">
-          <div className="absolute inset-0 bg-ink/50" onClick={() => setOpen(false)} />
-          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-xl bg-background p-5 animate-in slide-in-from-bottom duration-200">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl">Filters</h2>
-              <button className="tap-target" aria-label="Close filters" onClick={() => setOpen(false)}><X className="size-5" /></button>
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-labelledby="mobile-filters-title">
+          <button type="button" className="absolute inset-0 w-full cursor-default bg-ink/55" aria-label="Close filters" onClick={() => setOpen(false)} />
+          <div ref={filterPanel} className="absolute inset-x-0 bottom-0 flex max-h-[min(88dvh,760px)] min-w-0 flex-col overflow-hidden rounded-t-2xl bg-background shadow-raised">
+            <div className="flex shrink-0 items-center justify-between border-b border-border px-4 py-3">
+              <h2 id="mobile-filters-title" className="text-xl">Filter Products</h2>
+              <button ref={closeFilterButton} type="button" className="tap-target rounded-full" aria-label="Close filters" onClick={() => setOpen(false)}><X className="size-5" /></button>
             </div>
-            {Filters}
-            <Button variant="outline" block className="mt-3" onClick={() => setOpen(false)}>Show {list.length} results</Button>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">{Filters}</div>
+            <div className="shrink-0 border-t border-border bg-card px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+              <Button block className="min-h-12" onClick={() => setOpen(false)}>Show {list.length} {list.length === 1 ? "product" : "products"}</Button>
+            </div>
           </div>
         </div>
       )}

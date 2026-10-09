@@ -180,7 +180,7 @@ function ProductPage() {
   };
 
   return (
-    <div className="container-page py-6 pb-48 lg:py-10 lg:pb-10">
+    <div className="container-page py-6 pb-44 sm:pb-10 lg:py-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}

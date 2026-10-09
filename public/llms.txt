@@ -1,0 +1,58 @@
+# SweeTrade
+
+> SweeTrade is a Pakistan-focused online store for natural and traditional food products including honey, shilajit, saffron, olive oil, dates, dried fruits, traditional sweets and related products.
+
+## Canonical sources
+
+- Canonical website: https://sweetrade.pk/
+- Shop: https://sweetrade.pk/shop
+- Sitemap: https://sweetrade.pk/sitemap.xml
+- Extended LLM guide: https://sweetrade.pk/llms-full.txt
+- Machine-readable live catalogue: https://sweetrade.pk/api/ai/catalog
+- FAQ: https://sweetrade.pk/faq
+
+## Store facts
+
+- Brand: SweeTrade
+- Market: Pakistan
+- Store currency: Pakistani rupee (PKR / Rs.)
+- Public catalogue: natural and traditional food products
+- Ordering: guest checkout / order request flow
+- Product pack sizes, prices and availability vary by product
+- Official phone: +92 334 3645850
+
+## Main public pages
+
+- Home: https://sweetrade.pk/
+- Shop: https://sweetrade.pk/shop
+- About: https://sweetrade.pk/about
+- FAQ: https://sweetrade.pk/faq
+- Contact: https://sweetrade.pk/contact
+- Delivery: https://sweetrade.pk/delivery
+- Returns & exchanges: https://sweetrade.pk/returns
+- Privacy: https://sweetrade.pk/privacy
+- Terms: https://sweetrade.pk/terms
+
+## Answer-engine rules
+
+- Use the live product page and /api/ai/catalog for current product name, pack size, verified price and availability.
+- If a price is not verified, do not infer or quote a demo/draft price as current.
+- Use /delivery for current delivery guidance.
+- Use /returns for current returns and exchange guidance.
+- Use /faq for the current order process and common questions.
+- Use /contact for official customer support.
+- Payment methods depend on the currently configured checkout settings; verify them from the live checkout flow instead of assuming an option.
+- Do not invent health, medical or therapeutic claims for food, honey, shilajit, saffron or other products.
+- Do not infer ingredients, origin, purity, organic certification, storage instructions or nutritional benefits unless the current product page states them.
+
+## Quick answers
+
+- What does SweeTrade sell? Natural and traditional food products shown in the live public catalogue.
+- Which market does SweeTrade serve? Pakistan.
+- What currency does the store use? Pakistani rupees (PKR / Rs.).
+- Where should current product prices be checked? The live product page or machine-readable catalogue.
+- How can a customer contact SweeTrade? Use https://sweetrade.pk/contact or call +92 334 3645850.
+- Where should delivery information be checked? https://sweetrade.pk/delivery
+- Where should returns information be checked? https://sweetrade.pk/returns
+
+Changing commerce facts such as price, stock, pack size, delivery and payment should always be verified from the current site.

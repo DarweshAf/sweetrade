@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/Logo";
-export const Route = createFileRoute("/auth")({ head: () => ({ meta: [{ title: "Admin Sign In — Sweet Trade" }, { name: "robots", content: "noindex" }] }), component: AuthPage });
+export const Route = createFileRoute("/auth")({ head: () => ({ meta: [{ title: "Admin Sign In — SweeTrade" }, { name: "robots", content: "noindex" }] }), component: AuthPage });
 const field = "h-11 w-full rounded-md border border-input bg-card px-3 text-sm focus:border-primary focus:outline-none";
 function AuthPage() {
   const navigate = useNavigate();

@@ -40,24 +40,30 @@ function Cart() {
   }
 
   return (
-    <div className="container-page py-8 lg:py-12">
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <h1 className="text-3xl">Your Cart ({count})</h1>
-        <Link to="/shop" className="inline-flex items-center gap-1 text-sm text-primary"><ArrowLeft className="size-4" /> Continue Shopping</Link>
-      </div>
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div className="container-page py-7 sm:py-10">
+      <div className="mb-7 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-          <ul className="divide-y divide-border rounded-lg border border-border bg-card">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">Your selection</p>
+          <h1 className="mt-2 text-[clamp(1.8rem,5vw,2.75rem)]">Shopping Cart <span className="font-sans text-base font-medium text-muted-foreground">({count})</span></h1>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Review your sizes and quantities before sending your order request.</p>
+        </div>
+        <Link to="/shop" className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-primary hover:underline">
+          <ArrowLeft className="size-4" aria-hidden /> Continue shopping
+        </Link>
+      </div>
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-8">
+        <div>
+          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card shadow-card">
             {lines.map((l) => (
-              <li key={l.productId + l.variant} className="grid grid-cols-[72px_minmax(0,1fr)] gap-4 p-4 sm:grid-cols-[80px_minmax(0,1fr)_auto_auto_auto] sm:items-center">
-                <img src={l.product.image} alt={l.product.name} className="size-18 rounded-md object-cover sm:size-20" loading="lazy" />
+              <li key={l.productId + l.variant} className="grid min-w-0 grid-cols-[72px_minmax(0,1fr)] items-center gap-3 p-3 sm:grid-cols-[84px_minmax(0,1fr)] sm:gap-4 sm:p-5 xl:grid-cols-[84px_minmax(0,1fr)_auto]">
+                <img src={l.product.image} alt={l.product.name} className="size-[72px] rounded-lg object-cover sm:size-[84px]" loading="lazy" />
                 <div className="min-w-0">
                   <Link to="/product/$slug" params={{ slug: l.product.slug }} className="font-semibold hover:text-primary">{l.product.name}</Link>
                   <p className="text-sm text-muted-foreground">{l.variant} · {formatPrice(l.v.price)}</p>
                 </div>
-                <div className="col-span-2 flex items-center justify-between gap-4 sm:col-span-3 sm:justify-end">
+                <div className="col-span-2 flex min-w-0 flex-wrap items-center justify-between gap-2 border-t border-border pt-3 sm:gap-3 xl:col-span-1 xl:justify-end xl:border-0 xl:pt-0">
                   <QuantitySelector compact value={l.qty} onChange={(n) => setQty(l.productId, l.variant, n)} />
-                  <p className="w-24 text-right font-semibold">{formatPrice(l.total)}</p>
+                  <p className="min-w-0 text-right text-sm font-semibold tabular-nums sm:text-base">{formatPrice(l.total)}</p>
                   <button className="tap-target text-muted-foreground hover:text-destructive" aria-label={`Remove ${l.product.name}`} onClick={() => remove(l.productId, l.variant)}>
                     <Trash2 className="size-4" />
                   </button>
@@ -65,9 +71,9 @@ function Cart() {
               </li>
             ))}
           </ul>
-          <button onClick={clear} className="mt-4 text-sm text-primary hover:underline">Clear Cart</button>
+          <button type="button" onClick={clear} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">Clear cart</button>
         </div>
-        <aside className="h-fit rounded-lg border border-border bg-card p-5">
+        <aside className="h-fit rounded-xl border border-border bg-card p-4 shadow-card sm:p-6 lg:sticky lg:top-24">
           <h2 className="mb-4 text-xl">Order Summary</h2>
           <Totals />
           {requestMode && <p className="mt-3 text-xs text-muted-foreground">Prices are estimates. Submit a request without paying upfront; SweeTrade will confirm costs and delivery.</p>}

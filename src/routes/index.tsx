@@ -16,7 +16,10 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Shop natural favorites: honey, saffron, shilajit, olive oil, dates and more. Choose your size and request an order from across Pakistan." },
       { property: "og:title", content: "Natural Favorites, Made Easy | SweeTrade Pakistan" },
       { property: "og:description", content: "Explore natural products for customers across Pakistan." },
+      { property: "og:url", content: "https://sweetrade.pk/" },
+      { name: "robots", content: "index,follow,max-image-preview:large" },
     ],
+    links: [{ rel: "canonical", href: "https://sweetrade.pk/" }],
   }),
   component: Home,
 });

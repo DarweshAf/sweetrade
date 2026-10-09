@@ -48,9 +48,9 @@ export function Header() {
   return (
     <>
       <div className="bg-ink text-ink-foreground">
-        <div className="container-page flex h-9 items-center justify-center gap-6 text-xs sm:justify-between">
+        <div className="container-page flex min-h-9 items-center justify-center gap-4 py-1 text-[11px] sm:justify-between sm:text-xs">
           <span className="hidden sm:block" />
-          <p className="text-center">
+          <p className="max-w-full text-center leading-4 sm:max-w-[55%]">
             {CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Free delivery across Pakistan on orders above ${formatPrice(CONTACT.freeDeliveryThreshold)}` : content.home.announcement}
           </p>
           <div className="hidden items-center gap-4 sm:flex">
@@ -63,10 +63,10 @@ export function Header() {
       </div>
 
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-        <div className="container-page grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 lg:h-20 lg:gap-8">
-          <Logo className="h-10 lg:h-14" />
+        <div className="container-page grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3 xl:h-20 xl:gap-5 2xl:gap-8">
+          <Logo className="h-10 xl:h-14" />
 
-          <nav aria-label="Main" className="hidden items-center gap-6 lg:flex">
+          <nav aria-label="Main" className="hidden min-w-0 items-center gap-4 xl:flex 2xl:gap-6">
             {NAV.map((n) => (
               <Link
                 key={n.label}
@@ -85,14 +85,14 @@ export function Header() {
                 ))}
               </div>
             </details>
-            <div className="ml-2 w-64 xl:w-72">
+            <div className="ml-1 min-w-0 w-44 2xl:w-64">
               <SearchBox />
             </div>
           </nav>
-          <span className="lg:hidden" />
+          <span className="xl:hidden" />
 
           <div className="flex items-center">
-            <button className="tap-target lg:hidden" aria-label="Search" aria-expanded={searchOpen} onClick={() => setSearchOpen((s) => !s)}>
+            <button className="tap-target xl:hidden" aria-label="Search" aria-expanded={searchOpen} onClick={() => setSearchOpen((s) => !s)}>
               <Search className="size-5" />
             </button>
             <Link to="/wishlist" className="tap-target" aria-label="Wishlist">
@@ -109,13 +109,13 @@ export function Header() {
           </div>
         </div>
         {searchOpen && (
-          <div className="container-page pb-3 lg:hidden">
+          <div className="container-page pb-3 xl:hidden">
             <SearchBox onDone={() => setSearchOpen(false)} />
           </div>
         )}
       </header>
 
-      <nav aria-label="Mobile" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+      <nav aria-label="Mobile" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur xl:hidden">
         <Link to="/" activeOptions={{ exact: true }} className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
           <Home className="size-5" aria-hidden />Home
         </Link>

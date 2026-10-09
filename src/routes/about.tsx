@@ -10,7 +10,10 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: "Meet SweeTrade and browse our honey, shilajit, saffron, olive oil, dates and other products across Pakistan." },
       { property: "og:title", content: "About Us — SweeTrade" },
       { property: "og:description", content: "Explore the SweeTrade product collection." },
+      { property: "og:url", content: "https://sweetrade.pk/about" },
+      { name: "robots", content: "index,follow,max-image-preview:large" },
     ],
+    links: [{ rel: "canonical", href: "https://sweetrade.pk/about" }],
   }),
   component: About,
 });

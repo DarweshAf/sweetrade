@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { QuantitySelector } from "@/components/shop/QuantitySelector";
 import { ProductImage } from "@/components/shop/ProductImage";
 import { ProductCard } from "@/components/shop/ProductCard";
+import { ScrollReveal } from "@/components/site/ScrollReveal";
+import { StoreSkeleton } from "@/components/site/StoreSkeleton";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/product/$slug")({
@@ -37,6 +39,7 @@ export const Route = createFileRoute("/product/$slug")({
     </div>
   ),
   component: ProductPage,
+  pendingComponent: StoreSkeleton,
 });
 
 const TABS = ["Description", "Ingredients", "Storage", "Delivery"] as const;
@@ -181,7 +184,7 @@ function ProductPage() {
         <section className="mt-14">
           <h2 className="mb-5 text-2xl">You may also like</h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {related.map((r) => <ProductCard key={r.id} product={r} />)}
+            {related.map((r, i) => <ScrollReveal key={r.id} className="h-full" delay={i * 40}><ProductCard product={r} /></ScrollReveal>)}
           </div>
         </section>
       )}

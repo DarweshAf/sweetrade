@@ -1,9 +1,9 @@
-# Sweet Trade release checklist
+# SweeTrade release checklist
 
 This repository can be edited using GitHub directly. No Lovable prompt credits, GitHub Actions, or CLI workflows are required for code edits.
 
 ## Changes applied to the current Lovable Cloud project
-Project: `14cceb1a-dc3e-4ba8-8195-2f8251f24ad8` (Sweet Trade).
+Project: `14cceb1a-dc3e-4ba8-8195-2f8251f24ad8` (SweeTrade).
 
 On October 8, 2026, migrations `0001_secure_store.sql`, `0002_verify_product_prices.sql` and `0003_confirm_shipping.sql` were applied directly through the project's connected PostgreSQL database. Verification queries confirmed:
 - 14 products, with the corrected product names.
@@ -38,7 +38,7 @@ These database changes are specific to this Lovable project, **not a proof that 
 **Never place real test orders on production.**
 
 ## Pakistan-wide checkout change (October 8, 2026)
-- Sweet Trade serves customers throughout Pakistan, not only Karachi. City can be typed freely; province/region and locality are also required.
+- SweeTrade serves customers throughout Pakistan, not only Karachi. City can be typed freely; province/region and locality are also required.
 - The Lovable Cloud project's `orders` table now has nullable `province` and `city` columns; old records remain valid. For any other database, review and apply `docs/PAKISTAN_WIDE_CHECKOUT.sql` before deploying new checkout code.
 - The editable suggested city list is under Admin → Settings → Website Content → Suggested cities; it does not restrict the actual delivery address.
 - Delivery fees remain unverified (`delivery_configured=false` in the current Lovable project). Confirm *nationwide* rate applicability before enabling online checkout. Variable shipping charges by city/region will require further work; do not silently charge a Karachi fee for other cities.

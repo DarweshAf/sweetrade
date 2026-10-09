@@ -52,7 +52,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   },
   footer: {
     brandName: "Sweet Trade",
-    logoImage: "local:logo",
+    logoImage: "",
     tagline: "Sweet Taste… Healthy Life",
     description: "Carefully selected natural products for customers across Pakistan.",
     facebook: "",

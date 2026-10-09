@@ -80,7 +80,7 @@ function Products() {
                 <img src={resolveImage(p.image_url)} alt="" className="size-14 rounded object-cover" />
                 <span className="min-w-0 flex-1">
                   <b className="block truncate font-medium">{p.name}</b>
-                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {priceSummary}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.allow_pending_orders ? " · Request orders allowed" : ""}{p.is_archived ? " · Archived" : ""}</span>
+                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {priceSummary}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.allow_pending_orders ? " · Request orders allowed" : ""}{p.is_archived ? " · Archived" : ""}{p.image_url?.startsWith("local:") ? " · Add real product photo" : ""}</span>
                 </span>
                 <button onClick={() => toggleStock(p)} className={`rounded-full px-3 py-1 text-xs font-medium ${p.in_stock ? "bg-primary-soft text-primary" : "bg-secondary text-muted-foreground"}`}>
                   {p.in_stock ? "In stock" : "Out of stock"}
@@ -247,6 +247,7 @@ function ProductForm({ row, nextOrder, onDone }: { row: Row | null; nextOrder: n
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
           <L>Main image</L>
+          {(!image || image.startsWith("local:")) && <p className="mb-2 text-xs text-muted-foreground">This is a category illustration, not the actual product photo. Upload a real photo to replace it for shoppers.</p>}
           <div className="flex items-center gap-3">
             <img src={resolveImage(image)} alt="" className="size-16 rounded object-cover" />
             <input type="file" accept="image/*" onChange={(e) => upload(e.target.files, true)} className="min-w-0 text-sm" />

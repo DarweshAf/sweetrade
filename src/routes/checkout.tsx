@@ -32,7 +32,7 @@ const PROVINCES = [
   "Azad Jammu & Kashmir",
 ] as const;
 
-const field = "h-11 w-full rounded-md border border-input bg-card px-3 text-sm focus:border-primary focus:outline-none aria-[invalid=true]:border-destructive";
+const field = "min-h-12 w-full min-w-0 max-w-full rounded-lg border border-input bg-card px-3 text-base sm:text-sm focus:border-primary focus:outline-none aria-[invalid=true]:border-destructive";
 
 function Checkout() {
   const { lines, checkoutLines, isBuyNow, ready, clearBuyNow, completeCheckout } = useStore();
@@ -130,7 +130,7 @@ function Checkout() {
   if (!ready) {
     return <div role="status" aria-busy="true" aria-label="Loading your checkout" className="container-page grid gap-6 py-10 lg:grid-cols-[minmax(0,1fr)_380px]">
       <div className="space-y-5 rounded-xl border border-border bg-card p-6"><div className="wow-skeleton h-8 w-48" /><div className="wow-skeleton h-4 w-3/4" />
-        <div className="grid gap-4 sm:grid-cols-2">{Array.from({ length: 6 }, (_, i) => <div key={i} className="space-y-2"><div className="wow-skeleton h-4 w-24" /><div className="wow-skeleton h-11 w-full" /></div>)}</div>
+        <div className="grid min-w-0 gap-4 sm:grid-cols-2">{Array.from({ length: 6 }, (_, i) => <div key={i} className="space-y-2"><div className="wow-skeleton h-4 w-24" /><div className="wow-skeleton h-11 w-full" /></div>)}</div>
       </div>
       <div className="space-y-4 rounded-xl border border-border bg-card p-6"><div className="wow-skeleton h-8 w-36" /><div className="wow-skeleton h-16 w-full" /><div className="wow-skeleton h-16 w-full" /><div className="wow-skeleton h-11 w-full" /></div>
     </div>;
@@ -149,9 +149,9 @@ function Checkout() {
   const L = ({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) => <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium">{children}</label>;
 
   return (
-    <form noValidate onSubmit={submit} className="container-page grid gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:py-12">
+    <form noValidate onSubmit={submit} className="container-page grid min-w-0 gap-5 py-7 sm:gap-7 sm:py-9 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8 lg:py-12">
       <h1 className="sr-only">Checkout</h1>
-      <section className="rounded-lg border border-border bg-card p-5 sm:p-6">
+      <section className="min-w-0 rounded-xl border border-border bg-card p-4 shadow-card sm:p-6">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-xl">1. Delivery Information</h2>
           {isBuyNow && <span className="rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">Buy Now · One product</span>}
@@ -206,7 +206,7 @@ function Checkout() {
       </section>
 
       <aside className="space-y-6">
-        <section className="rounded-lg border border-border bg-card p-5">
+        <section className="min-w-0 rounded-xl border border-border bg-card p-4 shadow-card sm:p-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-xl">2. Order Summary</h2>
             {isBuyNow && lines.length > 0 && (
@@ -250,7 +250,7 @@ function Checkout() {
             </label>
           )}
           {requestMode && !settings.pendingOrdersEnabled && <p role="alert" className="mt-3 text-sm text-destructive">Order requests are currently unavailable. Please contact SweeTrade.</p>}
-          <Button type="submit" size="lg" block className="mt-5" disabled={busy || !paymentOptions.length || (requestMode && !settings.pendingOrdersEnabled)}>
+          <Button type="submit" size="lg" block className="mt-5 min-h-12 text-base sm:text-sm" disabled={busy || !paymentOptions.length || (requestMode && !settings.pendingOrdersEnabled)}>
             {busy ? "Submitting…" : requestMode ? "Submit Order Request" : "Place Order"}
           </Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">No account required. SweeTrade confirms orders by phone.</p>

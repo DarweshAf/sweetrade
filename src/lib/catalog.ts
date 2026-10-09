@@ -110,6 +110,7 @@ export async function fetchCatalog(): Promise<Catalog> {
         name: x.name,
         category: (x.category_slug ?? "") as Product["category"],
         image,
+        imageIllustrative: Boolean(x.image_url?.startsWith("local:")),
         gallery: gallery.length ? gallery : [image],
         // Display admin-entered draft prices as clearly labelled demos in the UI.
         // Keep priceVerified=false and inStock=false until the merchant confirms the real rates.

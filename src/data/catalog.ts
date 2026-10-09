@@ -11,7 +11,7 @@ import pickle from "@/assets/p-pickle.jpg";
 export const CONTACT = {
   phone: "+92 334 3645850",
   whatsapp: "", // Activate only after WhatsApp is confirmed on the business number.
-  email: "info@sweetrade.com",
+  email: "",
   freeDeliveryThreshold: 0,
   deliveryFee: 0,
   deliveryConfigured: false,

@@ -101,7 +101,7 @@ export function Header() {
             <Link to="/cart" className="tap-target relative -mr-2 hidden sm:inline-flex" aria-label={`Cart, ${count} items`}>
               <ShoppingCart className="size-5" />
               {count > 0 && (
-                <span className="absolute right-1 top-1 grid min-w-4.5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold leading-4.5 text-primary-foreground">
+                <span key={count} className="wow-cart-pop absolute right-1 top-1 grid min-w-4.5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold leading-4.5 text-primary-foreground">
                   {count}
                 </span>
               )}
@@ -127,7 +127,7 @@ export function Header() {
         </button>
         <Link to="/cart" className="relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
           <ShoppingCart className="size-5" aria-hidden />Cart
-          {count > 0 && <span className="absolute right-1/3 top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{count}</span>}
+          {count > 0 && <span key={count} className="wow-cart-pop absolute right-1/3 top-1 rounded-full bg-primary px-1 text-[10px] text-primary-foreground">{count}</span>}
         </Link>
       </nav>
     </>

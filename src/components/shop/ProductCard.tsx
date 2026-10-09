@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { Heart, ShoppingBag, ShoppingCart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, Heart, ShoppingBag, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import { ProductImage } from "./ProductImage";
 import { formatPrice, type Product } from "@/data/catalog";
@@ -13,12 +13,18 @@ export function ProductCard({ product }: { product: Product; showFrom?: boolean 
   const navigate = useNavigate();
   const wished = wishlist.includes(product.id);
   const [selectedLabel, setSelectedLabel] = useState(product.variants[0]?.label ?? "");
+  const [justAdded, setJustAdded] = useState(false);
+  useEffect(() => {
+    if (!justAdded) return;
+    const timer = window.setTimeout(() => setJustAdded(false), 1500);
+    return () => window.clearTimeout(timer);
+  }, [justAdded]);
   const selected = product.variants.find((v) => v.label === selectedLabel) ?? product.variants[0];
   const canOrder = Boolean(product.inStock && (product.priceVerified || product.requestOnly) && selected && selected.price > 0);
   const hasEstimate = !product.priceVerified && Boolean(selected?.price);
 
   return (
-    <article className="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-shadow hover:shadow-raised">
+    <article className="wow-product-card group flex min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card">
       <div className="relative">
         <Link to="/product/$slug" params={{ slug: product.slug }} aria-label={`View ${product.name}`}>
           <ProductImage
@@ -54,7 +60,7 @@ export function ProductCard({ product }: { product: Product; showFrom?: boolean 
         </Link>
 
         <div aria-live="polite" aria-atomic="true" className="space-y-0.5">
-          <p className="text-xl font-bold leading-tight text-primary tabular-nums sm:text-2xl">
+          <p key={selected?.label} className="wow-price-pop text-xl font-bold leading-tight text-primary tabular-nums sm:text-2xl">
             {selected && selected.price > 0 ? formatPrice(selected.price) : "Price on request"}
           </p>
           <p className="text-sm text-muted-foreground">
@@ -68,10 +74,10 @@ export function ProductCard({ product }: { product: Product; showFrom?: boolean 
             <div className="flex flex-wrap gap-2">
               {product.variants.map((variant) => (
                 <button key={variant.label} type="button"
-                  onClick={() => setSelectedLabel(variant.label)}
+                  onClick={() => { setSelectedLabel(variant.label); setJustAdded(false); }}
                   aria-pressed={selected?.label === variant.label}
                   aria-label={`${product.name}, ${variant.label}, ${formatPrice(variant.price)}`}
-                  className={`min-h-10 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${selected?.label === variant.label
+                  className={`wow-weight-option min-h-10 rounded-lg border px-3 py-2 text-sm font-semibold ${selected?.label === variant.label
                     ? "border-primary bg-primary-soft text-primary"
                     : "border-input bg-background text-foreground hover:border-primary"}`}>
                   {variant.label}
@@ -83,17 +89,18 @@ export function ProductCard({ product }: { product: Product; showFrom?: boolean 
 
         {canOrder ? (
           <div className="mt-auto grid grid-cols-1 gap-2 pt-2 sm:grid-cols-2">
-            <Button type="button" variant="outline" className="h-auto min-h-11 min-w-0 gap-1 px-2 text-xs font-semibold sm:text-sm"
+            <Button type="button" variant="outline" className="wow-buy-button h-auto min-h-11 min-w-0 gap-1 px-2 text-xs font-semibold sm:text-sm"
               onClick={() => {
                 if (!selected) return;
                 add(product.id, selected.label);
+                setJustAdded(true);
                 toast.success(`${product.name} (${selected.label}) added to cart`, {
                   action: { label: "View Cart", onClick: () => navigate({ to: "/cart" }) },
                 });
               }}>
-              <ShoppingCart className="size-4 shrink-0" aria-hidden /> <span>Add to Cart</span>
+              {justAdded ? <Check className="size-4 shrink-0 text-success" aria-hidden /> : <ShoppingCart className="size-4 shrink-0" aria-hidden />} <span>{justAdded ? "Added!" : "Add to Cart"}</span>
             </Button>
-            <Button type="button" className="h-auto min-h-11 min-w-0 gap-1 px-2 text-xs font-semibold sm:text-sm"
+            <Button type="button" className="wow-buy-button h-auto min-h-11 min-w-0 gap-1 px-2 text-xs font-semibold sm:text-sm"
               onClick={() => {
                 if (!selected) return;
                 startBuyNow(product.id, selected.label);

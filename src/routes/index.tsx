@@ -47,7 +47,16 @@ function Home() {
         image={content.home.heroImage}
       />
 
-      {(isPreview || requiresPricing || settings.pendingOrdersEnabled) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">{settings.pendingOrdersEnabled && !isPreview ? "Order requests are open across Pakistan. We confirm the final price and delivery before dispatch. No advance payment." : "Sample prices are for demonstration only. Online orders are unavailable until SweeTrade confirms the product prices."} <Link to="/contact" className="font-semibold text-primary underline">Contact SweeTrade</Link> for details.</p></div>}
+      {(isPreview || requiresPricing || settings.pendingOrdersEnabled) && (
+        <div className="border-y border-border bg-secondary">
+          <p className="container-page py-2.5 text-center text-xs leading-5 sm:text-sm">
+            {settings.pendingOrdersEnabled && !isPreview
+              ? "Order requests open · Final prices and delivery confirmed by phone."
+              : "Browse our collection · Contact us to confirm availability and prices."}
+            {" "}<Link to="/faq" className="font-semibold text-primary underline underline-offset-2">How ordering works</Link>
+          </p>
+        </div>
+      )}
       <section className="border-b border-border bg-card">
         <ul className="container-page grid grid-cols-2 gap-4 py-5 lg:grid-cols-4">
           {content.home.highlights.map((feature, i) => {
@@ -61,7 +70,7 @@ function Home() {
       </section>
 
       <ScrollReveal>
-      <section id="categories" className="container-page section-y">
+      <section id="categories" className="container-page section-y scroll-mt-24 xl:scroll-mt-28">
         <div className="mb-5 flex items-end justify-between gap-4">
           <h2 className="text-2xl sm:text-3xl">Shop by Category</h2>
           <Link to="/shop" className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-primary">View All <ArrowRight className="size-4" /></Link>

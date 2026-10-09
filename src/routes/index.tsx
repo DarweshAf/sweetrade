@@ -46,6 +46,7 @@ function Home() {
       <section className="relative overflow-hidden">
         <img src={resolveImage(content.home.heroImage)} alt="SweeTrade natural products" width={1600} height={912} fetchPriority="high" className="wow-hero-image absolute inset-0 size-full object-cover object-right" />
         <div className="hero-fade absolute inset-0" />
+        <div aria-hidden="true" className="wow-hero-glow pointer-events-none absolute inset-0" />
         <div className="container-page relative py-16 sm:py-24 lg:py-28">
           <div className="wow-hero-copy max-w-lg">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl">

@@ -199,3 +199,97 @@
 @utility hero-fade {
   background: linear-gradient(90deg, var(--color-background) 0%, oklch(0.985 0.008 80 / 0.85) 38%, transparent 70%);
 }
+
+/*
+ * SweeTrade motion system. Visual only: no layout shifts, fake urgency,
+ * automatic purchases, or required external animation services.
+ */
+.wow-reveal[data-reveal="pending"] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.wow-reveal[data-reveal="visible"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+.wow-reveal { transition: opacity 500ms ease, transform 500ms cubic-bezier(.2,.8,.2,1); }
+
+.wow-product-card { transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease; }
+.wow-weight-option { transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease; }
+.wow-weight-option[aria-pressed="true"] { box-shadow: inset 0 0 0 1px var(--color-primary); }
+.wow-buy-button { transition: transform 160ms ease, filter 160ms ease; }
+.wow-buy-button:active, .wow-weight-option:active { transform: scale(.97); }
+
+.wow-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg,
+    var(--color-surface) 15%,
+    var(--color-secondary) 35%,
+    var(--color-surface) 55%);
+  background-size: 220% 100%;
+  animation: wow-shimmer 1.55s ease-in-out infinite;
+}
+.wow-skeleton {
+  border-radius: .5rem;
+  background: linear-gradient(110deg, var(--color-surface) 15%, var(--color-secondary) 35%, var(--color-surface) 55%);
+  background-size: 220% 100%;
+  animation: wow-shimmer 1.55s ease-in-out infinite;
+}
+
+@keyframes wow-shimmer {
+  0% { background-position: 180% 0; }
+  100% { background-position: -80% 0; }
+}
+@keyframes wow-cart-pop {
+  0% { transform: scale(.72); }
+  50% { transform: scale(1.26); }
+  100% { transform: scale(1); }
+}
+@keyframes wow-price-pop {
+  0% { opacity: .6; transform: translateY(5px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes wow-hero-reveal {
+  0% { opacity: .01; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes wow-hero-image {
+  0% { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+@keyframes wow-success-pop {
+  0% { opacity: 0; transform: scale(.75); }
+  75% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes wow-mobile-bar {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wow-hero-image { animation: wow-hero-image 1.5s ease-out both; }
+  .wow-hero-copy { animation: wow-hero-reveal .65s ease-out both; }
+  .wow-hero-actions { animation: wow-hero-reveal .7s .12s ease-out both; }
+  .wow-cart-pop { animation: wow-cart-pop 380ms cubic-bezier(.2,.8,.2,1) both; }
+  .wow-price-pop { animation: wow-price-pop 240ms ease-out both; }
+  .wow-success-pop { animation: wow-success-pop 520ms cubic-bezier(.2,.8,.2,1) both; }
+  .wow-mobile-bar { animation: wow-mobile-bar 280ms ease-out both; }
+  @media (hover: hover) and (pointer: fine) {
+    .wow-product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-raised);
+      border-color: var(--color-border-strong);
+    }
+    .wow-buy-button:hover { filter: brightness(1.04); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wow-reveal[data-reveal="pending"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .wow-shimmer, .wow-skeleton { animation: none !important; }
+}

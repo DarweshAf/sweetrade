@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Heart, Home, MessageCircle, Phone, Search, ShoppingCart, Grid2X2 } from "lucide-react";
 import { Logo } from "./Logo";
 import { useStore } from "@/lib/store";
@@ -44,6 +44,16 @@ export function Header() {
   const { contact: CONTACT, categories, content } = useCatalog();
   const { count } = useStore();
   const [searchOpen, setSearchOpen] = useState(false);
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  useEffect(() => { setSearchOpen(false); }, [pathname]);
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSearchOpen(false);
+    };
+    document.addEventListener("keydown", onEscape);
+    return () => document.removeEventListener("keydown", onEscape);
+  }, [searchOpen]);
 
   return (
     <>
@@ -122,7 +132,7 @@ export function Header() {
         <Link to="/shop" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
           <Grid2X2 className="size-5" aria-hidden />Shop
         </Link>
-        <button type="button" onClick={() => setSearchOpen(true)} aria-label="Search products" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground">
+        <button type="button" onClick={() => setSearchOpen((value) => !value)} aria-expanded={searchOpen} aria-label="Search products" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground">
           <Search className="size-5" aria-hidden />Search
         </button>
         <Link to="/cart" className="relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">

@@ -46,12 +46,12 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   about: {
     eyebrow: "A sweet way to trade",
     title: "Sweet Taste… Healthy Life",
-    introduction: "Sweet Trade offers carefully selected natural products — honey, shilajit, saffron, olive oil, dates, pickles and traditional sweets — available to customers across Pakistan.",
+    introduction: "SweeTrade offers carefully selected natural products — honey, shilajit, saffron, olive oil, dates, pickles and traditional sweets — available to customers across Pakistan.",
     detail: "We keep things simple: clear product information, honest pricing and easy ordering by phone or WhatsApp.",
     image: "local:hero",
   },
   footer: {
-    brandName: "Sweet Trade",
+    brandName: "SweeTrade",
     logoImage: "",
     tagline: "Sweet Taste… Healthy Life",
     description: "Carefully selected natural products for customers across Pakistan.",
@@ -76,10 +76,10 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     ],
   },
   policies: {
-    delivery: "Sweet Trade serves customers throughout Pakistan. Delivery availability, charges and timing depend on the delivery city and address.\n\nIf your destination does not yet have a confirmed shipping rate, checkout shows delivery as to be confirmed and accepts a pending order request. Our team will agree the final price and delivery fee with you by phone before fulfillment.\n\nDo not rely on a specific delivery date until it has been confirmed by our team.",
-    returns: "If your order is damaged, incorrect or otherwise not as expected, please contact Sweet Trade as soon as possible with your order reference and relevant photos.\n\nOur team will review the issue and explain the options available for your product and circumstances. Product-specific return eligibility and procedures should be confirmed before sending an item back.\n\nThis page does not limit any rights that customers have under applicable law.",
-    privacy: "When you place an order, Sweet Trade collects the information you provide, such as your name, phone number, province, city, locality, address, selected products and any order notes.\n\nThis information is used for managing the order, arranging delivery and communicating with you. Order information is stored in the store's database and is accessible to authorized administrators.\n\nIf you contact us through an external service such as WhatsApp, that service may process information according to its own privacy policy.\n\nFor questions about your order information or a request to review or correct it, please contact Sweet Trade. We will address requests in line with applicable law.",
-    terms: "Sweet Trade is an online store serving customers across Pakistan. Product information, stock and delivery options may change.\n\nWhen you submit a checkout form, an order request is created. The order remains subject to confirmation, product availability and delivery feasibility. Our team may contact you to verify order details.\n\nThe cart and checkout display prices in Pakistani Rupees (PKR). When prices or delivery are unconfirmed, the amounts shown are estimates, not a final payment demand; submitting a request does not collect payment. Our team confirms the final total and availability with the customer before fulfillment.\n\nPayment and return arrangements depend on the confirmed order and applicable law. Please use the contact page if you have questions before ordering.",
+    delivery: "SweeTrade serves customers throughout Pakistan. Delivery availability, charges and timing depend on the delivery city and address.\n\nIf your destination does not yet have a confirmed shipping rate, checkout shows delivery as to be confirmed and accepts a pending order request. Our team will agree the final price and delivery fee with you by phone before fulfillment.\n\nDo not rely on a specific delivery date until it has been confirmed by our team.",
+    returns: "If your order is damaged, incorrect or otherwise not as expected, please contact SweeTrade as soon as possible with your order reference and relevant photos.\n\nOur team will review the issue and explain the options available for your product and circumstances. Product-specific return eligibility and procedures should be confirmed before sending an item back.\n\nThis page does not limit any rights that customers have under applicable law.",
+    privacy: "When you place an order, SweeTrade collects the information you provide, such as your name, phone number, province, city, locality, address, selected products and any order notes.\n\nThis information is used for managing the order, arranging delivery and communicating with you. Order information is stored in the store's database and is accessible to authorized administrators.\n\nIf you contact us through an external service such as WhatsApp, that service may process information according to its own privacy policy.\n\nFor questions about your order information or a request to review or correct it, please contact SweeTrade. We will address requests in line with applicable law.",
+    terms: "SweeTrade is an online store serving customers across Pakistan. Product information, stock and delivery options may change.\n\nWhen you submit a checkout form, an order request is created. The order remains subject to confirmation, product availability and delivery feasibility. Our team may contact you to verify order details.\n\nThe cart and checkout display prices in Pakistani Rupees (PKR). When prices or delivery are unconfirmed, the amounts shown are estimates, not a final payment demand; submitting a request does not collect payment. Our team confirms the final total and availability with the customer before fulfillment.\n\nPayment and return arrangements depend on the confirmed order and applicable law. Please use the contact page if you have questions before ordering.",
   },
   checkout: {
     // Suggestions only — buyers can type any city in Pakistan.

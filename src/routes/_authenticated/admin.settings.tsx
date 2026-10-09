@@ -96,10 +96,20 @@ function SettingsPage() {
         </fieldset>
         <section className="grid gap-4">
           <h2 className="text-lg">Homepage</h2>
-          <F name="hero_title" label="Hero title" def={s.heroTitle} />
           <div>
-            <label htmlFor="hero_subtitle" className="mb-1.5 block text-sm font-medium">Hero text</label>
-            <textarea id="hero_subtitle" name="hero_subtitle" rows={3} defaultValue={s.heroSubtitle} className={`${adminField} h-auto py-2`} />
+            <label htmlFor="hero_title" className="mb-1.5 block text-sm font-medium">Hero headline</label>
+            <input id="hero_title" name="hero_title" defaultValue={s.heroTitle} required maxLength={85} className={adminField} />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Keep it short (3–6 words). An optional comma highlights the second phrase in orange, e.g. “Natural Favorites, Made Easy”.
+            </p>
+          </div>
+          <div>
+            <label htmlFor="hero_subtitle" className="mb-1.5 block text-sm font-medium">Hero description</label>
+            <textarea id="hero_subtitle" name="hero_subtitle" rows={3} maxLength={220} required
+              defaultValue={s.heroSubtitle} className={`${adminField} h-auto min-h-24 w-full py-2`} />
+            <p className="mt-1 text-xs text-muted-foreground">
+              One or two concise sentences. Describe products and ordering without promising unconfirmed prices or shipping.
+            </p>
           </div>
         </section>
         <Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save settings"}</Button>

@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Heart, ShieldCheck, Truck, MessageCircle } from "lucide-react";
 import { resolveImage, useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/shop/ProductCard";
+import { ScrollReveal } from "@/components/site/ScrollReveal";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
@@ -20,8 +21,8 @@ const HIGHLIGHT_ICONS = [ShieldCheck, Heart, Truck, MessageCircle];
 
 function Promo({ img, title, sub, cat, big = false }: { img: string; title: string; sub: string; cat: string; big?: boolean }) {
   return (
-    <div className={`relative overflow-hidden rounded-lg ${big ? "min-h-48 sm:min-h-56" : "min-h-44"}`}>
-      <img src={img} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
+    <div className={`group relative overflow-hidden rounded-lg ${big ? "min-h-48 sm:min-h-56" : "min-h-44"}`}>
+      <img src={img} alt="" loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-700 motion-safe:group-hover:scale-[1.03]" />
       <div className="promo-overlay absolute inset-0" />
       <div className="relative flex h-full flex-col justify-center p-6 text-ink-foreground sm:p-8">
         <h3 className={big ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl"}>{title}</h3>
@@ -43,17 +44,17 @@ function Home() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <img src={resolveImage(content.home.heroImage)} alt="SweeTrade natural products" width={1600} height={912} className="absolute inset-0 size-full object-cover object-right" />
+        <img src={resolveImage(content.home.heroImage)} alt="SweeTrade natural products" width={1600} height={912} fetchPriority="high" className="wow-hero-image absolute inset-0 size-full object-cover object-right" />
         <div className="hero-fade absolute inset-0" />
         <div className="container-page relative py-16 sm:py-24 lg:py-28">
-          <div className="max-w-lg">
+          <div className="wow-hero-copy max-w-lg">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl">
               {heroLead} <span className="block text-primary">{heroTail}</span>
             </h1>
             <p className="mt-4 text-base text-muted-foreground sm:text-lg">
               {settings.heroSubtitle}
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="wow-hero-actions mt-7 flex flex-wrap gap-3">
               <Button asChild size="lg"><Link to="/shop">Shop Now</Link></Button>
               <Button asChild size="lg" variant="outline" className="bg-card"><a href="#categories">Explore Categories</a></Button>
             </div>
@@ -74,6 +75,7 @@ function Home() {
         </ul>
       </section>
 
+      <ScrollReveal>
       <section id="categories" className="container-page section-y">
         <div className="mb-5 flex items-end justify-between gap-4">
           <h2 className="text-2xl sm:text-3xl">Shop by Category</h2>
@@ -92,6 +94,9 @@ function Home() {
         </div>
       </section>
 
+      </ScrollReveal>
+
+      <ScrollReveal>
       <section className="container-page pb-10 sm:pb-14">
         <div className="mb-5 flex items-end justify-between gap-4">
           <h2 className="text-2xl sm:text-3xl">Featured Products</h2>
@@ -102,7 +107,10 @@ function Home() {
         </div>
       </section>
 
+      </ScrollReveal>
+
       {content.home.promos.length > 0 && (
+        <ScrollReveal>
         <section className="container-page grid gap-4 pb-12 sm:pb-16">
           <Promo big img={resolveImage(content.home.promos[0].image)}
             title={content.home.promos[0].title} sub={content.home.promos[0].sub} cat={content.home.promos[0].category} />
@@ -111,6 +119,7 @@ function Home() {
               img={resolveImage(promo.image)} title={promo.title} sub={promo.sub} cat={promo.category} />)}
           </div>}
         </section>
+        </ScrollReveal>
       )}
     </>
   );

@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { FileText, Headphones, Leaf, MessageCircle, Phone, ShieldCheck, Truck, Mail, Facebook, Instagram } from "lucide-react";
 import { useCatalog } from "@/lib/catalog";
 
@@ -28,13 +28,14 @@ export function TrustStrip({ compact = false }: { compact?: boolean }) {
 
 export function Footer() {
   const { contact: CONTACT, categories: CATEGORIES, content } = useCatalog();
+  const onHome = useRouterState({ select: (state) => state.location.pathname === "/" });
   return (
     <footer className="mt-auto">
-      <div className="border-t border-border bg-surface">
+      {!onHome && <div className="border-t border-border bg-surface">
         <div className="container-page py-8">
           <TrustStrip />
         </div>
-      </div>
+      </div>}
       <div className="bg-ink text-ink-foreground">
         <div className="container-page grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -72,8 +73,8 @@ export function Footer() {
             <h2 className="mb-3 font-sans text-sm font-semibold uppercase tracking-wider text-primary">Contact</h2>
             <ul className="space-y-2 text-sm text-ink-foreground/80">
               <li className="flex items-center gap-2"><Phone className="size-4" /><a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="hover:text-primary">{CONTACT.phone}</a></li>
-              {CONTACT.email && <li className="flex items-center gap-2"><Mail className="size-4" /> {CONTACT.email}</li>}
-              {CONTACT.whatsapp && <li className="flex items-center gap-2"><MessageCircle className="size-4" /> WhatsApp ordering</li>}
+              {CONTACT.email && <li className="flex items-center gap-2"><Mail className="size-4" /><a href={`mailto:${CONTACT.email}`} className="break-all hover:text-primary">{CONTACT.email}</a></li>}
+              {CONTACT.whatsapp && <li className="flex items-center gap-2"><MessageCircle className="size-4" /><a href={`https://wa.me/${CONTACT.whatsapp}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary">WhatsApp ordering</a></li>}
               {content.footer.facebook && <li className="flex items-center gap-2"><Facebook className="size-4" /><a href={content.footer.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-primary">Facebook</a></li>}
               {content.footer.instagram && <li className="flex items-center gap-2"><Instagram className="size-4" /><a href={content.footer.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-primary">Instagram</a></li>}
             </ul>

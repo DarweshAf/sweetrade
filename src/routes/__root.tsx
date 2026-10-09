@@ -21,6 +21,8 @@ import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { StoreSkeleton } from "@/components/site/StoreSkeleton";
 
+const BASE_URL = "https://sweetrade.pk";
+
 function NotFoundComponent() {
   return (
     <div className="container-page py-24 text-center">
@@ -69,6 +71,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
+      {
+        rel: "alternate",
+        href: "/llms.txt",
+        type: "text/plain",
+        title: "SweeTrade LLM guide",
+      },
+      {
+        rel: "alternate",
+        href: "/api/ai/catalog",
+        type: "application/json",
+        title: "SweeTrade live AI catalogue",
+      },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" },
@@ -83,10 +97,78 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "OnlineStore",
+    "@id": BASE_URL + "/#organization",
+    name: "SweeTrade",
+    description:
+      "Pakistan-focused online store for natural and traditional food products.",
+    url: BASE_URL + "/",
+    logo: BASE_URL + "/favicon.png",
+    telephone: "+92 334 3645850",
+    currenciesAccepted: "PKR",
+    areaServed: {
+      "@type": "Country",
+      name: "Pakistan",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: "+92 334 3645850",
+      areaServed: "PK",
+      availableLanguage: ["English", "Urdu"],
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "SweeTrade product catalogue",
+      url: BASE_URL + "/shop",
+      itemListElement: [
+        { "@type": "OfferCatalog", name: "Honey", url: BASE_URL + "/shop?category=honey" },
+        { "@type": "OfferCatalog", name: "Shilajit", url: BASE_URL + "/shop?category=shilajit" },
+        { "@type": "OfferCatalog", name: "Saffron", url: BASE_URL + "/shop?category=saffron" },
+        { "@type": "OfferCatalog", name: "Olive Oil", url: BASE_URL + "/shop?category=olive-oil" },
+        { "@type": "OfferCatalog", name: "Dates & Dried Fruits", url: BASE_URL + "/shop?category=dates" },
+      ],
+    },
+    knowsAbout: [
+      "Honey",
+      "Shilajit",
+      "Saffron",
+      "Olive oil",
+      "Dates",
+      "Dried fruits",
+      "Traditional foods in Pakistan",
+    ],
+  };
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": BASE_URL + "/#website",
+    name: "SweeTrade",
+    url: BASE_URL + "/",
+    publisher: { "@id": BASE_URL + "/#organization" },
+    inLanguage: "en",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: BASE_URL + "/shop?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
       </head>
       <body>
         {children}

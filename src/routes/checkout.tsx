@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, ClipboardCheck, MapPin, Phone, Truck } from "lucide-react";
 import { formatPrice, PAYMENT_METHODS } from "@/data/catalog";
 import { useStore } from "@/lib/store";
 import { useCatalog } from "@/lib/catalog";
@@ -44,6 +44,8 @@ function Checkout() {
   const selectedPay = paymentOptions.some((method) => method === pay) ? pay : paymentOptions[0] ?? "";
   const [done, setDone] = useState<{ reference: string; isRequest: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [province, setProvince] = useState("");
+  const [city, setCity] = useState("");
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -99,17 +101,38 @@ function Checkout() {
 
   if (done !== null) {
     return (
-      <div className="container-page py-24 text-center">
-        <CheckCircle2 className="mx-auto size-12 text-success" />
-        <h1 className="mt-4 text-3xl">{done.isRequest ? "Your order request has been received" : "Thank you for your order"}</h1>
-        <p className="mt-2 text-muted-foreground">Reference #{done.reference}. SweeTrade will contact you by phone to confirm availability, final prices and delivery charges before processing the order. No payment has been collected.</p>
-        <Button asChild size="lg" className="mt-6"><Link to="/shop">Continue Shopping</Link></Button>
+      <div className="container-page max-w-2xl py-12 text-center sm:py-20">
+        <div className="wow-success-pop mx-auto grid size-20 place-items-center rounded-full bg-primary-soft">
+          <CheckCircle2 className="size-12 text-success" aria-hidden />
+        </div>
+        <h1 className="mt-5 text-3xl sm:text-4xl">{done.isRequest ? "Your order request has been received" : "Thank you for your order"}</h1>
+        <p className="mt-3 text-muted-foreground">
+          We saved your request. SweeTrade will confirm product availability, final prices and Pakistan delivery charges by phone before dispatch. No online payment was collected.
+        </p>
+        <div className="mt-6 rounded-xl border border-border bg-card p-5 text-left shadow-card">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Your reference number</p>
+          <p className="mt-1 font-mono text-2xl font-bold tracking-wider text-primary">#{done.reference}</p>
+          <ol className="mt-5 space-y-4 border-t border-border pt-5 text-sm">
+            <li className="flex items-start gap-3"><ClipboardCheck className="mt-0.5 size-5 shrink-0 text-success" aria-hidden /><span><strong>1. Request saved</strong><br /><span className="text-muted-foreground">Keep this reference for your records.</span></span></li>
+            <li className="flex items-start gap-3"><Phone className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden /><span><strong>2. Phone confirmation</strong><br /><span className="text-muted-foreground">Our team will discuss price, stock and delivery charges with you.</span></span></li>
+            <li className="flex items-start gap-3"><Truck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden /><span><strong>3. Delivery after confirmation</strong><br /><span className="text-muted-foreground">Shipping is arranged only after your order is confirmed.</span></span></li>
+          </ol>
+        </div>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Button asChild size="lg"><Link to="/shop">Continue Shopping <ArrowRight className="size-4" /></Link></Button>
+          <Button asChild size="lg" variant="outline"><Link to="/contact">Contact Support</Link></Button>
+        </div>
       </div>
     );
   }
 
   if (!ready) {
-    return <div role="status" className="container-page py-20 text-center text-muted-foreground">Loading your checkout…</div>;
+    return <div role="status" aria-busy="true" aria-label="Loading your checkout" className="container-page grid gap-6 py-10 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="space-y-5 rounded-xl border border-border bg-card p-6"><div className="wow-skeleton h-8 w-48" /><div className="wow-skeleton h-4 w-3/4" />
+        <div className="grid gap-4 sm:grid-cols-2">{Array.from({ length: 6 }, (_, i) => <div key={i} className="space-y-2"><div className="wow-skeleton h-4 w-24" /><div className="wow-skeleton h-11 w-full" /></div>)}</div>
+      </div>
+      <div className="space-y-4 rounded-xl border border-border bg-card p-6"><div className="wow-skeleton h-8 w-36" /><div className="wow-skeleton h-16 w-full" /><div className="wow-skeleton h-16 w-full" /><div className="wow-skeleton h-11 w-full" /></div>
+    </div>;
   }
 
   if (!checkoutLines.length) {
@@ -132,13 +155,18 @@ function Checkout() {
           <h2 className="text-xl">1. Delivery Information</h2>
           {isBuyNow && <span className="rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">Buy Now · One product</span>}
         </div>
-        <p className="mb-4 text-sm text-muted-foreground">Country: Pakistan. Enter your actual province, city and complete delivery address. Delivery availability and charges are confirmed by SweeTrade.</p>
+        <div className="mb-5 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground" aria-label="Checkout steps">
+          <span className="rounded-full bg-primary-soft px-3 py-1.5 text-primary">1 · Your address</span>
+          <span className="rounded-full bg-secondary px-3 py-1.5">2 · Review items</span>
+          <span className="rounded-full bg-secondary px-3 py-1.5">3 · Submit request</span>
+        </div>
+        <p className="mb-4 text-sm text-muted-foreground">Pakistan-wide ordering. Choose your province and enter any city, town or village; the list of suggestions does not restrict where you can request delivery.</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div><L htmlFor="name">Full Name *</L><input id="name" name="name" autoComplete="name" className={field} aria-invalid={!!errors.name} aria-describedby="name-err" /><Err k="name" /></div>
           <div><L htmlFor="phone">Mobile Number *</L><input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+92 3XX XXXXXXX" className={field} aria-invalid={!!errors.phone} aria-describedby="phone-err" /><Err k="phone" /></div>
           <div>
             <L htmlFor="province">Province / Region *</L>
-            <select id="province" name="province" defaultValue="" className={field}
+            <select id="province" name="province" value={province} onChange={(e) => setProvince(e.target.value)} autoComplete="address-level1" className={field}
               aria-invalid={!!errors.province} aria-describedby="province-err">
               <option value="" disabled>Select province or region</option>
               {PROVINCES.map((province) => <option key={province} value={province}>{province}</option>)}
@@ -146,7 +174,7 @@ function Checkout() {
           </div>
           <div>
             <L htmlFor="city">City *</L>
-            <input id="city" name="city" required maxLength={120} autoComplete="address-level2"
+            <input id="city" name="city" required maxLength={120} value={city} onChange={(e) => setCity(e.target.value)} autoComplete="address-level2"
               placeholder="e.g. Lahore, Karachi, Multan" list="pakistan-cities"
               aria-invalid={!!errors.city} aria-describedby="city-err" className={field} />
             <datalist id="pakistan-cities">
@@ -164,6 +192,11 @@ function Checkout() {
             <L htmlFor="postal_code">Postal Code (Optional)</L>
             <input id="postal_code" name="postal_code" inputMode="numeric" autoComplete="postal-code"
               maxLength={12} placeholder="Postal code" className={field} />
+          </div>
+          <div className="sm:col-span-2 rounded-lg border border-border bg-secondary/60 p-3 text-sm" aria-live="polite">
+            <div className="flex items-center gap-2 font-semibold"><MapPin className="size-4 text-primary" aria-hidden /> Delivery destination</div>
+            <p className="mt-1 text-muted-foreground">{[city.trim(), province].filter(Boolean).join(", ") || "Choose your province and enter your city"}, Pakistan</p>
+            <p className="mt-1 text-xs text-muted-foreground">Delivery availability, time and final shipping fee are confirmed by phone. No automatic courier fee is promised.</p>
           </div>
           <div className="sm:col-span-2"><L htmlFor="address">Address *</L><input id="address" name="address" autoComplete="street-address" placeholder="House / street / road / village and nearby details" className={field} aria-invalid={!!errors.address} aria-describedby="address-err" /><Err k="address" /></div>
           <div className="sm:col-span-2"><L htmlFor="landmark">Landmark (Optional)</L><input id="landmark" name="landmark" placeholder="Near…" className={field} /></div>

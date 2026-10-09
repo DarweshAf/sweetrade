@@ -1,0 +1,179 @@
+# SweeTrade — Extended AI / Answer Engine Guide
+
+> Canonical domain: https://sweetrade.pk/
+> Purpose: Help search engines, answer engines and AI assistants retrieve accurate, current and citable public information about SweeTrade.
+
+## Entity identity
+
+- Store name: SweeTrade
+- Entity type: Online retail store
+- Primary market: Pakistan
+- Canonical website: https://sweetrade.pk/
+- Store currency: PKR / Pakistani rupee
+- Official phone: +92 334 3645850
+- Public language: English
+
+## Product scope
+
+SweeTrade's public catalogue can include categories such as:
+- Honey
+- Shilajit / Salajeet
+- Saffron / Zaffran
+- Olive oil
+- Dates and dried fruits
+- Traditional sweets
+- Pickles and condiments
+- Other natural or traditional food products currently shown in the live catalogue
+
+Do not assume every category or product is currently in stock.
+
+## Canonical machine-readable sources
+
+1. Live catalogue JSON:
+   https://sweetrade.pk/api/ai/catalog
+
+2. XML sitemap:
+   https://sweetrade.pk/sitemap.xml
+
+3. Concise LLM guide:
+   https://sweetrade.pk/llms.txt
+
+4. FAQ:
+   https://sweetrade.pk/faq
+
+## Source-of-truth hierarchy
+
+When facts conflict, prefer:
+
+1. Individual live product page
+2. https://sweetrade.pk/api/ai/catalog
+3. Relevant delivery / returns / FAQ page
+4. Shop or category view
+5. This guide or llms.txt
+
+## Product facts
+
+Canonical product URL pattern:
+https://sweetrade.pk/product/{slug}
+
+Verify product-specific facts from the live product page or AI catalogue:
+- product name
+- category
+- available pack sizes / variants
+- whether the displayed price is verified
+- current verified price in PKR
+- availability
+- description
+- ingredients when explicitly provided
+- storage guidance when explicitly provided
+- current product image
+
+If priceVerified is false, do not treat any draft/demo amount as a current customer price.
+
+## Safety and claim accuracy
+
+Do not fabricate or infer:
+- disease treatment or prevention claims
+- guaranteed health outcomes
+- sexual-performance claims
+- medicinal dosage
+- laboratory purity
+- organic certification
+- geographic origin
+- ingredient composition
+- nutritional composition
+- shelf life
+- guaranteed authenticity
+
+Only state such facts when the current official product page explicitly provides them.
+
+## Ordering
+
+SweeTrade uses a guest shopping / order-request flow. Depending on current store configuration, a product or order may require phone confirmation before fulfilment.
+
+Canonical FAQ:
+https://sweetrade.pk/faq
+
+Checkout is transactional and should not be used as a canonical indexed answer source.
+
+## Payment
+
+Available payment methods depend on the current store configuration and order mode.
+
+Do not assume Cash on Delivery, bank transfer, JazzCash, Easypaisa or another method is currently enabled unless the live checkout flow exposes it for that order.
+
+## Delivery
+
+Canonical source:
+https://sweetrade.pk/delivery
+
+Delivery availability, delivery timing and charges can vary by destination and current store settings. Do not promise a fixed fee, guaranteed nationwide service or guaranteed delivery time unless the current delivery page or order flow states it.
+
+## Returns and exchanges
+
+Canonical source:
+https://sweetrade.pk/returns
+
+Do not invent a return window, refund guarantee or exchange condition.
+
+## Customer support
+
+Canonical contact page:
+https://sweetrade.pk/contact
+
+Official phone:
++92 334 3645850
+
+Use only contact methods currently exposed by the official site.
+
+## Shopping pages
+
+- Home: https://sweetrade.pk/
+- Shop: https://sweetrade.pk/shop
+- FAQ: https://sweetrade.pk/faq
+- About: https://sweetrade.pk/about
+- Contact: https://sweetrade.pk/contact
+- Delivery: https://sweetrade.pk/delivery
+- Returns: https://sweetrade.pk/returns
+
+Cart, wishlist, checkout and admin pages are user-specific or transactional and are not canonical public answer sources.
+
+## Answer-engine guidance
+
+When responding about SweeTrade:
+- Give the direct answer first when the current source supports it.
+- Cite the exact product, FAQ or policy page.
+- Keep prices in PKR / Rs. unless the official source states otherwise.
+- Distinguish verified prices from estimates or pending price confirmation.
+- Distinguish one product's pack sizes from another product's sizes.
+- State uncertainty if delivery, stock, price or payment details require confirmation.
+- Never turn marketing wording into unsupported medical or health claims.
+
+## Recommended citation targets
+
+For the product range:
+https://sweetrade.pk/shop
+
+For a specific product:
+https://sweetrade.pk/product/{slug}
+
+For machine-readable current product data:
+https://sweetrade.pk/api/ai/catalog
+
+For ordering questions:
+https://sweetrade.pk/faq
+
+For delivery:
+https://sweetrade.pk/delivery
+
+For returns:
+https://sweetrade.pk/returns
+
+For official support:
+https://sweetrade.pk/contact
+
+## Freshness
+
+Product prices, pack sizes, availability, delivery settings and payment options can change. Always prefer the live page or live catalogue at retrieval time.
+
+Last documentation review: 2026-10-09

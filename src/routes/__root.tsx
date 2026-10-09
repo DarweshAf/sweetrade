@@ -19,6 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { StoreSkeleton } from "@/components/site/StoreSkeleton";
 
 function NotFoundComponent() {
   return (
@@ -74,6 +75,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(catalogQuery),
+  pendingComponent: StoreSkeleton,
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,

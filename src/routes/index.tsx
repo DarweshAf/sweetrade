@@ -4,13 +4,14 @@ import { resolveImage, useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
 import { Button } from "@/components/ui/button";
+import { StoreHero } from "@/components/site/StoreHero";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SweeTrade — Experience Nature's Finest" },
-      { name: "description", content: "Carefully selected honey, saffron, shilajit, olive oil, dates and traditional delicacies, available to customers across Pakistan." },
-      { property: "og:title", content: "SweeTrade — Experience Nature's Finest" },
+      { title: "Natural Favorites, Made Easy | SweeTrade Pakistan" },
+      { name: "description", content: "Shop natural favorites: honey, saffron, shilajit, olive oil, dates and more. Choose your size and request an order from across Pakistan." },
+      { property: "og:title", content: "Natural Favorites, Made Easy | SweeTrade Pakistan" },
       { property: "og:description", content: "Explore natural products for customers across Pakistan." },
     ],
   }),
@@ -37,31 +38,14 @@ function Promo({ img, title, sub, cat, big = false }: { img: string; title: stri
 
 function Home() {
   const { categories: CATEGORIES, countIn, products, settings, isPreview, requiresPricing, content } = useCatalog();
-  const hw = settings.heroTitle.trim().split(/\s+/);
-  const heroTail = hw.length > 2 ? hw.slice(-2).join(" ") : hw.join(" ");
-  const heroLead = hw.length > 2 ? hw.slice(0, -2).join(" ") : "";
   const featured = products.filter((p) => p.featured);
   return (
     <>
-      <section className="relative overflow-hidden">
-        <img src={resolveImage(content.home.heroImage)} alt="SweeTrade natural products" width={1600} height={912} fetchPriority="high" className="wow-hero-image absolute inset-0 size-full object-cover object-right" />
-        <div className="hero-fade absolute inset-0" />
-        <div aria-hidden="true" className="wow-hero-glow pointer-events-none absolute inset-0" />
-        <div className="container-page relative py-16 sm:py-24 lg:py-28">
-          <div className="wow-hero-copy max-w-lg">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl">
-              {heroLead} <span className="block text-primary">{heroTail}</span>
-            </h1>
-            <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-              {settings.heroSubtitle}
-            </p>
-            <div className="wow-hero-actions mt-7 flex flex-wrap gap-3">
-              <Button asChild size="lg"><Link to="/shop">Shop Now</Link></Button>
-              <Button asChild size="lg" variant="outline" className="bg-card"><a href="#categories">Explore Categories</a></Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <StoreHero
+        title={settings.heroTitle}
+        description={settings.heroSubtitle}
+        image={content.home.heroImage}
+      />
 
       {(isPreview || requiresPricing || settings.pendingOrdersEnabled) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">{settings.pendingOrdersEnabled && !isPreview ? "Order requests are open across Pakistan. We confirm the final price and delivery before dispatch. No advance payment." : "Sample prices are for demonstration only. Online orders are unavailable until SweeTrade confirms the product prices."} <Link to="/contact" className="font-semibold text-primary underline">Contact SweeTrade</Link> for details.</p></div>}
       <section className="border-b border-border bg-card">

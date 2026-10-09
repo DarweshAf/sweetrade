@@ -95,19 +95,37 @@ function Shop() {
   );
 
   return (
-    <div className="container-page py-8 lg:py-10">
-      <div className="grid gap-8 lg:grid-cols-[230px_minmax(0,1fr)]">
-        <aside className="hidden lg:block">{Filters}</aside>
+    <div className="container-page py-7 sm:py-10">
+      <header className="mb-7 max-w-2xl sm:mb-9">
+        <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">The SweeTrade Collection</p>
+        <h1 className="mt-2 text-[clamp(1.8rem,5vw,2.75rem)] leading-tight">
+          {s.q ? "Search results" : cat?.name ?? "Shop All Products"}
+        </h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground sm:text-base">
+          {s.q ? `Showing products matching “${s.q}”.` :
+            cat ? `Explore ${cat.name.toLowerCase()} and choose a suitable pack size.` :
+            "Explore honey, saffron, shilajit, dates and more. Choose a product and pack size to get started."}
+        </p>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
+          Estimated prices and Pakistan shipping charges are confirmed with you before dispatch.
+        </p>
+      </header>
+      <div className="grid gap-6 lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-8">
+        <aside className="hidden self-start rounded-xl border border-border bg-card p-5 shadow-card lg:sticky lg:top-24 lg:block">{Filters}</aside>
         <div className="min-w-0">
-          <div className="mb-5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-            <h1 className="truncate text-2xl sm:text-3xl">
-              {s.q ? `Results for “${s.q}”` : cat?.name ?? "All Products"} <span className="font-sans text-base text-muted-foreground">({list.length})</span>
-            </h1>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="lg:hidden" onClick={() => setOpen(true)}><SlidersHorizontal /> Filters</Button>
+          <div className="mb-5 flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card px-3 py-3 sm:px-4">
+            <p className="text-sm font-semibold" aria-live="polite">
+              {list.length} {list.length === 1 ? "product" : "products"} <span className="font-normal text-muted-foreground">found</span>
+            </p>
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              {active && <button type="button" onClick={() => navigate({ search: {} })} className="min-h-10 rounded-md px-2 text-xs font-semibold text-primary hover:underline">Clear filters</button>}
+              <Button variant="outline" size="sm" className="min-h-10 lg:hidden" onClick={() => setOpen(true)}>
+                <SlidersHorizontal className="size-4" /> Filters
+              </Button>
               <label className="sr-only" htmlFor="sort">Sort by</label>
-              <select id="sort" value={s.sort ?? ""} onChange={(e) => set({ sort: e.target.value || undefined })} className="h-9 rounded-md border border-input bg-card px-2 text-sm">
-                <option value="">Sort by: Featured</option>
+              <select id="sort" aria-label="Sort products" value={s.sort ?? ""} onChange={(e) => set({ sort: e.target.value || undefined })}
+                className="min-h-10 min-w-0 max-w-full rounded-md border border-input bg-card px-2 text-sm">
+                <option value="">Featured</option>
                 <option value="low">Price: Low to High</option>
                 <option value="high">Price: High to Low</option>
                 <option value="name">Name A–Z</option>

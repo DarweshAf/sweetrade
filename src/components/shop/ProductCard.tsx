@@ -48,7 +48,7 @@ export function ProductCard({ product }: { product: Product; showFrom?: boolean 
         <button type="button" onClick={() => toggleWish(product.id)}
           aria-pressed={wished}
           aria-label={wished ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
-          className="absolute right-2 top-2 grid size-10 place-items-center rounded-full bg-card/95 shadow-card transition-colors hover:text-primary">
+          className="wow-favorite absolute right-2 top-2 grid size-10 place-items-center rounded-full bg-card/95 shadow-card transition-colors hover:text-primary">
           <Heart className={`size-5 ${wished ? "fill-primary text-primary" : ""}`} aria-hidden />
         </button>
       </div>

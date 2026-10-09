@@ -10,7 +10,7 @@ import { useCatalog } from "@/lib/catalog";
 export function Logo({ className = "h-10 sm:h-12" }: { className?: string }) {
   const { content } = useCatalog();
   const [failed, setFailed] = useState(false);
-  const name = content.footer.brandName?.trim() || "Sweet Trade";
+  const name = content.footer.brandName?.trim() || "SweeTrade";
   const source = content.footer.logoImage?.trim() || "";
   const showImage = /^(https:\/\/|http:\/\/)/i.test(source) && !failed;
 

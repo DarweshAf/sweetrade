@@ -10,7 +10,10 @@ export const Route = createFileRoute("/contact")({
       { name: "description", content: "Contact SweeTrade to ask about products, pack sizes, pending orders and delivery to your city in Pakistan." },
       { property: "og:title", content: "Contact Us — SweeTrade" },
       { property: "og:description", content: "Questions about products or an order? Our team is here to help." },
+      { property: "og:url", content: "https://sweetrade.pk/contact" },
+      { name: "robots", content: "index,follow,max-image-preview:large" },
     ],
+    links: [{ rel: "canonical", href: "https://sweetrade.pk/contact" }],
   }),
   component: Contact,
 });

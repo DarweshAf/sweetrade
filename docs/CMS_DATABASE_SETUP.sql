@@ -1,4 +1,4 @@
--- Sweet Trade: admin-editable storefront sections.
+-- SweeTrade: admin-editable storefront sections.
 -- Applied to Lovable Cloud project 14cceb1a-dc3e-4ba8-8195-2f8251f24ad8 on 2026-10-08.
 -- Safe to run on a separately verified deployment; never apply to unrelated databases.
 CREATE TABLE IF NOT EXISTS public.site_content (

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useCatalog } from "@/lib/catalog";
 
 export const Route = createFileRoute("/faq")({
-  head: () => ({ meta: [{ title: "Frequently Asked Questions | Sweet Trade" }, { name: "description", content: "Information about frequently asked questions at Sweet Trade, Pakistan." }] }),
+  head: () => ({ meta: [{ title: "Frequently Asked Questions | SweeTrade" }, { name: "description", content: "Information about frequently asked questions at SweeTrade, Pakistan." }] }),
   component: Page,
 });
 
@@ -20,7 +20,7 @@ function Page() {
           </section>
         ))}
       </div>
-      <Button asChild variant="outline" className="mt-8"><Link to="/contact">Contact Sweet Trade</Link></Button>
+      <Button asChild variant="outline" className="mt-8"><Link to="/contact">Contact SweeTrade</Link></Button>
     </div>
   );
 }

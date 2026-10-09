@@ -10,6 +10,7 @@ import { Totals } from "@/components/shop/OrderSummary";
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex,follow,noarchive" },
       { title: "Your Cart — SweeTrade" },
       { name: "description", content: "Review your SweeTrade order before checkout or order directly on WhatsApp." },
       { property: "og:title", content: "Your Cart — SweeTrade" },

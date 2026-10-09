@@ -10,6 +10,15 @@ export interface SiteContent {
   home: {
     announcement: string;
     heroImage: string;
+    categoriesHeading: string;
+    categoriesDescription: string;
+    featuredHeading: string;
+    featuredDescription: string;
+    collectionsHeading: string;
+    collectionsDescription: string;
+    orderingHeading: string;
+    orderingDescription: string;
+    orderingSteps: ShortFeature[];
     highlights: ShortFeature[];
     promos: Promo[];
   };
@@ -31,16 +40,29 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   home: {
     announcement: "Natural products across Pakistan · Delivery details confirmed by location",
     heroImage: "local:hero",
+    categoriesHeading: "Explore by Category",
+    categoriesDescription: "From honey and saffron to dates and pantry favourites, find what suits you.",
+    featuredHeading: "Handpicked for Your Browse",
+    featuredDescription: "Explore our featured products, choose the right pack size and see the estimated price.",
+    collectionsHeading: "Explore Our Collections",
+    collectionsDescription: "Discover the range that interests you, all in one place.",
+    orderingHeading: "Shopping, Made Simple",
+    orderingDescription: "A straightforward way to request your order from anywhere in Pakistan.",
+    orderingSteps: [
+      { title: "Find your favourites", body: "Browse products and choose the size or pack you want." },
+      { title: "Send your order request", body: "Use Buy Now or your cart, then enter your delivery address." },
+      { title: "Confirm before dispatch", body: "We contact you to confirm stock, final prices and shipping." },
+    ],
     highlights: [
-      { title: "Natural Products", body: "Explore our collection" },
-      { title: "Carefully Selected", body: "Sourcing" },
-      { title: "Pakistan-wide Service", body: "Confirm shipping for your city" },
-      { title: "Easy Ordering", body: "Call or WhatsApp" },
+      { title: "Natural Product Range", body: "Explore different everyday favourites" },
+      { title: "Choose Your Pack", body: "Find a size that suits you" },
+      { title: "Across Pakistan", body: "Request delivery to your city" },
+      { title: "Order with Ease", body: "We confirm details by phone" },
     ],
     promos: [
-      { title: "The Honey Collection", sub: "Discover our honey range.", category: "honey", image: "local:honey" },
-      { title: "Shilajit Essentials", sub: "Explore our herbal collection.", category: "shilajit", image: "local:shilajit" },
-      { title: "Dates & Dried Fruits", sub: "Explore dates and dried fruits.", category: "dates", image: "local:dates" },
+      { title: "Explore the Honey Range", sub: "Find your preferred honey and pack size.", category: "honey", image: "local:honey" },
+      { title: "Discover Shilajit", sub: "Browse the available shilajit products.", category: "shilajit", image: "local:shilajit" },
+      { title: "Dates & Dried Fruits", sub: "Everyday favourites for your pantry.", category: "dates", image: "local:dates" },
     ],
   },
   about: {
@@ -109,6 +131,7 @@ export function mergeSiteContent(rows: { section: string; content: unknown }[]):
     home: {
       ...home,
       highlights: Array.isArray(home.highlights) ? home.highlights : DEFAULT_SITE_CONTENT.home.highlights,
+      orderingSteps: Array.isArray(home.orderingSteps) ? home.orderingSteps : DEFAULT_SITE_CONTENT.home.orderingSteps,
       promos: Array.isArray(home.promos) ? home.promos : DEFAULT_SITE_CONTENT.home.promos,
     },
     about,

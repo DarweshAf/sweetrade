@@ -15,8 +15,25 @@ export const Route = createFileRoute("/faq")({
 
 function Page() {
   const { content } = useCatalog();
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: content.faq.items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <div className="container-page max-w-4xl py-9 sm:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="max-w-2xl">
         <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">Help Centre</p>
         <h1 className="mt-2 text-[clamp(2rem,6vw,3rem)] leading-tight">Frequently Asked Questions</h1>

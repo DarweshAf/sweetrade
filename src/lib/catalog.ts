@@ -135,7 +135,8 @@ export async function fetchCatalog(): Promise<Catalog> {
       ? {
           phone: s.data.phone,
           whatsapp: s.data.whatsapp,
-          email: s.data.email,
+          // The scaffold email is unverified; hide it until an admin enters a real inbox.
+          email: s.data.email.trim().toLowerCase() === "info@sweetrade.com" ? "" : s.data.email,
           deliveryFee: s.data.delivery_fee,
           deliveryConfigured: s.data.delivery_configured,
           pendingOrdersEnabled: s.data.accept_pending_orders,

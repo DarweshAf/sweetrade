@@ -13,6 +13,13 @@ import { ScrollReveal } from "@/components/site/ScrollReveal";
 import { StoreSkeleton } from "@/components/site/StoreSkeleton";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
+const BASE_URL = "https://sweetrade.pk";
+
+function absoluteUrl(value: string) {
+  if (/^https?:\/\//i.test(value)) return value;
+  return BASE_URL + (value.startsWith("/") ? value : "/" + value);
+}
+
 export const Route = createFileRoute("/product/$slug")({
   loader: async ({ params, context }) => {
     const cat = await context.queryClient.ensureQueryData(catalogQuery);
@@ -21,15 +28,31 @@ export const Route = createFileRoute("/product/$slug")({
     return { product };
   },
   head: ({ loaderData }) => {
-    if (!loaderData) return { meta: [{ title: "Product not found — SweeTrade" }, { name: "robots", content: "noindex" }] };
+    if (!loaderData) {
+      return {
+        meta: [
+          { title: "Product not found — SweeTrade" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
+    }
+
     const p = loaderData.product;
+    const canonical = BASE_URL + "/product/" + encodeURIComponent(p.slug);
+
     return {
       meta: [
         { title: `${p.name} — SweeTrade` },
         { name: "description", content: p.short },
+        { name: "robots", content: "index,follow,max-image-preview:large" },
         { property: "og:title", content: `${p.name} — SweeTrade` },
         { property: "og:description", content: p.short },
+        { property: "og:type", content: "product" },
+        { property: "og:url", content: canonical },
+        { property: "og:image", content: absoluteUrl(p.image) },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
+      links: [{ rel: "canonical", href: canonical }],
     };
   },
   notFoundComponent: () => (
@@ -80,8 +103,92 @@ function ProductPage() {
     Delivery: CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Pakistan shipping: free above ${formatPrice(CONTACT.freeDeliveryThreshold)}, otherwise ${formatPrice(CONTACT.deliveryFee)} under current store-wide settings. Contact us to confirm service and delivery timing to your city.` : "Shipping charges and delivery timing for your city must be confirmed by SweeTrade.",
   };
 
+  const productUrl = BASE_URL + "/product/" + encodeURIComponent(p.slug);
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": productUrl + "#product",
+    name: p.name,
+    url: productUrl,
+    description: p.description || p.short,
+    image: (p.gallery.length ? p.gallery : [p.image]).map(absoluteUrl),
+    sku: p.id,
+    category: cat?.name || p.category,
+    brand: {
+      "@type": "Brand",
+      name: "SweeTrade",
+    },
+    ...(p.priceVerified && p.variants.some((item) => item.price > 0)
+      ? {
+          offers: p.variants
+            .filter((item) => item.price > 0)
+            .map((item) => ({
+              "@type": "Offer",
+              name: item.label,
+              priceCurrency: "PKR",
+              price: item.price,
+              url:
+                productUrl +
+                "?variant=" +
+                encodeURIComponent(item.label),
+              availability: p.inStock
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+              seller: {
+                "@id": BASE_URL + "/#organization",
+              },
+            })),
+        }
+      : {}),
+    additionalProperty: [
+      {
+        "@type": "PropertyValue",
+        name: "Price verification",
+        value: p.priceVerified ? "Verified" : "Confirmation required",
+      },
+      {
+        "@type": "PropertyValue",
+        name: "Order mode",
+        value: p.requestOnly ? "Order request" : "Standard order",
+      },
+    ],
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: BASE_URL + "/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Shop",
+        item: BASE_URL + "/shop",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: p.name,
+        item: productUrl,
+      },
+    ],
+  };
+
   return (
     <div className="container-page py-6 pb-48 lg:py-10 lg:pb-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
         <Link to="/" className="hover:text-primary">Home</Link><ChevronRight className="size-3" />
         <Link to="/shop" search={{ category: p.category }} className="hover:text-primary">{cat?.name}</Link><ChevronRight className="size-3" />

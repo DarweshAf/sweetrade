@@ -62,7 +62,14 @@ function Checkout() {
     if (area.length < 2 || area.length > 120) err.area = "Enter your area, town or neighbourhood";
     if (!String(f.get("address")).trim()) err.address = "Please enter your address";
     setErrors(err);
-    if (Object.keys(err).length > 0) return;
+    if (Object.keys(err).length > 0) {
+      // Mobile keyboards can obscure validation messages. Move to the first
+      // incorrect field and let the browser scroll it into view.
+      const first = Object.keys(err)[0];
+      const invalid = e.currentTarget.elements.namedItem(first);
+      if (invalid instanceof HTMLElement) invalid.focus();
+      return;
+    }
     if (!selectedPay) { toast.error("No payment option is currently available. Please contact us."); return; }
     if (requestMode && !settings.pendingOrdersEnabled) { toast.error("Order requests are currently unavailable."); return; }
     if (requestMode && f.get("accept_estimate") !== "on") {

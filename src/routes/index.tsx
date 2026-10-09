@@ -61,7 +61,7 @@ function Home() {
         </div>
       </section>
 
-      {(isPreview || requiresPricing || settings.pendingOrdersEnabled) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">{settings.pendingOrdersEnabled && !isPreview ? "Order requests are open! Prices are estimates; we confirm stock, shipping and the final total by phone before processing. No upfront payment." : "Sample prices are for demonstration only. Online orders are unavailable until Sweet Trade confirms the product prices."} <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for details.</p></div>}
+      {(isPreview || requiresPricing || settings.pendingOrdersEnabled) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">{settings.pendingOrdersEnabled && !isPreview ? "Order requests are open across Pakistan. We confirm the final price and delivery before dispatch. No advance payment." : "Sample prices are for demonstration only. Online orders are unavailable until Sweet Trade confirms the product prices."} <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for details.</p></div>}
       <section className="border-b border-border bg-card">
         <ul className="container-page grid grid-cols-2 gap-4 py-5 lg:grid-cols-4">
           {content.home.highlights.map((feature, i) => {
@@ -97,8 +97,8 @@ function Home() {
           <h2 className="text-2xl sm:text-3xl">Featured Products</h2>
           <Link to="/shop" className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-primary">View All <ArrowRight className="size-4" /></Link>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
-          {featured.length ? featured.map((p) => <ProductCard key={p.id} product={p} showFrom />) : <p className="col-span-full text-sm text-muted-foreground">Featured products will appear here when available.</p>}
+        <div className="grid grid-cols-1 gap-4 min-[440px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          {featured.length ? featured.map((p) => <ProductCard key={p.id} product={p} />) : <p className="col-span-full text-sm text-muted-foreground">Featured products will appear here when available.</p>}
         </div>
       </section>
 

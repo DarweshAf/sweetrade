@@ -10,9 +10,9 @@ import { Totals } from "@/components/shop/OrderSummary";
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
-      { title: "Your Cart — Sweet Trade" },
-      { name: "description", content: "Review your Sweet Trade order before checkout or order directly on WhatsApp." },
-      { property: "og:title", content: "Your Cart — Sweet Trade" },
+      { title: "Your Cart — SweeTrade" },
+      { name: "description", content: "Review your SweeTrade order before checkout or order directly on WhatsApp." },
+      { property: "og:title", content: "Your Cart — SweeTrade" },
       { property: "og:description", content: "Review your order." },
     ],
   }),
@@ -70,7 +70,7 @@ function Cart() {
         <aside className="h-fit rounded-lg border border-border bg-card p-5">
           <h2 className="mb-4 text-xl">Order Summary</h2>
           <Totals />
-          {requestMode && <p className="mt-3 text-xs text-muted-foreground">Prices are estimates. Submit a request without paying upfront; Sweet Trade will confirm costs and delivery.</p>}
+          {requestMode && <p className="mt-3 text-xs text-muted-foreground">Prices are estimates. Submit a request without paying upfront; SweeTrade will confirm costs and delivery.</p>}
           <Button asChild size="lg" block className="mt-5"><Link to="/checkout" onClick={clearBuyNow}>{requestMode ? "Continue to Order Request" : "Proceed to Checkout"}</Link></Button>
           {CONTACT.whatsapp && <Button asChild size="lg" variant="outline" block className="mt-3 border-success text-success hover:bg-success/10">
             <a href={`https://wa.me/${CONTACT.whatsapp}?text=${waText}`} target="_blank" rel="noreferrer"><MessageCircle /> WhatsApp Order</a>

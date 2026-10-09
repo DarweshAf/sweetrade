@@ -65,3 +65,15 @@ These database changes are specific to this Lovable project, **not a proof that 
 - Previously stored order items keep their snapshot until explicitly confirmed; updating product prices in Admin → Products affects later orders, not existing stored requests.
 - Buy Now from a product does not clear or silently purchase unrelated items in the cart; checkout offers a switch back to full-cart ordering.
 - Two database transaction smoke tests (pending order insert, order finalisation) passed with intentional rollback; no test orders were left in the project database. Static code checks still need build/lint and real browser E2E; the public sweetrade.pk domain has **not** been confirmed deployed.
+
+## Home/shop screenshot UI fixes — 9 October 2026
+- The original logo pointed at a Lovable-only `/__l5e/assets-v1/...` URL and failed on the custom domain. Replaced it with a branded, accessible wordmark that never renders a broken image; a real logo uploaded through Admin → Settings → Website Content → Footer & trust is used when a public URL exists.
+- Enlarged product cards and typography, made the selected-size price prominent, reduced repetitive "Estimated/From" language and removed pricing warnings from over the photos. The actual selected weight is still included in the order request.
+- Made Add to Cart and Buy Now visible on every orderable product card and large enough for mobile use. Kept instant one-product Buy Now separate from the full saved cart.
+- Changed homepage featured-product layout and shop listing grids to responsive one-to-four-column layouts rather than six cramped cards.
+- Removed the duplicate footer trust strip from the home page, retaining it on other pages. Contact links for actual email/WhatsApp are clickable.
+- The scaffold email `info@sweetrade.com` has **not been verified** by the merchant; hide this specific template value from customers until the admin enters an active inbox. The original database setting is not silently overwritten.
+- 14 products still use shared category illustration images, not 14 real product photographs. These are now clearly labelled illustrative; Admin → Products highlights products needing authentic photography. **Replacing them with genuine, product-specific uploads remains a merchant asset dependency**.
+- The default FAQ, delivery copy and terms now explain Pakistan-wide pending order requests, estimated prices and the requirement to confirm delivery charges before fulfillment.
+- Source-only integration checks: 22 of 22 passed. This is not a substitute for a successful bundler build, responsive browser QA or a verified custom-domain deploy.
+- No Lovable AI credits, GitHub Actions or local CLI were used.

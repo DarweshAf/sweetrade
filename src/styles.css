@@ -282,14 +282,15 @@
   .wow-price-pop { animation: wow-price-pop 240ms ease-out both; }
   .wow-success-pop { animation: wow-success-pop 520ms cubic-bezier(.2,.8,.2,1) both; }
   .wow-mobile-bar { animation: wow-mobile-bar 280ms ease-out both; }
-  @media (hover: hover) and (pointer: fine) {
-    .wow-product-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-raised);
-      border-color: var(--color-border-strong);
-    }
-    .wow-buy-button:hover { filter: brightness(1.04); }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .wow-product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-raised);
+    border-color: var(--color-border-strong);
   }
+  .wow-buy-button:hover { filter: brightness(1.04); }
 }
 
 @media (prefers-reduced-motion: reduce) {

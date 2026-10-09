@@ -112,7 +112,7 @@ function Shop() {
             </div>
           </div>
           {list.length ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 min-[440px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {list.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
           ) : (

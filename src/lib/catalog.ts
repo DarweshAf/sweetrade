@@ -70,9 +70,9 @@ const fallback = (): Catalog => ({
     ...FALLBACK_CONTACT,
     paymentMethods: ["Cash on Delivery"],
     pendingOrdersEnabled: false,
-    heroTitle: "Experience Nature's Finest",
+    heroTitle: "Natural Favorites, Made Easy",
     heroSubtitle:
-      "Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — available to customers across Pakistan.",
+      "Shop honey, saffron, shilajit, olive oil, dates and more. Choose your size and request an order from across Pakistan.",
   },
 });
 

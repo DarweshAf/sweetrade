@@ -1,4 +1,4 @@
-# Sweetrade
+# SweeTrade
 
 Implement exactly the screenshot and nothing else
 

@@ -35,7 +35,7 @@ async function loadPublishedProducts() {
 
     const response = await fetch(
       supabaseUrl.replace(/\/$/, "") +
-        "/rest/v1/products?select=slug,updated_at&is_archived=eq.false&order=sort_order.asc,created_at.asc",
+        "/rest/v1/products?select=slug,created_at&is_archived=eq.false&order=sort_order.asc,created_at.asc",
       { headers },
     );
 
@@ -46,7 +46,7 @@ async function loadPublishedProducts() {
       ? rows
           .map((row) => ({
             slug: String(row?.slug || "").trim(),
-            updatedAt: row?.updated_at ? String(row.updated_at) : "",
+            updatedAt: row?.created_at ? String(row.created_at) : "",
           }))
           .filter((row) => Boolean(row.slug))
       : [];

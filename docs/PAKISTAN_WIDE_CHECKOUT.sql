@@ -34,13 +34,14 @@ END $$;
 -- any custom merchant marketing text.
 UPDATE public.site_settings
 SET hero_subtitle = CASE
-  WHEN hero_subtitle = 'Explore SweeTrade natural products in Karachi.'
+  WHEN hero_subtitle IN ('Explore Sweet Trade natural products in Karachi.', 'Explore SweeTrade natural products in Karachi.')
     THEN 'Explore SweeTrade natural products for customers across Pakistan.'
   WHEN hero_subtitle = 'Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — delivered with care across Karachi.'
     THEN 'Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — available to customers across Pakistan.'
   ELSE hero_subtitle
 END
 WHERE id = 1 AND hero_subtitle IN (
+  'Explore Sweet Trade natural products in Karachi.',
   'Explore SweeTrade natural products in Karachi.',
   'Discover carefully selected natural products including honey, saffron, shilajit, olive oil, dates and traditional delicacies — delivered with care across Karachi.'
 );

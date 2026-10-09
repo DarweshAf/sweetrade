@@ -12,13 +12,13 @@ export function ScrollReveal({ children, className = "", delay = 0 }: {
     const el = node.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined" ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) return;
 
     const rect = el.getBoundingClientRect();
     if (rect.top <= window.innerHeight * 0.92) return;
     el.dataset.reveal = "pending";
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
+      if (entry?.isIntersecting) {
         el.dataset.reveal = "visible";
         observer.disconnect();
       }

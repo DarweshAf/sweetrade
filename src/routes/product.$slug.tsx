@@ -107,7 +107,7 @@ function ProductPage() {
         <div>
           <h1 className="text-3xl sm:text-4xl">{p.name}</h1>
           <div className="mt-3" aria-live="polite" aria-atomic="true">
-            <p className="text-2xl font-bold text-primary">
+            <p key={v.label} className="wow-price-pop text-2xl font-bold text-primary">
               {v.price > 0 ? formatPrice(v.price) : "Price on request"}
             </p>
             {!p.priceVerified && v.price > 0 && (
@@ -186,18 +186,27 @@ function ProductPage() {
         </section>
       )}
 
-      <div className="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-30 grid grid-cols-2 gap-3 border-t border-border bg-background p-3 shadow-raised sm:hidden">
-        {purchasable ? (
-          <>
-            <Button onClick={addIt}>Add to Cart</Button>
-            <Button variant="outline" className="border-primary text-primary" onClick={buyIt}>Buy Now</Button>
-          </>
-        ) : (
-          <>
-            <Button asChild><Link to="/contact">Enquire</Link></Button>
-            <Button asChild variant="outline"><a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>Call Us</a></Button>
-          </>
-        )}
+      <div className="wow-mobile-bar fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-30 space-y-2 border-t border-border bg-background/98 px-3 py-2 shadow-raised backdrop-blur sm:hidden">
+        <div className="flex min-w-0 items-center justify-between gap-3" aria-live="polite">
+          <span className="truncate text-sm font-medium text-muted-foreground">Selected: {v.label}{qty > 1 ? ` × ${qty}` : ""}</span>
+          <span key={v.label} className="wow-price-pop shrink-0 text-base font-bold tabular-nums text-primary">
+            {v.price > 0 ? formatPrice(v.price * qty) : "Price on request"}
+            {!p.priceVerified && <span className="ml-1 text-[10px] font-normal text-muted-foreground">est.</span>}
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {purchasable ? (
+            <>
+              <Button type="button" variant="outline" className="wow-buy-button min-h-11 min-w-0 border-primary text-primary" onClick={addIt}>Add to Cart</Button>
+              <Button type="button" className="wow-buy-button min-h-11 min-w-0" onClick={buyIt}>Buy Now</Button>
+            </>
+          ) : (
+            <>
+              <Button asChild><Link to="/contact">Enquire</Link></Button>
+              <Button asChild variant="outline"><a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>Call Us</a></Button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

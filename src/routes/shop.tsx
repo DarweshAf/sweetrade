@@ -4,6 +4,8 @@ import { SlidersHorizontal, X, SearchX } from "lucide-react";
 import { formatPrice, priceFrom } from "@/data/catalog";
 import { useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/shop/ProductCard";
+import { ScrollReveal } from "@/components/site/ScrollReveal";
+import { StoreSkeleton } from "@/components/site/StoreSkeleton";
 import { Button } from "@/components/ui/button";
 
 type Search = { category?: string | undefined; q?: string | undefined; sort?: string | undefined; stock?: string | undefined; max?: number | undefined };
@@ -25,6 +27,7 @@ export const Route = createFileRoute("/shop")({
     ],
   }),
   component: Shop,
+  pendingComponent: StoreSkeleton,
 });
 
 
@@ -113,7 +116,7 @@ function Shop() {
           </div>
           {list.length ? (
             <div className="grid grid-cols-1 gap-4 min-[440px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-              {list.map((p) => <ProductCard key={p.id} product={p} />)}
+              {list.map((p, i) => <ScrollReveal key={p.id} className="h-full" delay={Math.min(i % 4, 3) * 50}><ProductCard product={p} /></ScrollReveal>)}
             </div>
           ) : (
             <div className="rounded-lg border border-dashed border-border-strong py-16 text-center">

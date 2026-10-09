@@ -19,13 +19,13 @@ export const Route = createFileRoute("/product/$slug")({
     return { product };
   },
   head: ({ loaderData }) => {
-    if (!loaderData) return { meta: [{ title: "Product not found — Sweet Trade" }, { name: "robots", content: "noindex" }] };
+    if (!loaderData) return { meta: [{ title: "Product not found — SweeTrade" }, { name: "robots", content: "noindex" }] };
     const p = loaderData.product;
     return {
       meta: [
-        { title: `${p.name} — Sweet Trade` },
+        { title: `${p.name} — SweeTrade` },
         { name: "description", content: p.short },
-        { property: "og:title", content: `${p.name} — Sweet Trade` },
+        { property: "og:title", content: `${p.name} — SweeTrade` },
         { property: "og:description", content: p.short },
       ],
     };
@@ -72,9 +72,9 @@ function ProductPage() {
 
   const tabBody: Record<(typeof TABS)[number], string> = {
     Description: p.description,
-    Ingredients: p.ingredients || "Contact Sweet Trade to confirm the ingredients for this product.",
-    Storage: p.storage || "Contact Sweet Trade for confirmed storage instructions.",
-    Delivery: CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Pakistan shipping: free above ${formatPrice(CONTACT.freeDeliveryThreshold)}, otherwise ${formatPrice(CONTACT.deliveryFee)} under current store-wide settings. Contact us to confirm service and delivery timing to your city.` : "Shipping charges and delivery timing for your city must be confirmed by Sweet Trade.",
+    Ingredients: p.ingredients || "Contact SweeTrade to confirm the ingredients for this product.",
+    Storage: p.storage || "Contact SweeTrade for confirmed storage instructions.",
+    Delivery: CONTACT.deliveryConfigured && CONTACT.freeDeliveryThreshold > 0 ? `Pakistan shipping: free above ${formatPrice(CONTACT.freeDeliveryThreshold)}, otherwise ${formatPrice(CONTACT.deliveryFee)} under current store-wide settings. Contact us to confirm service and delivery timing to your city.` : "Shipping charges and delivery timing for your city must be confirmed by SweeTrade.",
   };
 
   return (
@@ -94,7 +94,7 @@ function ProductPage() {
             </button>
           </div>
           <Dialog open={zoomOpen} onOpenChange={setZoomOpen}><DialogContent className="max-w-3xl"><DialogTitle className="sr-only">{p.name} image</DialogTitle><img src={p.gallery[img] ?? p.image} alt={p.name} className="max-h-[78vh] w-full object-contain" /></DialogContent></Dialog>
-          {p.imageIllustrative && <p className="mt-2 text-sm text-muted-foreground">Illustrative category image. The product photograph will be added by Sweet Trade.</p>}
+          {p.imageIllustrative && <p className="mt-2 text-sm text-muted-foreground">Illustrative category image. The product photograph will be added by SweeTrade.</p>}
           <div className="mt-3 grid grid-cols-4 gap-3">
             {p.gallery.map((g, i) => (
               <button key={i} onClick={() => setImg(i)} aria-label={`View image ${i + 1}`} className={`overflow-hidden rounded-md border-2 ${i === img ? "border-primary" : "border-transparent"}`}>
@@ -112,7 +112,7 @@ function ProductPage() {
             </p>
             {!p.priceVerified && v.price > 0 && (
               <p className="mt-1 text-sm font-semibold text-destructive">
-                Estimated price only — not final. You can submit an order request; Sweet Trade will confirm pricing and shipping by phone before fulfillment.
+                Estimated price only — not final. You can submit an order request; SweeTrade will confirm pricing and shipping by phone before fulfillment.
               </p>
             )}
             <p className="mt-1 text-sm text-muted-foreground">Selected size: {v.label}</p>
@@ -155,7 +155,7 @@ function ProductPage() {
             ) : (
               <>
                 <Button asChild size="lg"><Link to="/contact">Enquire About Product</Link></Button>
-                <Button asChild size="lg" variant="outline"><a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>Call Sweet Trade</a></Button>
+                <Button asChild size="lg" variant="outline"><a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>Call SweeTrade</a></Button>
               </>
             )}
           </div>

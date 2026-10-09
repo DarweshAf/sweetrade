@@ -1,4 +1,4 @@
-# Sweet Trade — hardcoded vs admin-editable audit (2026-10-08)
+# SweeTrade — hardcoded vs admin-editable audit (2026-10-08)
 
 Repository: DarweshAf/sweetrade, main. Lovable Cloud project ID: 14cceb1a-dc3e-4ba8-8195-2f8251f24ad8.
 This document distinguishes implemented functionality from things that need live browser E2E verification.

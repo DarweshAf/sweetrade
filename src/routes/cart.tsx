@@ -41,7 +41,7 @@ function Cart() {
   }
 
   return (
-    <div className="container-page py-7 sm:py-10">
+    <div className="container-page py-7 pb-40 sm:py-10 lg:pb-10">
       <div className="mb-7 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">Your selection</p>
@@ -83,6 +83,15 @@ function Cart() {
             <a href={`https://wa.me/${CONTACT.whatsapp}?text=${waText}`} target="_blank" rel="noreferrer"><MessageCircle /> WhatsApp Order</a>
           </Button>}
         </aside>
+      </div>
+      <div className="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-30 flex items-center gap-3 border-t border-border bg-background/98 px-4 py-3 shadow-raised backdrop-blur lg:hidden">
+        <div className="min-w-0 flex-1" aria-live="polite">
+          <p className="text-xs text-muted-foreground">{requestMode ? "Estimated product subtotal" : "Order total"}</p>
+          <p className="truncate text-lg font-bold tabular-nums text-primary">{formatPrice(requestMode ? subtotal : total)}</p>
+        </div>
+        <Button asChild className="min-h-12 shrink-0 px-4 text-sm">
+          <Link to="/checkout" onClick={clearBuyNow}>{requestMode ? "Request Order" : "Checkout"}</Link>
+        </Button>
       </div>
     </div>
   );

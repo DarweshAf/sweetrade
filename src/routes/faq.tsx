@@ -8,7 +8,9 @@ export const Route = createFileRoute("/faq")({
     meta: [
       { title: "Frequently Asked Questions | SweeTrade" },
       { name: "description", content: "Find answers about ordering, pack sizes, provisional prices and Pakistan delivery requests at SweeTrade." },
+      { name: "robots", content: "index,follow,max-image-preview:large" },
     ],
+    links: [{ rel: "canonical", href: "https://sweetrade.pk/faq" }],
   }),
   component: Page,
 });

@@ -70,7 +70,7 @@ function SettingsPage() {
           <h2 className="text-lg sm:col-span-2">Contact</h2>
           <F name="phone" label="Phone" def={s.phone} />
           <F name="whatsapp" label="WhatsApp number (digits, e.g. 923001234567)" def={s.whatsapp} />
-          <div className="sm:col-span-2"><F name="email" label="Email" def={s.email} type="email" /></div>
+          <div className="sm:col-span-2"><F name="email" label="Business email (optional)" def={s.email} type="email" /><p className="mt-1 text-xs text-muted-foreground">Enter only a working email inbox that you monitor. The old unverified template email is hidden from shoppers.</p></div>
         </section>
         <section className="space-y-2 rounded-md border border-primary/30 bg-primary-soft p-4">
           <h2 className="text-lg">Accept pending order requests</h2>

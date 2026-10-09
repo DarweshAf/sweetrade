@@ -82,7 +82,7 @@ export function ProductCard({ product }: { product: Product; showFrom?: boolean 
         )}
 
         {canOrder ? (
-          <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
+          <div className="mt-auto grid grid-cols-1 gap-2 pt-2 sm:grid-cols-2">
             <Button type="button" variant="outline" className="h-auto min-h-11 min-w-0 gap-1 px-2 text-xs font-semibold sm:text-sm"
               onClick={() => {
                 if (!selected) return;

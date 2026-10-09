@@ -44,6 +44,7 @@ export interface Product {
   inStock: boolean;
   priceVerified?: boolean;
   requestOnly?: boolean;
+  imageIllustrative?: boolean;
   badge?: "Bestseller" | "New" | "Premium";
   featured?: boolean;
   short: string;

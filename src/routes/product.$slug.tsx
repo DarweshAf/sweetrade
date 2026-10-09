@@ -88,12 +88,13 @@ function ProductPage() {
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
         <div>
           <div className="relative overflow-hidden rounded-lg border border-border">
-            <button type="button" className="block w-full" onClick={() => setZoomOpen(true)} aria-label={`Enlarge ${p.name} image`}><ProductImage src={p.gallery[img] ?? p.image} alt={p.name} ratio="1/1" priority /></button>
+            <button type="button" className="block w-full" onClick={() => setZoomOpen(true)} aria-label={`Enlarge ${p.name} image`}><ProductImage src={p.gallery[img] ?? p.image} alt={p.imageIllustrative ? `Illustrative category photo for ${p.name}` : p.name} ratio="1/1" priority /></button>
             <button onClick={() => toggleWish(p.id)} aria-pressed={wished} aria-label="Toggle wishlist" className="absolute right-3 top-3 grid size-10 place-items-center rounded-full bg-card shadow-card">
               <Heart className={`size-5 ${wished ? "fill-primary text-primary" : ""}`} />
             </button>
           </div>
           <Dialog open={zoomOpen} onOpenChange={setZoomOpen}><DialogContent className="max-w-3xl"><DialogTitle className="sr-only">{p.name} image</DialogTitle><img src={p.gallery[img] ?? p.image} alt={p.name} className="max-h-[78vh] w-full object-contain" /></DialogContent></Dialog>
+          {p.imageIllustrative && <p className="mt-2 text-sm text-muted-foreground">Illustrative category image. The product photograph will be added by Sweet Trade.</p>}
           <div className="mt-3 grid grid-cols-4 gap-3">
             {p.gallery.map((g, i) => (
               <button key={i} onClick={() => setImg(i)} aria-label={`View image ${i + 1}`} className={`overflow-hidden rounded-md border-2 ${i === img ? "border-primary" : "border-transparent"}`}>
@@ -131,7 +132,7 @@ function ProductPage() {
                 >
                   <span className="block text-sm font-semibold">{x.label}</span>
                   <span className="block text-xs text-muted-foreground">
-                    {x.price > 0 ? `${!p.priceVerified ? "Demo " : ""}${formatPrice(x.price)}` : "Ask for price"}
+                    {x.price > 0 ? `${!p.priceVerified ? "Est. " : ""}${formatPrice(x.price)}` : "Ask for price"}
                   </span>
                 </button>
               ))}

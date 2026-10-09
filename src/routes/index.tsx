@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sweet Trade — Experience Nature's Finest" },
+      { title: "SweeTrade — Experience Nature's Finest" },
       { name: "description", content: "Carefully selected honey, saffron, shilajit, olive oil, dates and traditional delicacies, available to customers across Pakistan." },
-      { property: "og:title", content: "Sweet Trade — Experience Nature's Finest" },
+      { property: "og:title", content: "SweeTrade — Experience Nature's Finest" },
       { property: "og:description", content: "Explore natural products for customers across Pakistan." },
     ],
   }),
@@ -43,7 +43,7 @@ function Home() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <img src={resolveImage(content.home.heroImage)} alt="Sweet Trade natural products" width={1600} height={912} className="absolute inset-0 size-full object-cover object-right" />
+        <img src={resolveImage(content.home.heroImage)} alt="SweeTrade natural products" width={1600} height={912} className="absolute inset-0 size-full object-cover object-right" />
         <div className="hero-fade absolute inset-0" />
         <div className="container-page relative py-16 sm:py-24 lg:py-28">
           <div className="max-w-lg">
@@ -61,7 +61,7 @@ function Home() {
         </div>
       </section>
 
-      {(isPreview || requiresPricing || settings.pendingOrdersEnabled) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">{settings.pendingOrdersEnabled && !isPreview ? "Order requests are open across Pakistan. We confirm the final price and delivery before dispatch. No advance payment." : "Sample prices are for demonstration only. Online orders are unavailable until Sweet Trade confirms the product prices."} <Link to="/contact" className="font-semibold text-primary underline">Contact Sweet Trade</Link> for details.</p></div>}
+      {(isPreview || requiresPricing || settings.pendingOrdersEnabled) && <div role="status" className="border-y border-border bg-secondary"><p className="container-page py-3 text-center text-sm">{settings.pendingOrdersEnabled && !isPreview ? "Order requests are open across Pakistan. We confirm the final price and delivery before dispatch. No advance payment." : "Sample prices are for demonstration only. Online orders are unavailable until SweeTrade confirms the product prices."} <Link to="/contact" className="font-semibold text-primary underline">Contact SweeTrade</Link> for details.</p></div>}
       <section className="border-b border-border bg-card">
         <ul className="container-page grid grid-cols-2 gap-4 py-5 lg:grid-cols-4">
           {content.home.highlights.map((feature, i) => {

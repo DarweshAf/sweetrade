@@ -82,8 +82,17 @@ export function AdminContentEditor() {
   const save = async () => {
     if (busy) return;
     const cities = [...new Set(citiesText.split(/\r?\n/).map((x) => x.trim()).filter(Boolean))];
-    if (selected === "home" && draft.home.promos.some((p) => !p.title.trim() || !categories.some((c) => c.slug === p.category))) {
-      toast.error("Every promotion needs a title and a valid product category."); return;
+    if (selected === "home") {
+      if (draft.home.promos.some((p) => !p.title.trim() || !categories.some((c) => c.slug === p.category))) {
+        toast.error("Every promotion needs a title and a valid product category."); return;
+      }
+      if ([draft.home.categoriesHeading, draft.home.featuredHeading, draft.home.collectionsHeading, draft.home.orderingHeading]
+        .some((heading) => !heading.trim())) {
+        toast.error("Please enter a heading for every homepage section."); return;
+      }
+      if (draft.home.orderingSteps.some((step) => !step.title.trim() || !step.body.trim())) {
+        toast.error("Every ordering step needs a title and explanation."); return;
+      }
     }
     if (selected === "faq" && draft.faq.items.some((i) => !i.question.trim() || !i.answer.trim())) {
       toast.error("Every FAQ needs both a question and answer."); return;
@@ -130,10 +139,29 @@ export function AdminContentEditor() {
       {selected === "home" && <>
         <Text label="Top announcement bar" value={draft.home.announcement} onChange={(v) => update("home", { announcement: v })} />
         <ImageField label="Homepage hero image" value={draft.home.heroImage} onChange={(v) => update("home", { heroImage: v })} />
+        <div className="grid gap-4 rounded-lg border border-border bg-surface/60 p-4 sm:grid-cols-2">
+          <h3 className="text-lg font-semibold sm:col-span-2">Home section headings</h3>
+          <Text label="Categories heading" value={draft.home.categoriesHeading} onChange={(v) => update("home", { categoriesHeading: v })} />
+          <Text label="Categories short introduction" value={draft.home.categoriesDescription} rows={2} onChange={(v) => update("home", { categoriesDescription: v })} />
+          <Text label="Featured products heading" value={draft.home.featuredHeading} onChange={(v) => update("home", { featuredHeading: v })} />
+          <Text label="Featured short introduction" value={draft.home.featuredDescription} rows={2} onChange={(v) => update("home", { featuredDescription: v })} />
+          <Text label="Collections heading" value={draft.home.collectionsHeading} onChange={(v) => update("home", { collectionsHeading: v })} />
+          <Text label="Collections short introduction" value={draft.home.collectionsDescription} rows={2} onChange={(v) => update("home", { collectionsDescription: v })} />
+          <Text label="Ordering steps heading" value={draft.home.orderingHeading} onChange={(v) => update("home", { orderingHeading: v })} />
+          <Text label="Ordering steps short introduction" value={draft.home.orderingDescription} rows={2} onChange={(v) => update("home", { orderingDescription: v })} />
+        </div>
         <h3 className="text-lg font-semibold">Homepage highlights</h3>
         {draft.home.highlights.map((item, i) => <div key={i} className="grid gap-3 sm:grid-cols-2">
           <Text label={`Highlight ${i + 1}: title`} value={item.title} onChange={(v) => updateFeature("home", i, { title: v })} />
           <Text label="Short line" value={item.body} onChange={(v) => updateFeature("home", i, { body: v })} />
+        </div>)}
+        <h3 className="text-lg font-semibold">How ordering works — 3 steps</h3>
+        <p className="text-sm text-muted-foreground">Explain what happens from product selection to phone confirmation. Avoid promises about unverified shipping fees or delivery times.</p>
+        {draft.home.orderingSteps.map((item, i) => <div key={i} className="grid gap-3 sm:grid-cols-2">
+          <Text label={`Step ${i + 1} title`} value={item.title}
+            onChange={(v) => update("home", { orderingSteps: draft.home.orderingSteps.map((step, j) => j === i ? { ...step, title: v } : step) })} />
+          <Text label={`Step ${i + 1} explanation`} value={item.body}
+            onChange={(v) => update("home", { orderingSteps: draft.home.orderingSteps.map((step, j) => j === i ? { ...step, body: v } : step) })} />
         </div>)}
         <h3 className="text-lg font-semibold">Promotion banners</h3>
         {draft.home.promos.map((promo, i) => <div key={i} className="space-y-3 rounded-md border border-border p-3">

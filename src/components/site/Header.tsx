@@ -34,7 +34,7 @@ function SearchBox({ onDone }: { onDone?: () => void }) {
         autoFocus={Boolean(onDone)}
         aria-label="Search natural products"
         placeholder="Search natural products..."
-        className="h-10 w-full rounded-md border border-input bg-card pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+        className="min-h-11 w-full min-w-0 rounded-lg border border-input bg-card pl-9 pr-3 text-base sm:text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none"
       />
     </form>
   );
@@ -62,8 +62,8 @@ export function Header() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-        <div className="container-page grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3 xl:h-20 xl:gap-5 2xl:gap-8">
+      <header className="sticky top-0 z-40 min-w-0 border-b border-border bg-background/95 backdrop-blur">
+        <div className="container-page grid h-16 min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:gap-3 xl:h-20 xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:gap-5 2xl:gap-8">
           <Logo className="h-10 xl:h-14" />
 
           <nav aria-label="Main" className="hidden min-w-0 items-center gap-4 xl:flex 2xl:gap-6">
@@ -89,16 +89,16 @@ export function Header() {
               <SearchBox />
             </div>
           </nav>
-          <span className="xl:hidden" />
+
 
           <div className="flex items-center">
-            <button className="tap-target xl:hidden" aria-label="Search" aria-expanded={searchOpen} onClick={() => setSearchOpen((s) => !s)}>
+            <button className="tap-target rounded-lg xl:hidden" aria-label="Search" aria-expanded={searchOpen} onClick={() => setSearchOpen((s) => !s)}>
               <Search className="size-5" />
             </button>
-            <Link to="/wishlist" className="tap-target" aria-label="Wishlist">
+            <Link to="/wishlist" className="tap-target rounded-lg" aria-label="Wishlist">
               <Heart className="size-5" />
             </Link>
-            <Link to="/cart" className="tap-target relative -mr-2 hidden sm:inline-flex" aria-label={`Cart, ${count} items`}>
+            <Link to="/cart" className="tap-target relative -mr-2 hidden rounded-lg sm:inline-flex" aria-label={`Cart, ${count} items`}>
               <ShoppingCart className="size-5" />
               {count > 0 && (
                 <span key={count} className="wow-cart-pop absolute right-1 top-1 grid min-w-4.5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold leading-4.5 text-primary-foreground">
@@ -115,12 +115,12 @@ export function Header() {
         )}
       </header>
 
-      <nav aria-label="Mobile" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur xl:hidden">
+      <nav aria-label="Mobile" className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-background/98 pb-[env(safe-area-inset-bottom)] backdrop-blur xl:hidden">
         <Link to="/" activeOptions={{ exact: true }} className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
           <Home className="size-5" aria-hidden />Home
         </Link>
         <Link to="/shop" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground data-[status=active]:text-primary">
-          <Grid2X2 className="size-5" aria-hidden />Categories
+          <Grid2X2 className="size-5" aria-hidden />Shop
         </Link>
         <button type="button" onClick={() => setSearchOpen(true)} aria-label="Search products" className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs text-muted-foreground">
           <Search className="size-5" aria-hidden />Search

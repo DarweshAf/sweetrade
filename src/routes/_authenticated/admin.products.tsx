@@ -62,9 +62,9 @@ function Products() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl">Products</h1>
-        <div className="flex gap-2">
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search…" className={`${adminField} w-44`} />
-          <Button onClick={() => setEdit("new")}><Plus /> Add product</Button>
+        <div className="flex w-full min-w-0 flex-wrap gap-2 sm:w-auto sm:flex-nowrap">
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products…" aria-label="Search products" className={`${adminField} min-w-0 flex-1 sm:w-44 sm:flex-none`} />
+          <Button onClick={() => setEdit("new")} className="min-h-11 shrink-0"><Plus /> Add product</Button>
         </div>
       </div>
       {q.isLoading ? <p className="text-muted-foreground">Loading…</p> : q.isError ? <div role="alert" className="rounded-lg border border-destructive p-5 text-sm">Unable to load products. <Button variant="outline" size="sm" onClick={() => q.refetch()}>Retry</Button></div> : (
@@ -76,11 +76,11 @@ function Products() {
               ? `From ${formatPrice(Math.min(...priced.map((v) => v.price)))} · ${vs.length} sizes`
               : priced.length ? `Demo from ${formatPrice(Math.min(...priced.map((v) => v.price)))} · ${vs.length} sizes` : `${vs.length} size options · Prices not confirmed`;
             return (
-              <li key={p.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-3">
+              <li key={p.id} className="flex min-w-0 flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-3">
                 <img src={resolveImage(p.image_url)} alt="" className="size-14 rounded object-cover" />
                 <span className="min-w-0 flex-1">
                   <b className="block truncate font-medium">{p.name}</b>
-                  <span className="text-sm text-muted-foreground">{p.category_slug ?? "—"} · {priceSummary}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.allow_pending_orders ? " · Request orders allowed" : ""}{p.is_archived ? " · Archived" : ""}{p.image_url?.startsWith("local:") ? " · Add real product photo" : ""}</span>
+                  <span className="block break-words text-xs leading-5 text-muted-foreground sm:text-sm">{p.category_slug ?? "—"} · {priceSummary}{p.featured ? " · Featured" : ""}{!p.price_verified ? " · Price not confirmed" : ""}{p.allow_pending_orders ? " · Request orders allowed" : ""}{p.is_archived ? " · Archived" : ""}{p.image_url?.startsWith("local:") ? " · Add real product photo" : ""}</span>
                 </span>
                 <button onClick={() => toggleStock(p)} className={`rounded-full px-3 py-1 text-xs font-medium ${p.in_stock ? "bg-primary-soft text-primary" : "bg-secondary text-muted-foreground"}`}>
                   {p.in_stock ? "In stock" : "Out of stock"}
@@ -93,7 +93,7 @@ function Products() {
         </ul>
       )}
       <Dialog open={edit !== null} onOpenChange={(o) => !o && setEdit(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent className="max-h-[min(90dvh,850px)] w-[calc(100vw-1rem)] max-w-full overflow-y-auto overscroll-contain p-4 sm:max-w-2xl sm:p-6">
           <DialogHeader><DialogTitle>{edit === "new" ? "Add product" : "Edit product"}</DialogTitle></DialogHeader>
           {edit !== null && <ProductForm row={edit === "new" ? null : edit} nextOrder={q.data?.length ?? 0} onDone={() => { setEdit(null); refresh(); }} />}
         </DialogContent>

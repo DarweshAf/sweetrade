@@ -78,7 +78,7 @@ const p = (
   inStock: false,
   priceVerified: false,
   short: `Discover ${name}. Contact us for product details and availability.`,
-  description: `${name}. Please contact Sweet Trade for confirmed ingredients, origin, packaging and storage information.`,
+  description: `${name}. Please contact SweeTrade for confirmed ingredients, origin, packaging and storage information.`,
   ingredients: "",
   storage: "",
   ...extra,

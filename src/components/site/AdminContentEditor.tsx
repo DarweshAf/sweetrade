@@ -46,7 +46,7 @@ function ImageField({ label, value, onChange }: { label: string; value: string; 
   return <div className="space-y-2">
     <span className="text-sm font-medium">{label}</span>
     <div className="flex flex-wrap items-center gap-3">
-      <img src={resolveImage(value)} alt="" className="h-20 w-28 rounded-md border border-border object-cover" />
+      {value && value !== "local:logo" ? <img src={resolveImage(value)} alt="Preview" className="h-20 w-28 rounded-md border border-border object-contain" /> : <div className="grid h-20 w-28 place-items-center rounded-md border border-dashed border-border bg-surface text-center text-xs text-muted-foreground">No image yet</div>}
       <input aria-label={label} type="file" accept="image/*" disabled={uploading}
         onChange={(e) => { void upload(e.currentTarget.files?.[0]); e.currentTarget.value = ""; }}
         className="max-w-full text-xs" />
@@ -161,6 +161,7 @@ export function AdminContentEditor() {
       {selected === "footer" && <>
         <Text label="Store / brand name" value={draft.footer.brandName} onChange={(v) => update("footer", { brandName: v })} />
         <ImageField label="Store logo" value={draft.footer.logoImage} onChange={(v) => update("footer", { logoImage: v })} />
+        <p className="text-xs text-muted-foreground">The storefront shows a branded text logo until you upload a working logo image. Recommended: a transparent PNG or WebP.</p>
         <Text label="Brand tagline" value={draft.footer.tagline} onChange={(v) => update("footer", { tagline: v })} />
         <Text label="Footer description" value={draft.footer.description} rows={3} onChange={(v) => update("footer", { description: v })} />
         <Text label="Facebook page URL (optional)" value={draft.footer.facebook} onChange={(v) => update("footer", { facebook: v })} />

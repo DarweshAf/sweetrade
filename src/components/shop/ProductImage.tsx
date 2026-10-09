@@ -43,6 +43,8 @@ export function ProductImage({
   return (
     <div className={cn("img-frame", ratioClass, className)}>
       {status !== "error" ? (
+        <>
+        {status === "loading" && <div className="wow-shimmer pointer-events-none" aria-hidden="true" />}
         <img
           ref={ref}
           src={src}
@@ -54,12 +56,14 @@ export function ProductImage({
           onLoad={() => setStatus("ready")}
           onError={() => setStatus("error")}
           className={cn(
-            "absolute inset-0 size-full object-cover transition-opacity duration-500",
+            "absolute inset-0 size-full object-cover transition-opacity duration-300",
+            status === "ready" ? "opacity-100" : "opacity-0",
             
             zoom && "hover-zoom",
             imgClassName,
           )}
         />
+        </>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-muted px-3 text-center">
           <ImageOff className="size-5 text-muted-foreground" aria-hidden="true" />

@@ -12,9 +12,9 @@ import { Totals } from "@/components/shop/OrderSummary";
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
-      { title: "Checkout — Sweet Trade" },
+      { title: "Checkout — SweeTrade" },
       { name: "description", content: "Guest checkout for orders throughout Pakistan. Shipping and payment options depend on confirmed store settings." },
-      { property: "og:title", content: "Checkout — Sweet Trade" },
+      { property: "og:title", content: "Checkout — SweeTrade" },
       { property: "og:description", content: "Complete your order." },
     ],
   }),
@@ -91,7 +91,7 @@ function Checkout() {
       completeCheckout();
     } catch (error) {
       console.error("Order submission failed", error);
-      toast.error("Could not place your order. Please try again or contact Sweet Trade.");
+      toast.error("Could not place your order. Please try again or contact SweeTrade.");
     } finally {
       setBusy(false);
     }
@@ -102,7 +102,7 @@ function Checkout() {
       <div className="container-page py-24 text-center">
         <CheckCircle2 className="mx-auto size-12 text-success" />
         <h1 className="mt-4 text-3xl">{done.isRequest ? "Your order request has been received" : "Thank you for your order"}</h1>
-        <p className="mt-2 text-muted-foreground">Reference #{done.reference}. Sweet Trade will contact you by phone to confirm availability, final prices and delivery charges before processing the order. No payment has been collected.</p>
+        <p className="mt-2 text-muted-foreground">Reference #{done.reference}. SweeTrade will contact you by phone to confirm availability, final prices and delivery charges before processing the order. No payment has been collected.</p>
         <Button asChild size="lg" className="mt-6"><Link to="/shop">Continue Shopping</Link></Button>
       </div>
     );
@@ -132,7 +132,7 @@ function Checkout() {
           <h2 className="text-xl">1. Delivery Information</h2>
           {isBuyNow && <span className="rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">Buy Now · One product</span>}
         </div>
-        <p className="mb-4 text-sm text-muted-foreground">Country: Pakistan. Enter your actual province, city and complete delivery address. Delivery availability and charges are confirmed by Sweet Trade.</p>
+        <p className="mb-4 text-sm text-muted-foreground">Country: Pakistan. Enter your actual province, city and complete delivery address. Delivery availability and charges are confirmed by SweeTrade.</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div><L htmlFor="name">Full Name *</L><input id="name" name="name" autoComplete="name" className={field} aria-invalid={!!errors.name} aria-describedby="name-err" /><Err k="name" /></div>
           <div><L htmlFor="phone">Mobile Number *</L><input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+92 3XX XXXXXXX" className={field} aria-invalid={!!errors.phone} aria-describedby="phone-err" /><Err k="phone" /></div>
@@ -215,11 +215,11 @@ function Checkout() {
               <span>I understand this is an order request only. Product prices, availability, shipping and the final total must be confirmed by phone before fulfillment. No advance payment is required.</span>
             </label>
           )}
-          {requestMode && !settings.pendingOrdersEnabled && <p role="alert" className="mt-3 text-sm text-destructive">Order requests are currently unavailable. Please contact Sweet Trade.</p>}
+          {requestMode && !settings.pendingOrdersEnabled && <p role="alert" className="mt-3 text-sm text-destructive">Order requests are currently unavailable. Please contact SweeTrade.</p>}
           <Button type="submit" size="lg" block className="mt-5" disabled={busy || !paymentOptions.length || (requestMode && !settings.pendingOrdersEnabled)}>
             {busy ? "Submitting…" : requestMode ? "Submit Order Request" : "Place Order"}
           </Button>
-          <p className="mt-3 text-center text-xs text-muted-foreground">No account required. Sweet Trade confirms orders by phone.</p>
+          <p className="mt-3 text-center text-xs text-muted-foreground">No account required. SweeTrade confirms orders by phone.</p>
         </fieldset>
       </aside>
     </form>

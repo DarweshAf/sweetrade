@@ -19,4 +19,4 @@ export const slugify = (s: string) =>
 export const ORDER_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"] as const;
 
 export const adminField =
-  "h-10 w-full rounded-md border border-input bg-card px-3 text-sm focus:border-primary focus:outline-none";
+  "min-h-11 w-full min-w-0 max-w-full rounded-lg border border-input bg-card px-3 text-base sm:text-sm focus:border-primary focus:outline-none";
